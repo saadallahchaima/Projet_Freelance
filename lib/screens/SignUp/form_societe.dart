@@ -30,7 +30,7 @@ class _FormSocieteState extends State<FormSociete> {
                       height: 50.h,
                     ),
                   ),
-                  SizedBox(height: 50.h), // Ajustez cette valeur pour réduire l'espace
+                  SizedBox(height: 50.h),
 
                   Center(
                     child: Container(
@@ -103,13 +103,13 @@ class _FormSocieteState extends State<FormSociete> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      _buildCard('K.BIS', 0.27.sw, Colors.black, 'assets/images/person.png'),
+                      _buildCard('K.BIS', 0.27.sw, AppTheme.primaryColor, 'assets/images/person.png'),
                       SizedBox(width: 16.h),
 
-                      _buildCard('Label de qualité', 0.27.sw, Colors.black, 'assets/images/person.png'),
+                      _buildCard('Label de qualité', 0.27.sw, AppTheme.primaryColor, 'assets/images/person.png'),
                       SizedBox(width: 16.h),
 
-                      _buildCard('Assurance ', 0.27.sw, Colors.black, 'assets/images/person.png'),
+                      _buildCard('Assurance ', 0.27.sw, AppTheme.primaryColor, 'assets/images/person.png'),
 
                     ],
                   ),
@@ -141,7 +141,7 @@ class _FormSocieteState extends State<FormSociete> {
 
   Widget _buildTextField(Map<String, dynamic> textFieldData) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
       decoration: BoxDecoration(
         color: AppTheme.grisTextField,
         borderRadius: BorderRadius.circular(10.0),
@@ -150,23 +150,23 @@ class _FormSocieteState extends State<FormSociete> {
             color: Colors.grey.withOpacity(0.1),
             blurRadius: 5.0,
             spreadRadius: 1.0,
-            offset: Offset(0, 2.0),
+            offset: const Offset(0, 2.0),
           ),
         ],
       ),
       child: TextField(
         decoration: InputDecoration(
           hintText: textFieldData['hint'],
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0), // Ajoutez le padding ici
-          hintStyle: TextStyle(color: AppTheme.secondaryColor), // Changer la couleur du hint text ici
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0), // Ajoutez le padding ici
+          hintStyle: const TextStyle(color: AppTheme.secondaryColor), // Changer la couleur du hint text ici
 
-          border: UnderlineInputBorder(
+          border: const UnderlineInputBorder(
             borderSide: BorderSide(color: AppTheme.grisTextField), // Bordure blanche
           ),
-          enabledBorder: UnderlineInputBorder(
+          enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: AppTheme.grisTextField), // Bordure blanche quand inactif
           ),
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: AppTheme.grisTextField), // Bordure blanche quand actif
           ),
         ),
@@ -190,7 +190,7 @@ class _FormSocieteState extends State<FormSociete> {
                     color: Colors.grey.withOpacity(0.2),
                     blurRadius: 10.0,
                     spreadRadius: 1.0,
-                    offset: Offset(0, 10.0),
+                    offset: const Offset(0, 10.0),
                   ),
                 ],
               ),
@@ -212,7 +212,7 @@ class _FormSocieteState extends State<FormSociete> {
                 width: size * 0.20,
                 height: size * 0.20,
                 decoration: BoxDecoration(
-                  color: color, // Utilisez le paramètre color ici
+                  color: color,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -231,7 +231,7 @@ class _FormSocieteState extends State<FormSociete> {
           title,
           style: TextStyle(
             fontSize: size * 0.14,
-            color: color, // Utilisez le paramètre color ici
+            color: color, 
           ),
         ),
       ],

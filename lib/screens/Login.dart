@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../components/CustomStepper.dart';
 import '../components/LoginBtn.dart';
 import '../theme/AppTheme.dart';
 
@@ -101,12 +102,12 @@ class LoginPage extends StatelessWidget {
                     GestureDetector(
 
                       onTap: () {
-                     /*   Navigator.push(
+                     Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MainDataPage(),
+                            builder: (context) => CustomStepper(),
                           ),
-                        );*/
+                        );
                       },
                       child: Text.rich(
                         TextSpan(

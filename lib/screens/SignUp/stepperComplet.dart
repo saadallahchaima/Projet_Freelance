@@ -17,7 +17,7 @@ class Steppercomplet extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 50.h),
+                  SizedBox(height: 20.h),
                   Center(
                     child: Image.asset(
                       "assets/images/logo_rent_me-removebg-preview 2.png",
@@ -25,11 +25,19 @@ class Steppercomplet extends StatelessWidget {
                       height: 50.h,
                     ),
                   ),
-                  SizedBox(height: 200.h),
+                  SizedBox(height: 80.h),
+                  Center(
+                    child: Image.asset(
+                      "assets/icons/img_3.png",
+                      width: 100.w,
+                      height: 100.h,
+                    ),
+                  ),
+                  SizedBox(height: 70.h),
 
                   Center(
                     child: Container(
-                      width: 0.8.sw,
+                      width: 0.7.sw,
                       child: Text(
                         'Votre comte RentMe est créé avec succés !',
                         style: TextStyle(

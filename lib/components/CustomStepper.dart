@@ -107,15 +107,20 @@ class _CustomStepperState extends State<CustomStepper> {
   Widget _getPageForStep(int step) {
     switch (step) {
       case 0:
-        return Donneeadresse();
+        return SignUpScreen();
+    //  return Donneeadresse();
+
       case 1:
-        return VerificationPage();
-      case 2:
         return VerificationMailPage();
+
+      case 2:
+        return Donneeadresse();
       case 3:
         return PhoneInput();
+
       case 4:
-        return SignUpScreen();
+        return VerificationPage();
+
       case 5:
       return DonneeProfile();
         //return formDiplome();
@@ -141,6 +146,8 @@ class _CustomStepperState extends State<CustomStepper> {
       return FormSociete2();
       case 14:
       return  Steppercomplet();
+      break;
+
       default:
         return Center(child: Text('Étape inconnue'));
     }
