@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:khedma/screens/SignUp/Complete_Pro_Expert.dart';
+import 'package:khedma/screens/SignUp/Complete_profile.dart';
+import 'package:khedma/screens/SignUp/Diplome.dart';
+import 'package:khedma/screens/SignUp/Donne_profile.dart';
+import 'package:khedma/screens/SignUp/societe_exper.dart';
 
 import '../screens/SignUp/AjouterTel.dart';
 import '../screens/SignUp/DoneePrincipale.dart';
@@ -112,15 +117,30 @@ class _CustomStepperState extends State<CustomStepper> {
       case 4:
         return SignUpScreen();
       case 5:
-        return formDiplome();
+      return DonneeProfile();
+        //return formDiplome();
       case 6:
-        return FormExperience();
+       return CompleteProfile();
+        //return FormExperience();
       case 7:
-        return FormSociete();
+      return diplome();
+       // return FormSociete();
       case 8:
-        return FormSociete2();
+      return SocieteExper();
+        //return FormSociete2();
+        case 9:
+        return CompleteProfileProExpert();
+        case 10:
+        return formDiplome();
+        case 11:
+        return FormExperience();
       case 12:
-        return Steppercomplet();
+      //  return Steppercomplet();
+      return FormSociete();
+      case 13:
+      return FormSociete2();
+      case 14:
+      return  Steppercomplet();
       default:
         return Center(child: Text('Étape inconnue'));
     }
@@ -135,7 +155,7 @@ class _CustomStepperState extends State<CustomStepper> {
       padding: EdgeInsets.only(bottom: 16.h),
       child: DotsIndicator(
         dotsCount: 2,
-        position: step == 7 ? 0 : 1, // Assurez-vous que l'indicateur change avec les étapes
+        position: step == 7 ? 0 : 1,
         decorator: DotsDecorator(
           activeColor: Colors.blue,
           color: Colors.grey,
@@ -150,8 +170,8 @@ class _CustomStepperState extends State<CustomStepper> {
   }
 
   Widget _buildButtonsForStep(int step) {
-    if (step == 5 || step == 7
-        || step == 8) {
+    if (step == 7 || step == 8
+        || step == 9) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
