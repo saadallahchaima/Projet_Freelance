@@ -7,6 +7,7 @@ import 'package:khedma/screens/SignUp/Diplome.dart';
 import 'package:khedma/screens/SignUp/Donne_profile.dart';
 import 'package:khedma/screens/SignUp/societe_exper.dart';
 
+import '../screens/MainPages/HomePage.dart';
 import '../screens/SignUp/AjouterTel.dart';
 import '../screens/SignUp/DoneePrincipale.dart';
 import '../screens/SignUp/DonneeAdresse.dart';
@@ -177,8 +178,7 @@ class _CustomStepperState extends State<CustomStepper> {
   }
 
   Widget _buildButtonsForStep(int step) {
-    if (step == 7 || step == 8
-        || step == 9) {
+    if (step == 7 || step == 8 || step == 9) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -231,6 +231,38 @@ class _CustomStepperState extends State<CustomStepper> {
           ),
         ],
       );
+    } else if (step == 14) {  // Case 14
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 32.w),
+        child: Center(
+          child: Container(
+            width: 0.4.sw,
+            child: ElevatedButton(
+              onPressed: () {
+                // Naviguer vers HomeScreen
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                backgroundColor: AppTheme.primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14.33.r),
+                ),
+              ),
+              child: Text(
+                'Continuer vers Home',
+                style: TextStyle(
+                  fontSize: 0.034.sw,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
     } else {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
@@ -263,4 +295,5 @@ class _CustomStepperState extends State<CustomStepper> {
       );
     }
   }
+
 }

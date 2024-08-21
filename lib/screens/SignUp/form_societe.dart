@@ -103,13 +103,13 @@ class _FormSocieteState extends State<FormSociete> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      _buildCard('K.BIS', 0.27.sw, AppTheme.primaryColor, 'assets/images/person.png'),
+                      _buildCard('K.BIS', 0.27.sw, AppTheme.primaryColor, 'assets/images/img_7.png'),
                       SizedBox(width: 16.h),
 
-                      _buildCard('Label de qualité', 0.27.sw, AppTheme.primaryColor, 'assets/images/person.png'),
+                      _buildCard('Label de qualité', 0.27.sw, AppTheme.primaryColor, 'assets/images/img_7.png'),
                       SizedBox(width: 16.h),
 
-                      _buildCard('Assurance ', 0.27.sw, AppTheme.primaryColor, 'assets/images/person.png'),
+                      _buildCard('Assurance ', 0.27.sw, AppTheme.primaryColor, 'assets/images/img_7.png'),
 
                     ],
                   ),

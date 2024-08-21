@@ -15,8 +15,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Product> productList = [
-    Product('assets/images/img_5.png', 'Design Graphique', 4.9, 'A distance', 'Expert', 'Nourhene Bakalti', true),
-    Product('assets/images/img_5.png', 'Plombier', 4.9, 'Paris', 'Professionnel', 'Mark Marker', false),
+    Product('assets/images/img_6.png', 'Design Graphique', 4.9, 'A distance', 'Expert', 'Nourhene Bakalti', true),
+    Product('assets/images/menage.jpeg', 'Menage', 4.9, 'Paris', 'Professionnel', 'Mark Marker', false),
     Product('assets/images/img_5.png', 'Plombier', 4.9, 'Paris', 'Professionnel', 'Mark Marker', false),
   ];
 
@@ -169,7 +169,26 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
 
-
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+              child: Text(
+                'Demandes recentes',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.secondaryColor,
+                ),
+              ),
+            ),
+            ListView.builder(
+              padding: EdgeInsets.all(16.w),
+              itemCount: productList.length,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return _buildListItem2(context, index);
+              },
+            ),
           ],
         ),
       ),
@@ -338,29 +357,114 @@ class _HomeScreenState extends State<HomeScreen> {
     Product product = productList[index];
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.h),
-      child: Card(
-        child: ListTile(
-          leading: Image.asset(
-            product.imagePath,
-            fit: BoxFit.cover,
-            width: 50.w,
-            height: 50.h,
-          ),
-          title: Text(product.title),
-          subtitle: Text(product.name),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
+      margin: EdgeInsets.symmetric(vertical: 4.h), // Add margin between items
+      decoration: BoxDecoration(
+        border: Border.all(color: AppTheme.accentColor, width: 0.5),
+        borderRadius: BorderRadius.all(Radius.circular(10.w)),
+        color: Colors.white, // Set background color to white
+      ),
+      padding: EdgeInsets.all(16.w),
+      child: Row(
+        children: [
+          Stack(
             children: [
-              Icon(Icons.star_border_outlined, size: 16.sp, color: Colors.grey),
-              SizedBox(width: 4.w),
-              Text(product.rating.toString()),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10.w),
+                child: Image.asset(
+                  product.imagePath,
+                  width: 80.w,
+                  height: 80.h,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              if (product.verified)
+                Positioned(
+                  top: 0.h,
+                  right: 0.w,
+                  child: Container(
+                    width: 20.sp,
+                    height: 20.sp,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.green,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.check_circle_outline_outlined,
+                        color: Colors.white,
+                        size: 14.sp,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
-        ),
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.title,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  product.name,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: Colors.grey,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.star_border_outlined, color: Colors.blue, size: 16.sp),
+                    SizedBox(width: 4.w),
+                    Text(
+                      product.rating.toString(),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+                    Icon(Icons.location_on_outlined, color: Colors.blue, size: 16.sp),
+                    SizedBox(width: 4.w),
+                    Text(
+                      product.location,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 4.h),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: product.tag == 'Expert' ? Colors.green : Colors.red,
+                    borderRadius: BorderRadius.circular(9.51.w),
+                  ),
+                  child: Text(
+                    product.tag,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 16.w),
+        ],
       ),
     );
   }
+
   void _showSearchCard(BuildContext context) {
     showModalBottomSheet(
       context: context,
