@@ -72,7 +72,7 @@ class formDiplome extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/images/person.png'),
+                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/images/img_7.png'),
                     ],
                   ),
                   SizedBox(height: 50.h),
@@ -89,12 +89,12 @@ class formDiplome extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/images/person.png'),
+                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/images/img_7.png'),
                       SizedBox(width: 10.h),
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/images/person.png'),
+                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/images/img_7.png'),
                       SizedBox(width: 10.h),
 
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/images/person.png'),
+                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/images/img_7.png'),
                     ],
                   ),
 
