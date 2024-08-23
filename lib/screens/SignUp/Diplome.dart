@@ -17,7 +17,14 @@ class diplome extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  
+                  SizedBox(height: 20.h),
+                  Center(
+                    child: Image.asset(
+                      "assets/images/logo_rent_me-removebg-preview 2.png",
+                      width: 50.w,
+                      height: 50.h,
+                    ),
+                  ),
                   SizedBox(height: 50.h), // Ajustez cette valeur pour réduire l'espace
 
                   Center(
@@ -65,7 +72,7 @@ class diplome extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/image.png'),
+                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/img_6.png'),
                     ],
                   ),
                   SizedBox(height: 50.h),
@@ -82,12 +89,12 @@ class diplome extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/image.png'),
+                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/img_6.png'),
                       SizedBox(width: 10.h),
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/image.png'),
+                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/img_6.png'),
                       SizedBox(width: 10.h),
 
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/image.png'),
+                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/img_6.png'),
                     ],
                   ),
 

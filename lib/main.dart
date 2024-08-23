@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme, // Set the dark theme
           themeMode: ThemeMode.system, // Use system theme mode
           title: "Freelence",
-          home: SplashPage(),
+          home: HomeScreen(),
         );
       },
     );
