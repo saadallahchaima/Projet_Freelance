@@ -107,15 +107,20 @@ class _CustomStepperState extends State<CustomStepper> {
   Widget _getPageForStep(int step) {
     switch (step) {
       case 0:
-        return Donneeadresse();
+      return SignUpScreen();
+      //  return Donneeadresse();
+
       case 1:
-        return VerificationPage();
+        ///return VerificationPage();
+              return VerificationMailPage();
+
       case 2:
-        return VerificationMailPage();
+      return Donneeadresse();
+       
       case 3:
-        return PhoneInput();
+      return PhoneInput ();
       case 4:
-        return SignUpScreen();
+        return VerificationPage();
       case 5:
       return DonneeProfile();
         //return formDiplome();
@@ -170,6 +175,38 @@ class _CustomStepperState extends State<CustomStepper> {
   }
 
   Widget _buildButtonsForStep(int step) {
+    if(step==5){
+return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 32.w),
+        child: Center(
+          child: Container(
+            width: 1.4.sw,
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  currentStep++;
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                backgroundColor: AppTheme.primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14.33.r),
+                ),
+              ),
+              child: Text(
+                'Continuer en tant qu’un client',
+                style: TextStyle(
+                  fontSize: 0.034.sw,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }else
+    
     if (step == 7 || step == 8
         || step == 9) {
       return Row(

@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:khedma/theme/AppTheme.dart';
 
-class DonneeProfile extends StatelessWidget {
+class DonneeProfile extends StatefulWidget {
+  @override
+  _DonneeProfileState createState() => _DonneeProfileState();
+}
+
+class _DonneeProfileState extends State<DonneeProfile> {
+  String selectedProfile = ''; 
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+ return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
+        backgroundColor: Color(0xFFFFFFFF), // Set background color to white
         body: SingleChildScrollView(
           child: Column(
             children: [
-              // Design avant les cercles
               Container(
                 decoration: BoxDecoration(
                   color: Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.circular(40),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 53, 26, 50.1),
+                  padding: EdgeInsets.fromLTRB(20, 13, 26, 50.1),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,21 +39,46 @@ class DonneeProfile extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Ajoutez vos icônes ici
+                              // Any additional widgets if needed
                             ],
                           ),
                         ),
                       ),
+                      SizedBox(height: 20.h),
+                      Center(
+                        child: Image.asset(
+                          "assets/images/logo_rent_me-removebg-preview 2.png",
+                          width: 50.w,
+                          height: 50.h,
+                        ),
+                      ),
+                      SizedBox(height: 50.h),
                       Container(
                         margin: EdgeInsets.fromLTRB(5.2, 0, 0, 10.6),
-                        child: Text(
-                          'Vos données principales',
-                          style: GoogleFonts.roboto(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 22.3,
-                            height: 1.4,
-                            color: Color(0xFF1C1F1E),
-                          ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Container(
+                                    width: 0.8.sw,
+                                    child: Text(
+                                      'Vos données principales',
+                                      style: TextStyle(
+                                        fontSize: 0.06.sw,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppTheme.secondaryColor,
+                                        fontFamily: 'Roboto',
+                                        height: 1.4,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                       Container(
@@ -141,13 +176,14 @@ class DonneeProfile extends StatelessWidget {
                           width: 208,
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(0, 6, 1.2, 5),
-                            child: Text(
-                              '  Développez votre profile',
-                              style: GoogleFonts.roboto(
-                                
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14.9,
-                                color: Color(0xFF064BA6),
+                            child: Center(
+                              child: Text(
+                                'Développez votre profile',
+                                style: GoogleFonts.roboto(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14.9,
+                                  color: Color(0xFF064BA6),
+                                ),
                               ),
                             ),
                           ),
@@ -158,9 +194,9 @@ class DonneeProfile extends StatelessWidget {
                 ),
               ),
 
-              // Les cercles en dessous du design précédent
+              // Circles below the previous design
               Container(
-                height: 400, // Définissez une hauteur fixe pour le Stack
+                height: 400, // Define a fixed height for the Stack
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -169,125 +205,142 @@ class DonneeProfile extends StatelessWidget {
                       right: 50,
                       left: 50,
                       bottom: 270,
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 93,
-                            height: 93,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFD9D9D9),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Image.asset(
-                                'assets/icons/healthicons_city-worker-outline.png', // Remplacez par le chemin de votre image
-                                width: 50,
-                                height: 50,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedProfile = 'expert';
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 93,
+                              height: 93,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFD9D9D9),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: selectedProfile == 'expert'
+                                      ? Colors.blue
+                                      : Colors.transparent,
+                                  width: 3,
+                                ),
+                              ),
+                              child: Center(
+                                child: Image.asset(
+                                  'assets/icons/healthicons_city-worker-outline.png', // Replace with your image path
+                                  width: 50,
+                                  height: 50,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'expert',
-                            style: GoogleFonts.roboto(
-                              color: Colors.blue,
-                              fontSize: 14.33,
-                              fontWeight: FontWeight.w600,
+                            SizedBox(height: 8),
+                            Text(
+                              'expert',
+                              style: GoogleFonts.roboto(
+                                color: Colors.blue,
+                                fontSize: 14.33,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     Positioned(
                       left: 50,
                       bottom: 190,
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 93,
-                            height: 93,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFD9D9D9),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Image.asset(
-                                'assets/icons/healthicons_construction-worker-outline.png',
-                                width: 50,
-                                height: 50,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedProfile = 'amateur certifié';
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 93,
+                              height: 93,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFD9D9D9),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: selectedProfile == 'amateur certifié'
+                                      ? Colors.blue
+                                      : Colors.transparent,
+                                  width: 3,
+                                ),
+                              ),
+                              child: Center(
+                                child: Image.asset(
+                                  'assets/icons/healthicons_construction-worker-outline.png',
+                                  width: 50,
+                                  height: 50,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'amateur certifié',
-                            style: GoogleFonts.roboto(
-                              color: Colors.blue,
-                              fontSize: 14.33,
-                              fontWeight: FontWeight.w600,
+                            SizedBox(height: 8),
+                            Text(
+                              'amateur certifié',
+                              style: GoogleFonts.roboto(
+                                color: Colors.blue,
+                                fontSize: 14.33,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     Positioned(
                       right: 50,
                       bottom: 190,
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 93,
-                            height: 93,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFD9D9D9),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Image.asset(
-                                'assets/icons/healthicons_factory-worker-outline.png',
-                                width: 50,
-                                height: 50,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedProfile = 'professionel';
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 93,
+                              height: 93,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFD9D9D9),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: selectedProfile == 'professionel'
+                                      ? Colors.blue
+                                      : Colors.transparent,
+                                  width: 3,
+                                ),
+                              ),
+                              child: Center(
+                                child: Image.asset(
+                                  'assets/icons/healthicons_factory-worker-outline.png',
+                                  width: 50,
+                                  height: 50,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'professionel',
-                            style: GoogleFonts.roboto(
-                              color: Colors.blue,
-                              fontSize: 14.33,
-                              fontWeight: FontWeight.w600,
+                            SizedBox(height: 8),
+                            Text(
+                              'professionel',
+                              style: GoogleFonts.roboto(
+                                color: Colors.blue,
+                                fontSize: 14.33,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              // Ajoutez votre bouton ici si nécessaire
-              Container(
-                margin: EdgeInsets.only(top: 20),
-                decoration: BoxDecoration(
-                  color: Color(0xFF0099D5),
-                  borderRadius: BorderRadius.circular(11),
-                ),
-                child: SizedBox(
-                  width: 308,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 6, 1.2, 5),
-                    child: Text(
-                      'Continuer en tant qu’un client',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.9,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              
             ],
           ),
         ),
