@@ -42,75 +42,75 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-    appBar: PreferredSize(
-    preferredSize: Size.fromHeight(150.h),
-    child: ClipRRect(
-    borderRadius: BorderRadius.vertical(
-    bottom: Radius.circular(30.h)
-    ),
-    child: AppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: AppTheme.primaryColor,
-      title: Row(
-        children: [
-          Image.asset(
-              "assets/icons/notification.png",
-              width: 20.w,
-              height: 20.h,
-
-
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(150.h),
+        child: ClipRRect(
+          borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(30.h)
           ),
-          SizedBox(width: 60.w),
-          Text(
-            'Acceuil',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Roboto',
-              fontSize: 18.sp,
+          child: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: AppTheme.primaryColor,
+            title: Row(
+              children: [
+                Image.asset(
+                  "assets/icons/notification.png",
+                  width: 20.w,
+                  height: 20.h,
+
+
+                ),
+                SizedBox(width: 60.w),
+                Text(
+                  'Acceuil',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                    fontSize: 18.sp,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.menu, color: Colors.white),
-          onPressed: () {},
-        ),
-      ],
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(60.0), // Hauteur ajustée pour la barre de recherche
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 20.0), // Moins de padding vertical
-          child: Container(
-            height: 40, // Taille réduite
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Recherche',
-                prefixIcon:
-                 IconButton(
-                icon: Icon(Icons.search, color: Colors.blue),
-    onPressed: () {
-    _showSearchCard(context);  // Ouvre le BottomSheet lors du clic sur l'icône de recherche
-    },
-    ),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: EdgeInsets.symmetric(vertical: 5), // Ajustement de l'espace vertical
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15), // Bordures arrondies plus petites
-                  borderSide: BorderSide.none,
+            actions: [
+              IconButton(
+                icon: Icon(Icons.menu, color: Colors.white),
+                onPressed: () {},
+              ),
+            ],
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(60.0), // Hauteur ajustée pour la barre de recherche
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 60.0, vertical: 20.0), // Moins de padding vertical
+                child: Container(
+                  height: 40, // Taille réduite
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Recherche',
+                      prefixIcon:
+                      IconButton(
+                        icon: Icon(Icons.search, color: Colors.blue),
+                        onPressed: () {
+                          _showSearchCard(context);  // Ouvre le BottomSheet lors du clic sur l'icône de recherche
+                        },
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: EdgeInsets.symmetric(vertical: 5), // Ajustement de l'espace vertical
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15), // Bordures arrondies plus petites
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-    ),
-    ),
-    ),
 
-    body: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -532,18 +532,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(height: 20.h),
-            const RechercheBtn(),
-            SizedBox(height: 16.h),
-           // GestureDetector(
+                const RechercheBtn(),
+                SizedBox(height: 16.h),
+                // GestureDetector(
 
-             // onTap: () {
-               // Navigator.push(
-                 // context,
-                 // MaterialPageRoute(
+                // onTap: () {
+                // Navigator.push(
+                // context,
+                // MaterialPageRoute(
 
-                 // ),
-               // );
-             // },
+                // ),
+                // );
+                // },
               ],
             ),
           ),

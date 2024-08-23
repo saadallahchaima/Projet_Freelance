@@ -36,7 +36,7 @@ class _PhoneInputState extends State<PhoneInput> {
               ),
               Center(
                 child: Image.asset(
-                  "assets/images/img_4.png",
+                  "assets/images/img_10.png",
                   width: 150.w,
                   height: 150.h,
                 ),

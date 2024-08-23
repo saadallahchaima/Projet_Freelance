@@ -34,6 +34,7 @@ class _FormExperienceState extends State<FormExperience> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 20.h),
+
                   Center(
                     child: Image.asset(
                       "assets/images/logo_rent_me-removebg-preview 2.png",
@@ -109,8 +110,6 @@ class _FormExperienceState extends State<FormExperience> {
                     ),
                   ),
                   SizedBox(height: 10.h),
-
-                  // Ajouter les champs de date ici
                   Row(
                     children: [
                       _buildDateField('Day', '23'), // Ensure 'Day' is a key in _dateControllers
