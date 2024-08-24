@@ -81,10 +81,12 @@ class _FormSocieteState extends State<FormSociete> {
           children: <Widget>[
           CustomButton(
           text: 'Communication',
-          color: Colors.white, // Orange color
+          color: Colors.white,
+            // Orange color
           onPressed: () {
           // Action when the button is pressed
           },
+            borderColor:AppTheme.PURPLE,
           ),
         ],
             ),

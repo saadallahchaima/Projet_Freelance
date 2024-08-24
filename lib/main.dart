@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:khedma/screens/ChatMessage.dart';
-import 'package:khedma/screens/Messages.dart';
-import 'package:khedma/screens/Profile.dart';
-import 'package:khedma/screens/SideMenu.dart';
 import 'package:khedma/screens/onboardings/spalshScreen.dart';
 
 import 'package:khedma/theme/AppTheme.dart';
 
-import 'components/CustomStepper.dart';
 
 void main() {
   runApp( MyApp());
@@ -28,7 +23,7 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme, // Set the dark theme
           themeMode: ThemeMode.system, // Use system theme mode
           title: "Freelence",
-          home: ChatMessagePage(),
+          home: SplashPage(),
         );
       },
     );

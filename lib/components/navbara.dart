@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../screens/MainPages/Demandes/AjouterDemande.dart';
 import '../screens/MainPages/HomePage.dart';
 import '../screens/MainPages/RequestsPage.dart';
 import '../theme/AppTheme.dart'; // Make sure this path is correct
@@ -37,7 +38,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         );
         break;
       case 2:
-      // Handle the middle button (like add action)
+        CustomBottomSheet.show(context); // Use the new bottom sheet
         break;
       case 3:
       // Navigate to the chat screen
