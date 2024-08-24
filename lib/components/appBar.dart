@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../screens/MainPages/notification.dart';
 import '../theme/AppTheme.dart';
+import 'CustomSwitchRechereche.dart'; // Assuming this is your custom widget
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget notificationIcon;
@@ -28,7 +29,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             GestureDetector(
               onTap: () {
-                // Action à effectuer lors du clic sur l'icône de notification
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => NotificationScreen()),
@@ -39,13 +39,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Expanded(
               child: Center(
                 child: Text(
-                  title,  // Utilisation du titre passé en paramètre
+                  title,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Roboto',
                     fontSize: 18.sp,
                   ),
+                  overflow: TextOverflow.ellipsis, // This will ensure long titles get truncated
                 ),
               ),
             ),
@@ -60,9 +61,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(60.0),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 120.0, vertical: 20.0),
+            padding: EdgeInsets.symmetric(horizontal: 100.w, vertical: 20.h), // Adjusted padding for responsiveness
             child: Container(
-              height: 40,
+              height: 40.h,
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Recherche',
@@ -74,7 +75,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   filled: true,
                   fillColor: Colors.white,
-                  contentPadding: EdgeInsets.symmetric(vertical: 5),
+                  contentPadding: EdgeInsets.symmetric(vertical: 5.h),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
                     borderSide: BorderSide.none,
@@ -103,59 +104,48 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           child: Container(
             height: MediaQuery.of(context).size.height * 0.75,
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: EdgeInsets.all(40.0),
+            child: ListView(
               children: [
+                Row(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        icon: Icon(Icons.close),
+                        color: AppTheme.secondaryColor, // Change the color to match your theme
+                        onPressed: () {
+                          Navigator.pop(context); // Close the Bottom Sheet
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 90.0), // Add spacing between the IconButton and the Text if needed
+                    Text(
+                      'Recherche',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.secondaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 20.h),
                 Text(
-                  'Recherche Avancée',
+                  'Type de recherche',
                   style: TextStyle(
-                    fontSize: 18.sp,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
+                    color: AppTheme.secondaryColor,
                   ),
                 ),
                 SizedBox(height: 20.h),
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: 'Type de Service',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    prefixIcon: Icon(Icons.work_history_outlined, color: Colors.blue),
-                  ),
-                  items: ['Demande', 'Location'].map((String type) {
-                    return DropdownMenuItem<String>(
-                      value: type,
-                      child: Text(type),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    // Handle type change
-                  },
+                CustomSwitchRecherche(
+                  buttonLabels: ['Profile', 'Location'],
                 ),
                 SizedBox(height: 20.h),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Localisation',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    prefixIcon: Icon(Icons.location_on, color: Colors.blue),
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Nom de l\'expert',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    prefixIcon: Icon(Icons.person, color: Colors.blue),
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                RechercheBtn(),
+                RechercheBtn(), // Assuming this is your custom search button widget
                 SizedBox(height: 16.h),
               ],
             ),

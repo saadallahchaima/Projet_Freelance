@@ -79,15 +79,18 @@ class _FormSocieteState extends State<FormSociete> {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-          CustomButton(
-          text: 'Communication',
-          color: Colors.white,
-            // Orange color
-          onPressed: () {
-          // Action when the button is pressed
-          },
-            borderColor:AppTheme.PURPLE,
-          ),
+            CustomButton(
+              text: 'Communication',
+              color: Color(0xFFFFFFFF),
+              onPressed: () {},
+              borderColor: Color(0xFF064BA6),
+              textColor: Color(0xFF064BA6),
+              textStyle: TextStyle(
+                color:Color(0xFF064BA6),
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
         ],
             ),
 
@@ -105,13 +108,13 @@ class _FormSocieteState extends State<FormSociete> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      _buildCard('K.BIS', 0.27.sw, AppTheme.primaryColor, 'assets/images/img_7.png'),
+                      _buildCard('K.BIS', 0.27.sw, AppTheme.primaryColor, 'assets/icons/img_6.png'),
                       SizedBox(width: 16.h),
 
-                      _buildCard('Label de qualité', 0.27.sw, AppTheme.primaryColor, 'assets/images/img_7.png'),
+                      _buildCard('Label de qualité', 0.27.sw, AppTheme.primaryColor, 'assets/icons/img_6.png'),
                       SizedBox(width: 16.h),
 
-                      _buildCard('Assurance ', 0.27.sw, AppTheme.primaryColor, 'assets/images/img_7.png'),
+                      _buildCard('Assurance ', 0.27.sw, AppTheme.primaryColor, 'assets/icons/img_6.png'),
 
                     ],
                   ),
