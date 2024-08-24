@@ -77,26 +77,17 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   final ScrollController _scrollController = ScrollController();
 
-  void _scrollLeft() {
-    _scrollController.animateTo(
-      _scrollController.position.pixels - 200.w,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _scrollRight() {
-    _scrollController.animateTo(
-      _scrollController.position.pixels + 200.w,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(), // Use the new CustomAppBar
+      appBar: CustomAppBar(
+        notificationIcon: Image.asset(
+          "assets/icons/notification.png",  // Icône personnalisée
+          width: 20.w,
+          height: 20.h,
+        ),
+        title: 'Acceuil',  // Titre personnalisé
+      ), // Use the new CustomAppBar
 
       body: SingleChildScrollView(
         child: Column(
@@ -238,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       width: 200.w,
       height: 250.h,
-      margin: EdgeInsets.symmetric(horizontal: 0.5.w), // Add margin between cards
+      margin: EdgeInsets.symmetric(horizontal: 0.5.w),
       child: Card(
         elevation: 12,
         shape: RoundedRectangleBorder(
@@ -390,16 +381,16 @@ class _HomeScreenState extends State<HomeScreen> {
     Demande demande = demandeList[index];
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.h), // Add margin between items
+      margin: EdgeInsets.symmetric(vertical: 8.h),
       decoration: BoxDecoration(
-        color: Colors.white, // Set background color to white
-        borderRadius: BorderRadius.circular(12.w), // Border radius for the container
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.w),
         boxShadow: [
           BoxShadow(
             color: Color(0xFF0099D6).withOpacity(1),
             spreadRadius: 10,
             blurRadius: 8,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: Offset(0, 3),
           ),
         ],
       ),
@@ -412,10 +403,10 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               // Adjust the size of the image
               ClipRRect(
-                borderRadius: BorderRadius.circular(10.w), // Fixed border radius for the image
+                borderRadius: BorderRadius.circular(10.w),
                 child: Image.asset(
                   demande.imagePath,
-                  width: 137.w, // Adjust the width as needed
+                  width: 137.w,
                   height: 70.h,
                   fit: BoxFit.cover,
                 ),
@@ -446,8 +437,8 @@ class _HomeScreenState extends State<HomeScreen> {
                  children: [   ClipOval(
                       child: Image.asset(
                        metierList[0].imagePath,
-                        width: 20.w, // Diameter of the circle
-                        height: 20.h, // Diameter of the circle
+                        width: 20.w,
+                        height: 20.h,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -475,12 +466,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          SizedBox(height: 12.h), // Add space between the rows
+          SizedBox(height: 12.h),
           Row(
             children: [
               Icon(Icons.location_on_outlined, color: Colors.blue, size: 16.sp),
               SizedBox(width: 4.w),
-              Expanded( // Ensure the text wraps within the container
+              Expanded(
                 child: Text(
                   demande.location,
                   style: TextStyle(
@@ -500,16 +491,16 @@ class _HomeScreenState extends State<HomeScreen> {
     Offre offre = offreList[index];
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8.h), // Add margin between items
+      margin: EdgeInsets.symmetric(vertical: 8.h),
       decoration: BoxDecoration(
         color: Colors.white, // Set background color to white
-        borderRadius: BorderRadius.circular(12.w), // Border radius for the container
+        borderRadius: BorderRadius.circular(12.w),
         boxShadow: [
           BoxShadow(
             color: Color(0xFFF7AA1E).withOpacity(1),
             spreadRadius: 10,
             blurRadius: 8,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: Offset(0, 3),
           ),
         ],
       ),
@@ -522,10 +513,10 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               // Adjust the size of the image
               ClipRRect(
-                borderRadius: BorderRadius.circular(10.w), // Fixed border radius for the image
+                borderRadius: BorderRadius.circular(10.w),
                 child: Image.asset(
                   offre.imagePath,
-                  width: 137.w, // Adjust the width as needed
+                  width: 137.w,
                   height: 70.h,
                   fit: BoxFit.cover,
                 ),
@@ -603,93 +594,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  void _showSearchCard(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,// Pour que le BottomSheet prenne en compte le clavier
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
-      ),
-      builder: (BuildContext context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.75,
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Recherche Avancée',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primaryColor,
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    labelText: 'Type de Service',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    prefixIcon: Icon(Icons.work_history_outlined,color: Colors.blue),
-                  ),
-                  items: ['Demande', 'Location'].map((String type) {
-                    return DropdownMenuItem<String>(
-                      value: type,
-                      child: Text(type),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    // Handle type change
-                  },
-                ),
-                SizedBox(height: 20.h),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Localisation',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    prefixIcon: Icon(Icons.location_on,color: Colors.blue),
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Nom de l\'expert',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    prefixIcon: Icon(Icons.person,color: Colors.blue),
-                  ),
-                ),
-                SizedBox(height: 20.h),
-                const RechercheBtn(),
-                SizedBox(height: 16.h),
-                // GestureDetector(
-
-                // onTap: () {
-                // Navigator.push(
-                // context,
-                // MaterialPageRoute(
-
-                // ),
-                // );
-                // },
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 

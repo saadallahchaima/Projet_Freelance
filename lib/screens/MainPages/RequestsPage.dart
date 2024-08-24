@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../components/CustomSwitch.dart';
+import '../../components/CustomSwitch1.dart';
 import '../../components/ServiceCard.dart';
 import '../../components/navbara.dart';
 import '../../theme/AppTheme.dart';
@@ -88,7 +88,7 @@ class MyRequestsPage extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(top: 20.h),
-            child: CustomSwitch(),
+            child: CustomSwitch(buttonLabels: ["en cours","Terminés"],),
           ),
           Expanded(
             child: Padding(
@@ -131,9 +131,9 @@ class MyRequestsPage extends StatelessWidget {
   Widget _buildButton(String text, Color bgColor, Color textColor, {bool hasIcon = false}) {
     return TextButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(bgColor),
-        side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: Colors.white, width: 1)),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        backgroundColor: WidgetStateProperty.all<Color>(bgColor),
+        side: WidgetStateProperty.all<BorderSide>(const BorderSide(color: Colors.white, width: 1)),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(3),
           ),
