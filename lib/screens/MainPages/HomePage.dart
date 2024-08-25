@@ -81,13 +81,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        notificationIcon: Image.asset(
-          "assets/icons/notification.png",  // Icône personnalisée
-          width: 20.w,
-          height: 20.h,
-        ),
-        title: 'Acceuil',  // Titre personnalisé
-      ), // Use the new CustomAppBar
+        notificationIcon: Icon(Icons.notifications, color: Colors.white),
+        title: 'Recherche',
+        showSearchBar: true,
+        backgroundColor: Color(0xFF0099D6),
+      ),// Use the new CustomAppBar
 
       body: SingleChildScrollView(
         child: Column(

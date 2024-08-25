@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../screens/MainPages/Demandes/AjouterDemande.dart';
 import '../screens/MainPages/HomePage.dart';
 import '../screens/MainPages/RequestsPage.dart';
+import '../screens/Profile.dart';
 import '../theme/AppTheme.dart'; // Make sure this path is correct
 
 class BottomNavBar extends StatefulWidget {
@@ -41,11 +42,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
         CustomBottomSheet.show(context); // Use the new bottom sheet
         break;
       case 3:
-      // Navigate to the chat screen
+
         break;
       case 4:
-      // Navigate to the profile screen
-        break;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>ProfilePage(), // Replace with your actual screen
+          ),
+        );        break;
     }
   }
 

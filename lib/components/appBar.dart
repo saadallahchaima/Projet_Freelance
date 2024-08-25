@@ -7,15 +7,19 @@ import 'CustomSwitchRechereche.dart'; // Assuming this is your custom widget
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget notificationIcon;
   final String title;
+  final bool showSearchBar;
+  final Color backgroundColor;
 
   const CustomAppBar({
     Key? key,
     required this.notificationIcon,
     required this.title,
+    this.showSearchBar = false,
+    this.backgroundColor = Colors.blue, // Default color set to blue
   }) : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(150.h);
+  Size get preferredSize => Size.fromHeight(showSearchBar ? 150.h : 90.h); // Adjust height based on search bar
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       borderRadius: BorderRadius.vertical(bottom: Radius.circular(30.h)),
       child: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppTheme.primaryColor,
+        backgroundColor: backgroundColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -34,7 +38,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   MaterialPageRoute(builder: (context) => NotificationScreen()),
                 );
               },
-              child: notificationIcon,
+              child: Padding(
+                padding: EdgeInsets.only(left: 16.w), // Increase left padding
+                child: Icon(
+                  Icons.notifications, // Change to Icon widget if using a default icon
+                  size: 30.sp, // Increase icon size
+                  color: Colors.white,
+                ),
+              ),
             ),
             Expanded(
               child: Center(
@@ -46,7 +57,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     fontFamily: 'Roboto',
                     fontSize: 18.sp,
                   ),
-                  overflow: TextOverflow.ellipsis, // This will ensure long titles get truncated
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
@@ -58,12 +69,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () {},
           ),
         ],
-        bottom: PreferredSize(
+        bottom: showSearchBar
+            ? PreferredSize(
           preferredSize: Size.fromHeight(60.0),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 100.w, vertical: 20.h), // Adjusted padding for responsiveness
+            padding: EdgeInsets.symmetric(horizontal: 100.w, vertical: 25.h), // Adjust padding for smaller search bar
             child: Container(
               height: 40.h,
+              width: 250.w, // Set a smaller width for the search bar
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Recherche',
@@ -84,7 +97,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-        ),
+        )
+            : null,
       ),
     );
   }
@@ -113,13 +127,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       alignment: Alignment.topLeft,
                       child: IconButton(
                         icon: Icon(Icons.close),
-                        color: AppTheme.secondaryColor, // Change the color to match your theme
+                        color: AppTheme.secondaryColor,
                         onPressed: () {
-                          Navigator.pop(context); // Close the Bottom Sheet
+                          Navigator.pop(context);
                         },
                       ),
                     ),
-                    SizedBox(width: 90.0), // Add spacing between the IconButton and the Text if needed
+                    SizedBox(width: 90.0),
                     Text(
                       'Recherche',
                       style: TextStyle(
@@ -130,7 +144,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                 ),
-
                 SizedBox(height: 20.h),
                 Text(
                   'Type de recherche',

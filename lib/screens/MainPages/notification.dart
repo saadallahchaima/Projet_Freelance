@@ -10,16 +10,13 @@ class NotificationScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor:Color(0xFFC8D9FF), // Set the background color to purple
       appBar: CustomAppBar(
-        notificationIcon: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context); // Close the Bottom Sheet
+        notificationIcon: Icon(Icons.notifications, color: Colors.white),
+    title: 'Notifications',
+    showSearchBar: true,
+    backgroundColor: Color(0xFF0099D6),
+    ),// Use the new CustomAppBar
 
-          },
-        ),
-        title: 'Notifications',  // Titre personnalisé
-      ),
-      body: Container(
+    body: Container(
         padding: EdgeInsets.all(16.w),
         color: Color(0xFFC8D9FF), // Light purple color for the container
         child: ListView(
