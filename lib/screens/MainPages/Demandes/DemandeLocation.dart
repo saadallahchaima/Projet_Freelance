@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../components/CustomSwitchLocation.dart';
 import '../../../components/appBar.dart';
 
-class RentalRequestScreen extends StatelessWidget {
+class DemandelocationtScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
