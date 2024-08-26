@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../components/CustomSwitchLocation.dart';
 import '../../../components/appBar.dart';
@@ -7,7 +6,7 @@ import '../../../components/appBar.dart';
 class RentalRequestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Color(0xFFF7AA1E), // Set the background color to yellow
 
       appBar: CustomAppBar(

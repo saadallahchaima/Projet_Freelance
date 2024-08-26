@@ -52,13 +52,13 @@ class RentalItemCardDisponible extends StatelessWidget {
             // Title and Owner Section
             Row(
               children: [
-                Expanded(
-                  child: Text(
+
+               Text(
                     title,
                     style: GoogleFonts.roboto(
                       fontSize: 14.96.sp,
                       fontWeight: FontWeight.w600,
-                    ),
+
                   ),
                 ),
                 SizedBox(width: 8.w),
@@ -105,8 +105,8 @@ class RentalItemCardDisponible extends StatelessWidget {
               children: [
                 Icon(Icons.location_on_outlined, color: Colors.blue, size: 18.sp),
                 SizedBox(width: 4.w),
-                Expanded(
-                  child: Text(
+
+                Text(
                     location,
                     style: GoogleFonts.roboto(
                       fontSize: 12.sp,
@@ -115,7 +115,7 @@ class RentalItemCardDisponible extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                ),
+
               ],
             ),
             SizedBox(height: 8.h),
