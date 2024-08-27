@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:khedma/screens/MainPages/Demandes/OffreService.dart';
+
+import 'package:khedma/screens/onboardings/spalshScreen.dart';
 
 import 'package:khedma/theme/AppTheme.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme, // Set the dark theme
           themeMode: ThemeMode.system, // Use system theme mode
           title: "Freelence",
-          home: OffreservicetScreen(),
+          home: SplashPage(),
         );
       },
     );

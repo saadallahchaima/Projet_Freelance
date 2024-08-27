@@ -5,6 +5,7 @@ import '../../components/appBar.dart';
 import '../../components/navbara.dart';
 
 import '../../theme/AppTheme.dart';
+import '../SideMenu.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -80,6 +81,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: MyDrawer(),
+
       appBar: CustomAppBar(
         notificationIcon: Icon(Icons.notifications, color: Colors.white),
         title: 'Recherche',

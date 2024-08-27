@@ -24,6 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
+
       borderRadius: BorderRadius.vertical(bottom: Radius.circular(30.h)),
       child: AppBar(
         automaticallyImplyLeading: false,
@@ -66,7 +67,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.menu, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Scaffold.of(context).openEndDrawer();
+            },
           ),
         ],
         bottom: showSearchBar

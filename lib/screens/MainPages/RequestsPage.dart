@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../components/CustomSwitch1.dart';
 import '../../components/ServiceCard.dart';
+import '../../components/appBar.dart';
 import '../../components/navbara.dart';
 import '../../theme/AppTheme.dart';
+import '../SideMenu.dart';
 
 
 class MyRequestsPage extends StatelessWidget {
@@ -13,8 +15,17 @@ class MyRequestsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
+
+      backgroundColor: Color(0xFF0099D6),
+      endDrawer: MyDrawer(),  // L'appel du Drawer personnalisé
+      appBar:  CustomAppBar(
+        notificationIcon: Icon(Icons.location_on_outlined, color: Colors.white),
+        title: 'demandes',
+        showSearchBar: false,
+        backgroundColor: Color(0xFF0099D6),
+      ),// Use
       body: LayoutBuilder(
+
         builder: (context, constraints) {
           bool isPortrait = constraints.maxHeight > constraints.maxWidth;
           return SingleChildScrollView(
@@ -40,41 +51,6 @@ class MyRequestsPage extends StatelessWidget {
   }
 
 
-  PreferredSizeWidget _buildAppBar() {
-    return PreferredSize(
-      preferredSize: Size.fromHeight(60.h),
-      child: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: AppTheme.primaryColor,
-        title: Row(
-          children: [
-            IconButton(
-              icon: Image.asset("assets/images/place.png"),
-              iconSize: 30.sp,
-              onPressed: () {},
-            ),
-            const Spacer(),
-            Text(
-              'My Requests',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Roboto',
-                fontSize: 18.sp,
-              ),
-            ),
-            const Spacer(flex: 2),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildHeader(BuildContext context, bool isPortrait) {
     return Container(

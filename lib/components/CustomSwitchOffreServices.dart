@@ -13,9 +13,8 @@ class CustomSwitchOffreServices extends StatefulWidget {
 }
 
 class _CustomSwitchOffreServicesState extends State<CustomSwitchOffreServices> {
-  List<bool> isSelected = [true, false]; // Initialisation par défaut du premier bouton sélectionné
+  List<bool> isSelected = [true, false];
 
-  // Ajout d'une liste d'exemples d'items pour illustration
   final List<OffreItem> items = [
     OffreItem(
       'Vendredi 30 décembre 2022 de 12:30 à 13:30',

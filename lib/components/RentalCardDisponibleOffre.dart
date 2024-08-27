@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../theme/AppTheme.dart';
+
 class RentalItemCardDisponibleOffre extends StatefulWidget {
   final String imageUrl;
   final String title;
@@ -29,62 +31,175 @@ class RentalItemCardDisponibleOffre extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _RentalItemCardDisponibleOffreState createState() => _RentalItemCardDisponibleOffreState();
+  _RentalItemCardDisponibleOffreState createState() =>
+      _RentalItemCardDisponibleOffreState();
 }
 
-class _RentalItemCardDisponibleOffreState extends State<RentalItemCardDisponibleOffre> {
+class _RentalItemCardDisponibleOffreState
+    extends State<RentalItemCardDisponibleOffre> {
   late bool statut;
+  double price = 2000; // Initial price
 
   @override
   void initState() {
     super.initState();
     statut = widget.statut;
   }
-
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
+      backgroundColor: Colors.white,
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
       ),
       builder: (BuildContext context) {
-        return Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Proposition de prix',
-                style: GoogleFonts.roboto(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
-                ),
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            double localPrice = price; // Local state for price
+
+            return Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      icon: Icon(Icons.close, color: Colors.black),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  Text(
+                    'Proposition de prix',
+                    style: GoogleFonts.roboto(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Text(
+                    'Proposez une offre de prix afin de répondre à cette demande.',
+                    style: GoogleFonts.roboto(
+                      fontSize: 14.sp,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 12.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                localPrice += 100; // Increase the price
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                                side: BorderSide(color: Colors.blue),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+                            ),
+                            child: Text(
+                              '+',
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10.h), // Space between + and -
+                          ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                if (localPrice > 0) {
+                                  localPrice -= 100; // Decrease the price
+                                }
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                                side: BorderSide(color: Colors.blue),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+                            ),
+                            child: Text(
+                              '-',
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 20.w), // Space between buttons and price
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 40.w),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          '$localPrice',
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10.w),
+                      Image.asset("assets/icons/euro.png"),
+                    ],
+                  ),
+                  SizedBox(height: 20.h),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the BottomSheet
+                      setState(() {
+                        statut = true; // Update the status
+                        price = localPrice; // Update the global price state
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor, // Blue color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.r), // Radius
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 50.w),
+                    ),
+                    child: Text(
+                      'Valider',
+                      style: GoogleFonts.roboto(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 12.h),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: 'Entrez votre prix',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(height: 12.h),
-              ElevatedButton(
-                onPressed: () {
-                  // Logique pour mettre à jour le statut de l'offre
-                  Navigator.pop(context); // Ferme la BottomSheet
-                  setState(() {
-                    statut = true; // Met à jour le statut de l'offre
-                  });
-                },
-                child: Text('Valider'),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
   }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +280,7 @@ class _RentalItemCardDisponibleOffreState extends State<RentalItemCardDisponible
 
             // Price Section
             Text(
-              "Budget: ${widget.budget}""£",
+              "Budget: ${widget.budget}£",
               style: GoogleFonts.roboto(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.bold,
@@ -201,22 +316,23 @@ class _RentalItemCardDisponibleOffreState extends State<RentalItemCardDisponible
                   ),
                 ),
                 Row(
-
                   children: [
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFEEA41D),
-                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 8.h, horizontal: 16.w),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                       ),
                       onPressed: widget.onRentPressed,
-                      icon: Icon(Icons.edit, size: 16.sp,color: Colors.white,),
+                      icon: Icon(Icons.edit,
+                          size: 16.sp, color: Colors.white),
                       label: Text(
                         'Modifier',
                         style: GoogleFonts.roboto(
-                          fontSize: 10.sp,
+                          fontSize: 12.sp,
                           color: Colors.white,
                         ),
                       ),
@@ -225,7 +341,8 @@ class _RentalItemCardDisponibleOffreState extends State<RentalItemCardDisponible
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
-                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 8.h, horizontal: 16.w),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.r),
                         ),
@@ -233,11 +350,12 @@ class _RentalItemCardDisponibleOffreState extends State<RentalItemCardDisponible
                       onPressed: () {
                         // Logique pour annuler l'offre
                       },
-                      icon: Icon(Icons.cancel, size: 16.sp,color:Colors.white),
+                      icon: Icon(Icons.cancel,
+                          size: 16.sp, color: Colors.white),
                       label: Text(
                         'Annuler',
                         style: GoogleFonts.roboto(
-                          fontSize: 10.sp,
+                          fontSize: 12.sp,
                           color: Colors.white,
                         ),
                       ),
@@ -251,7 +369,8 @@ class _RentalItemCardDisponibleOffreState extends State<RentalItemCardDisponible
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
-                  padding: EdgeInsets.symmetric(vertical: 4.h),
+                  padding: EdgeInsets.symmetric(
+                      vertical: 10.h, horizontal: 16.w),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.r),
                   ),
@@ -259,10 +378,21 @@ class _RentalItemCardDisponibleOffreState extends State<RentalItemCardDisponible
                 onPressed: () {
                   _showBottomSheet(context);
                 },
-                child: Text(
-                  'Proposer une offre',
-                  style: GoogleFonts.roboto(fontSize: 10.sp, color: Colors.white),
-                  overflow: TextOverflow.ellipsis,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+
+                    Text(
+                      'Proposer une offre',
+                      style: GoogleFonts.roboto(
+                          fontSize: 12.sp, color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(width: 8.w),
+                    Image.asset("assets/icons/offre.png",
+                        height: 16.sp, width: 16.sp),
+
+                  ],
                 ),
               ),
             ),

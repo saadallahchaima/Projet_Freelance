@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../components/appBar.dart';
 import '../../components/navbara.dart';
-import '../../theme/AppTheme.dart'; // Assurez-vous que ce chemin est correct ou ajustez-le si nécessaire.
+import '../../theme/AppTheme.dart';
+import '../SideMenu.dart'; // Assurez-vous que ce chemin est correct ou ajustez-le si nécessaire.
 
 class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: MyDrawer(),  // L'appel du Drawer personnalisé
+
       backgroundColor:Color(0xFFC8D9FF), // Set the background color to purple
       appBar: CustomAppBar(
         notificationIcon: Icon(Icons.notifications, color: Colors.white),
