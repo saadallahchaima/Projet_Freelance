@@ -8,11 +8,17 @@ class ChatMessagePage extends StatefulWidget {
 }
 
 class _ChatMessagePageState extends State<ChatMessagePage> {
+    late GlobalKey<ScaffoldState> _scaffoldKey;
+  late bool isSettingsDrawer;
+
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      endDrawer: MyDrawer(),
+      endDrawer:      MyDrawer(),
+
       appBar: AppBar(
         backgroundColor: Color(0xFF0099D6),
         iconTheme: IconThemeData(

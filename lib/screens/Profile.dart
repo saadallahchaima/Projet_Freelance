@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:khedma/screens/SideMenu.dart';
 
+import '../components/navbara.dart';
+
 class ProfilePage  extends StatefulWidget {
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -840,6 +842,8 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavBar(),
+
     );
   }
   

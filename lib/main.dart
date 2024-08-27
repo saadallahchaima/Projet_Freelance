@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:khedma/screens/SideMenu.dart';
 import 'package:khedma/screens/onboardings/spalshScreen.dart';
 
 import 'package:khedma/theme/AppTheme.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,  // Set the light theme
+          theme: AppTheme.lightTheme, 
           darkTheme: AppTheme.darkTheme, // Set the dark theme
           themeMode: ThemeMode.system, // Use system theme mode
           title: "Freelence",
