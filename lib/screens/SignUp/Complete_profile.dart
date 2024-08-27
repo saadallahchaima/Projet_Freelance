@@ -8,17 +8,20 @@ class CompleteProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+
         child: Container(
           decoration: BoxDecoration(
             color: Color(0xFFFFFFFF),
             borderRadius: BorderRadius.circular(40),
           ),
           child: Padding(
+
             padding: EdgeInsets.fromLTRB(34, 123, 34, 55.1),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+
                 Container(
                   margin: EdgeInsets.only(bottom: 10.6),
                   child: Text(
@@ -237,32 +240,7 @@ class CompleteProfile extends StatelessWidget {
                     _buildCard(0.27.sw, AppTheme.primaryColor, 'assets/icons/image.png'),
                   ],
                 ),
-                SizedBox(height: 25),
-                Container(
-                  margin: EdgeInsets.only(bottom: 30.1),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xFF0099D5),
-                      borderRadius: BorderRadius.circular(14.3),
-                    ),
-                    child: SizedBox(
-                      width: 164.3,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 11.9, 0, 11.9),
-                        child: Center(
-                          child: Text(
-                            'Continuer',
-                            style: GoogleFonts.roboto(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12.7,
-                              color: Color(0xFFF4F6F5),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+
               ],
             ),
           ),
