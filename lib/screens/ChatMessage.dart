@@ -27,15 +27,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: 24,
-              height: 24,
-              child: Image.asset(
-                'assets/icons/Back.png',
-                width: 24,
-                height: 24,
-              ),
-            ),
+
             Text(
               'Mes Messages',
               style: GoogleFonts.getFont(
