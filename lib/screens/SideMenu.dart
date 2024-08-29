@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'MainPages/Demandes/DemandeLocation.dart';
+import 'MainPages/Demandes/MesLocation.dart';
+import 'MainPages/Demandes/MesOffre.dart';
 import 'MainPages/Demandes/OffreService.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -191,12 +193,12 @@ class MyDrawer extends StatelessWidget {
                           label: 'Mes offres',
                           margin: EdgeInsets.fromLTRB(25.2, 0, 43.8, 18),
                           onTap: () {
-                            /*Navigator.push(
+                            Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => DemandeLocationScreen()),
+                              MaterialPageRoute(builder: (context) => OffreScreen()),
                             );
 
-                             */
+
                           },
                         ),
                         DrawerItem(
@@ -204,12 +206,12 @@ class MyDrawer extends StatelessWidget {
                           label: 'Mes offres de location',
                           margin: EdgeInsets.fromLTRB(25.2, 0, 0, 127),
                           onTap: () {
-                            /*Navigator.push(
+                            Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => DemandeLocationScreen()),
+                              MaterialPageRoute(builder: (context) => OffreLocationScreen()),
                             );
 
-                             */
+
                           },
                         ),
                         DrawerItem(
