@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:khedma/screens/Messages.dart';
 
 import '../screens/MainPages/Demandes/AjouterDemande.dart';
 import '../screens/MainPages/HomePage.dart';
@@ -42,7 +43,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
         CustomBottomSheet.show(context); // Use the new bottom sheet
         break;
       case 3:
-
+       Navigator.push(
+ context,
+          MaterialPageRoute(
+            builder: (context) =>MessagePage(), // Replace with your actual screen
+          ),
+       );
         break;
       case 4:
         Navigator.push(
