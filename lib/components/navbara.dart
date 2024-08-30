@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:khedma/screens/Messages.dart';
 
 import '../screens/ChatMessage.dart';
 import '../screens/MainPages/Demandes/AjouterDemande.dart';
 import '../screens/MainPages/HomePage.dart';
 import '../screens/MainPages/RequestsPage.dart';
 import '../screens/Profile.dart';
-import '../theme/AppTheme.dart'; // Make sure this path is correct
+import '../theme/AppTheme.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override
@@ -22,13 +21,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
       _selectedIndex = index;
     });
 
-    // Navigate to the desired screen based on the index
     switch (index) {
       case 0:
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(), // Replace with your actual screen
+            builder: (context) => HomeScreen(),
           ),
         );
         break;
@@ -36,18 +34,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MyRequestsPage(), // Replace with your actual screen
+            builder: (context) => MyRequestsPage(),
           ),
         );
         break;
       case 2:
-        CustomBottomSheet.show(context); // Use the new bottom sheet
+        CustomBottomSheet.show(context);
         break;
       case 3:
        Navigator.push(
  context,
           MaterialPageRoute(
-            builder: (context) =>MessagePage(), // Replace with your actual screen
+            builder: (context) =>ChatMessagePage(),
           ),
        );
         break;
@@ -55,7 +53,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>ProfilePage(), // Replace with your actual screen
+            builder: (context) =>ProfilePage(),
           ),
         );        break;
     }

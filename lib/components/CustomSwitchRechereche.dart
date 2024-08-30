@@ -52,7 +52,7 @@ class _CustomSwitchRechercheState extends State<CustomSwitchRecherche> {
               selectedColor: Colors.white,
               color: Colors.grey,
               constraints: BoxConstraints(
-                minWidth: 150.0.w,
+                minWidth: 120.0.w,
                 minHeight: 44.0.h,
               ),
               children: <Widget>[
