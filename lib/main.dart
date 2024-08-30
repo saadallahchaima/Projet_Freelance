@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme,
           themeMode: ThemeMode.system, 
           title: "Freelence",
-          home: ChatMessagePage(),
+          home: SplashPage(),
         );
       },
     );

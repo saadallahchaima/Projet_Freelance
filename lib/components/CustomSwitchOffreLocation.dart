@@ -1,48 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'CardOffre.dart';
-import 'CardOffreEnCours.dart';
+import 'CardOffreLocation.dart';
 
-class CustomSwitchOffre extends StatefulWidget {
+class CustomSwitchLocationOffre extends StatefulWidget {
   final List<String> buttonLabels;
 
-  const CustomSwitchOffre({Key? key, required this.buttonLabels}) : super(key: key);
+  const CustomSwitchLocationOffre({Key? key, required this.buttonLabels}) : super(key: key);
 
   @override
-  State<CustomSwitchOffre> createState() => _CustomSwitchOffreState();
+  State<CustomSwitchLocationOffre> createState() => _CustomSwitchOffreState();
 }
 
-class _CustomSwitchOffreState extends State<CustomSwitchOffre> {
+class _CustomSwitchOffreState extends State<CustomSwitchLocationOffre> {
   List<bool> isSelected = [true, false];
-  final List<OffreItem> items = [
-    OffreItem(
+  final List<OffreLocationItem> items = [
+    OffreLocationItem(
       imageUrl: 'https://example.com/image1.png',
       title: 'Ménage à domicile',
       dateDebut: DateTime.now(),
       dateFin: DateTime.now(),
-      Budget: '30€-40€',
       location: '4 Rue de l\'Abbé Groult, 75015 Paris',
       ownerName: 'Jessica Virgolini',
+      description: 'Une table de mixage et des jeux de lumière.',
+
       paiement: '35€',
     ),
-    OffreItem(
+    OffreLocationItem(
       imageUrl: 'https://example.com/image1.png',
       title: 'Ménage à domicile',
       dateDebut: DateTime.now(),
       dateFin: DateTime.now(),
-      Budget: '30€-40€',
       location: '4 Rue de l\'Abbé Groult, 75015 Paris',
       ownerName: 'Jessica Virgolini',
+      description: 'Une table de mixage et des jeux de lumière.',
+
       paiement: '35€',
     ),
-    OffreItem(
+    OffreLocationItem(
       imageUrl: 'https://example.com/image1.png',
       title: 'Ménage à domicile',
       dateDebut: DateTime.now(),
       dateFin: DateTime.now(),
-      Budget: '30€-40€',
       location: '4 Rue de l\'Abbé Groult, 75015 Paris',
       ownerName: 'Jessica Virgolini',
+      description: 'Une table de mixage et des jeux de lumière.',
+
       paiement: '35€',
     ),
   ];
@@ -67,7 +70,7 @@ class _CustomSwitchOffreState extends State<CustomSwitchOffre> {
             borderRadius: BorderRadius.circular(9.0),
             borderColor: Colors.transparent,
             selectedBorderColor: Colors.transparent,
-            fillColor: const Color(0xFF2DC4FF),
+            fillColor: const Color(0xFFF7AA1E),
             selectedColor: Color(0xFFE7E6E6),
             color: Colors.white,
             constraints: BoxConstraints(
@@ -133,8 +136,8 @@ class _CustomSwitchOffreState extends State<CustomSwitchOffre> {
           dateFin: items[index].dateFin,
           location: items[index].location,
           ownerName: items[index].ownerName,
-          Budget: items[index].Budget,
           paiement: items[index].paiement,
+          Budget: items[index].paiement,
 
           onContactPressed: () {},
           onRentPressed: () {},
@@ -147,15 +150,15 @@ class _CustomSwitchOffreState extends State<CustomSwitchOffre> {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
-        return CardOffreEnCours(
+        return CardOffreLocationEnCours(
           imageUrl: items[index].imageUrl,
           title: items[index].title,
           dateDebut: items[index].dateDebut,
           dateFin: items[index].dateFin,
           location: items[index].location,
           ownerName: items[index].ownerName,
-          Budget: items[index].Budget,
-          paiement: items[index].paiement,
+          prix: items[index].paiement,
+          description: items[index].description,
           onContactPressed: () {},
           onRentPressed: () {},
         );
@@ -164,17 +167,18 @@ class _CustomSwitchOffreState extends State<CustomSwitchOffre> {
   }
 }
 
-class OffreItem {
+class OffreLocationItem {
   final String imageUrl;
   final String title;
   final DateTime dateDebut;
   final DateTime dateFin;
   final String paiement;
-  final String Budget;
   final String location;
+  final String description;
+
   final String ownerName;
 
-  OffreItem({
+  OffreLocationItem({
     required this.imageUrl,
     required this.title,
     required this.dateDebut,
@@ -182,6 +186,7 @@ class OffreItem {
     required this.location,
     required this.ownerName,
     required this.paiement,
-    required this.Budget,
+    required this.description,
+
   });
 }
