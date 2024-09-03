@@ -5,6 +5,7 @@ import 'MainPages/Demandes/DemandeLocation.dart';
 import 'MainPages/Demandes/MesLocation.dart';
 import 'MainPages/Demandes/MesOffre.dart';
 import 'MainPages/Demandes/OffreService.dart';
+import 'Messages.dart';
 
 class MyDrawer extends StatelessWidget {
     final VoidCallback toggleDrawer;
@@ -161,13 +162,13 @@ class MyDrawer extends StatelessWidget {
                         ),
                         // Drawer items
                         DrawerItem(
-                          iconPath: 'assets/drawericons/Icon(1).png',
-                          label: 'Localisation',
+                          iconPath: 'assets/icons/img_12.png',
+                          label: 'Mes Messages',
                           margin: EdgeInsets.fromLTRB(25.2, 0, 68.2, 20.3),
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => DemandelocationtScreen()),
+                              MaterialPageRoute(builder: (context) => MessagePage()),
                             );
                           },
                         ),

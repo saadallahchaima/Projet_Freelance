@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../components/appBar.dart';
-import '../../components/navbara.dart';
-
 import '../../theme/AppTheme.dart';
 import '../SideMenu.dart';
 
@@ -23,8 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Metier('assets/images/img_11.png', 'Menage', 4.9, 'Paris', 'Professionnel', 'Mark Marker', false),
 
   ];
-
-// List of Demande objects
   final List<Demande> demandeList = [
     Demande(
       'assets/images/img_6.png',
@@ -274,15 +270,14 @@ appBar: AppBar(
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBar(),
-    );
+     );
   }
 
 
   Widget _buildListItem(BuildContext context, int index) {
     Metier metier = metierList[index];
 
-    Color borderColor = metier.verified ? Colors.green : Colors.orange;
+    Color borderColor = metier.verified ? Colors.orange : Colors.green;
 
     return Container(
       width: 200.w,
@@ -320,42 +315,61 @@ appBar: AppBar(
               ),
               Positioned(
                 top: 8.h,
-                right: 8.w,
-                child: Container(
-                  width: 30.sp,
-                  height: 30.sp,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.favorite_border_outlined,
-                      color: Colors.red,
-                      size: 17.83.sp,
+                left: 20.w,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      metier.verified = !metier.verified;
+                    });
+                  },
+                  child: Container(
+                    width: 30.sp,
+                    height: 30.sp,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: metier.verified ? Colors.orange : Colors.green,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        metier.verified ? Icons.verified : Icons.check_circle_outline_outlined,
+                        color: Colors.white,
+                        size: 17.83.sp,
+                      ),
                     ),
                   ),
                 ),
               ),
               Positioned(
                 top: 8.h,
-                left: 8.w,
-                child: Container(
-                  width: 30.sp,
-                  height: 30.sp,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.orange,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.check_circle_outline_outlined,
-                      color: Colors.white,
-                      size: 17.83.sp,
+                right: 8.w,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      metier.isDisliked = !metier.isDisliked;
+                    });
+                  },
+                  child: Container(
+                    width: 30.sp,
+                    height: 30.sp,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: metier.isDisliked ? Colors.white : Colors.white, // La couleur de fond est la même pour les deux états
+                      border: Border.all(
+                        color: Colors.red, // Couleur de la bordure
+                        width: 2.0, // Épaisseur de la bordure
+                      ),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        metier.isDisliked ? Icons.favorite_border_outlined : Icons.favorite,
+                        color: metier.isDisliked ? Colors.red : Colors.red, // Changer la couleur de l'icône en fonction de l'état
+                        size: 17.83.sp,
+                      ),
                     ),
                   ),
                 ),
               ),
+
               Positioned(
                 bottom: 8.h,
                 left: 8.w,
@@ -435,6 +449,7 @@ appBar: AppBar(
       ),
     );
   }
+
   Widget _buildListItem2(BuildContext context, int index) {
     Demande demande = demandeList[index];
 
@@ -490,27 +505,26 @@ appBar: AppBar(
                       ),
                     ),
                     SizedBox(height: 4.h),
-
                     Row(
-                 children: [   ClipOval(
-                      child: Image.asset(
-                       metierList[0].imagePath,
-                        width: 20.w,
-                        height: 20.h,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-
-                    Text(
-                      demande.metier.professionalName,
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: Colors.grey,
-                      ),
-                    ),
+                      children: [
+                        ClipOval(
+                          child: Image.asset(
+                            demande.metier.imagePath,
+                            width: 20.w,
+                            height: 20.h,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          demande.metier.professionalName,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ],
                     ),
-
                     SizedBox(height: 8.h),
                     Text(
                       "Budget: ${demande.priceRange}",
@@ -600,17 +614,17 @@ appBar: AppBar(
                       ),
                     ),
                     SizedBox(height: 4.h),
-
                     Row(
-                      children: [   ClipOval(
-                        child: Image.asset(
-                          metierList[0].imagePath,
-                          width: 20.w, // Diameter of the circle
-                          height: 20.h, // Diameter of the circle
-                          fit: BoxFit.cover,
+                      children: [
+                        ClipOval(
+                          child: Image.asset(
+                            offre.metier.imagePath,
+                            width: 20.w,
+                            height: 20.h,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-
+                        SizedBox(width: 4.w),
                         Text(
                           offre.metier.professionalName,
                           style: TextStyle(
@@ -620,10 +634,9 @@ appBar: AppBar(
                         ),
                       ],
                     ),
-
                     SizedBox(height: 8.h),
                     Text(
-                      "Budget: ${offre.prix}",
+                      "Prix: ${offre.prix}",
                       style: TextStyle(
                         fontSize: 10.43.sp,
                         color: Color(0xFF525252),
@@ -634,12 +647,12 @@ appBar: AppBar(
               ),
             ],
           ),
-          SizedBox(height: 12.h), // Add space between the rows
+          SizedBox(height: 12.h),
           Row(
             children: [
               Icon(Icons.location_on_outlined, color: Colors.blue, size: 16.sp),
               SizedBox(width: 4.w),
-              Expanded( // Ensure the text wraps within the container
+              Expanded(
                 child: Text(
                   offre.location,
                   style: TextStyle(
@@ -657,8 +670,6 @@ appBar: AppBar(
 
 
 }
-
-// Classe Metier
 class Metier {
   final String imagePath;
   final String name;
@@ -666,12 +677,12 @@ class Metier {
   final String location;
   final String expertise;
   final String professionalName;
-  final bool verified;
+  bool verified;
+  bool isDisliked;
 
-  Metier(this.imagePath, this.name, this.rating, this.location, this.expertise, this.professionalName, this.verified);
+  Metier(this.imagePath, this.name, this.rating, this.location, this.expertise, this.professionalName, this.verified, {this.isDisliked = false});
 }
 
-// Classe Demande
 class Demande {
   final String imagePath;
   final String serviceName;
@@ -679,9 +690,12 @@ class Demande {
   final String priceRange;
   final String date;
   final Metier metier;
+  bool isDisliked;
+  bool verified;
 
-  Demande(this.imagePath, this.serviceName, this.location, this.priceRange, this.date, this.metier);
+  Demande(this.imagePath, this.serviceName, this.location, this.priceRange, this.date, this.metier, {this.isDisliked = false,this.verified = false});
 }
+
 class Offre {
   final String imagePath;
   final String offreName;
@@ -689,7 +703,7 @@ class Offre {
   final String prix;
   final String desc;
   final Metier metier;
+  bool isDisliked;
 
-  Offre(this.imagePath, this.offreName, this.location, this.prix, this.desc, this.metier);
+  Offre(this.imagePath, this.offreName, this.location, this.prix, this.desc, this.metier, {this.isDisliked = false});
 }
-
