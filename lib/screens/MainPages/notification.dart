@@ -1,23 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../components/appBar.dart';
 import '../../components/navbara.dart';
 import '../../theme/AppTheme.dart';
 import '../SideMenu.dart'; // Assurez-vous que ce chemin est correct ou ajustez-le si nécessaire.
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
+   @override
+  _NotificationScreenState createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+ 
+   bool _isSettingsDrawer = false;
+
+  void _toggleDrawer(BuildContext context) {
+    setState(() {
+      _isSettingsDrawer = !_isSettingsDrawer;
+    });
+    Navigator.of(context).pop(); // Close the current drawer
+    Scaffold.of(context).openEndDrawer(); // Open the new drawer
+  }
+
+ 
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: MyDrawer(),  // L'appel du Drawer personnalisé
+            backgroundColor:Color(0xFFC8D9FF), // Set the background color to purple
 
-      backgroundColor:Color(0xFFC8D9FF), // Set the background color to purple
-      appBar: CustomAppBar(
-        notificationIcon: Icon(Icons.notifications, color: Colors.white),
-    title: 'Notifications',
-    showSearchBar: true,
+endDrawer: _isSettingsDrawer
+          ? Builder(
+              builder: (context) =>
+                  SettingsDrawer(toggleDrawer: () => _toggleDrawer(context)),
+            )
+          : Builder(
+              builder: (context) =>
+                  MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
+            ),
+
+  appBar: AppBar(
     backgroundColor: Color(0xFF0099D6),
-    ),// Use the new CustomAppBar
+
+
+  iconTheme: IconThemeData(
+    color: Colors.white,
+  ),
+  title: Stack(
+    children: [
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Icon(Icons.notifications, color: Colors.white),
+      ),
+      Center(
+        child: Text(
+          'Notifications',
+          style: GoogleFonts.getFont(
+            'Roboto',
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    ],
+  ),
+  elevation: 0,
+        // Move the drawer icon to the right
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          ),
+        ],
+        automaticallyImplyLeading: false, // Remove the default leading icon
+      ),
+      
 
     body: Container(
         padding: EdgeInsets.all(16.w),

@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.notificationIcon,
     required this.title,
     this.showSearchBar = false,
-    this.backgroundColor = Colors.blue, // Default color set to blue
+    this.backgroundColor = Colors.blue,  // Default color set to blue
   }) : super(key: key);
 
   @override

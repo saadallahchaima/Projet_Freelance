@@ -104,7 +104,6 @@ void _showAssignDialog() {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0XFFEFF6F9),
-      endDrawer: MyDrawer(),
       appBar: AppBar(
         backgroundColor: Color(0xFF0099D6),
         iconTheme: IconThemeData(

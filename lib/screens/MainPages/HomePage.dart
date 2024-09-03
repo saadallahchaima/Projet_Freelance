@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../components/appBar.dart';
 import '../../components/navbara.dart';
 
@@ -77,18 +78,74 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   ];
   final ScrollController _scrollController = ScrollController();
+  bool _isSettingsDrawer = false;
 
+  void _toggleDrawer(BuildContext context) {
+    setState(() {
+      _isSettingsDrawer = !_isSettingsDrawer;
+    });
+    Navigator.of(context).pop(); // Close the current drawer
+    Scaffold.of(context).openEndDrawer(); // Open the new drawer
+  }
+
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: MyDrawer(),
-
-      appBar: CustomAppBar(
-        notificationIcon: Icon(Icons.notifications, color: Colors.white),
-        title: 'Recherche',
-        showSearchBar: true,
+      endDrawer: _isSettingsDrawer
+          ? Builder(
+              builder: (context) =>
+                  SettingsDrawer(toggleDrawer: () => _toggleDrawer(context)),
+            )
+          : Builder(
+              builder: (context) =>
+                  MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
+            ),
+appBar: AppBar(
         backgroundColor: Color(0xFF0099D6),
-      ),// Use the new CustomAppBar
+  iconTheme: IconThemeData(
+    color: Colors.white,
+  ),
+  title: Stack(
+    children: [
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Icon(Icons.notifications, color: Colors.white),
+      ),
+      Center(
+        child: Text(
+          'Recherche',
+          style: GoogleFonts.getFont(
+            'Roboto',
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    ],
+  ),
+  elevation: 0,
+        // Move the drawer icon to the right
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          ),
+        ],
+        automaticallyImplyLeading: false, // Remove the default leading icon
+      ),
+
+      // appBar: CustomAppBar(
+      //   notificationIcon: Icon(Icons.notifications, color: Colors.white),
+      //   title: 'Recherche',
+      //   showSearchBar: true,
+      //   backgroundColor: Color(0xFF0099D6),  
+      // ),// Use the new CustomAppBar
 
       body: SingleChildScrollView(
         child: Column(

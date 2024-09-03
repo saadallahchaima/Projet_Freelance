@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../components/CustomSwitch1.dart';
 import '../../components/ServiceCard.dart';
@@ -10,20 +11,82 @@ import '../../theme/AppTheme.dart';
 import '../SideMenu.dart';
 
 
-class MyRequestsPage extends StatelessWidget {
+class MyRequestsPage extends StatefulWidget {
+   @override
+  _MyRequestsPageState createState() => _MyRequestsPageState();
+}
+
+class _MyRequestsPageState extends State<MyRequestsPage> {
+  bool _isSettingsDrawer = false;
+
+  void _toggleDrawer(BuildContext context) {
+    setState(() {
+      _isSettingsDrawer = !_isSettingsDrawer;
+    });
+    Navigator.of(context).pop(); // Close the current drawer
+    Scaffold.of(context).openEndDrawer(); // Open the new drawer
+  }
+
+ 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
 
       backgroundColor: Color(0xFF0099D6),
-      endDrawer: MyDrawer(),  // L'appel du Drawer personnalisé
-      appBar:  CustomAppBar(
-        notificationIcon: Icon(Icons.location_on_outlined, color: Colors.white),
-        title: 'demandes',
-        showSearchBar: false,
+ endDrawer: _isSettingsDrawer
+          ? Builder(
+              builder: (context) =>
+                  SettingsDrawer(toggleDrawer: () => _toggleDrawer(context)),
+            )
+          : Builder(
+              builder: (context) =>
+                  MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
+            ),
+      appBar: AppBar(
         backgroundColor: Color(0xFF0099D6),
-      ),// Use
+  iconTheme: IconThemeData(
+    color: Colors.white,
+  ),
+  title: Stack(
+    children: [
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Icon(Icons.notifications, color: Colors.white),
+      ),
+      Center(
+        child: Text(
+          'demandes',
+          style: GoogleFonts.getFont(
+            'Roboto',
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    ],
+  ),
+  elevation: 0,
+        // Move the drawer icon to the right
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          ),
+        ],
+        automaticallyImplyLeading: false, // Remove the default leading icon
+      ),  
+      // appBar:  CustomAppBar(
+      //   notificationIcon: Icon(Icons.location_on_outlined, color: Colors.white),
+      //   title: 'demandes',
+      //   showSearchBar: false,
+      //   backgroundColor: Color(0xFF0099D6),
+      // ),// Use
       body: LayoutBuilder(
 
         builder: (context, constraints) {

@@ -33,23 +33,36 @@ class _ProfilePageState extends State<ProfilePage> {
       controller.text = currentValue.toString();
     });
   }
+  bool _isSettingsDrawer = false;
 
+  void _toggleDrawer(BuildContext context) {
+    setState(() {
+      _isSettingsDrawer = !_isSettingsDrawer;
+    });
+    Navigator.of(context).pop(); // Close the current drawer
+    Scaffold.of(context).openEndDrawer(); // Open the new drawer
+  }
 
- 
- 
-  
-        @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      endDrawer: MyDrawer(), // Add the endDrawer here
+      endDrawer: _isSettingsDrawer
+          ? Builder(
+              builder: (context) =>
+                  SettingsDrawer(toggleDrawer: () => _toggleDrawer(context)),
+            )
+          : Builder(
+              builder: (context) =>
+                  MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
+            ),
       appBar: AppBar(
         backgroundColor: Color(0xFF0099D6),
-         iconTheme: IconThemeData(
-          color: Colors.white, // Set the color of the icons (including the menu icon)
+        iconTheme: IconThemeData(
+          color: Colors.white, 
         ),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center, 
           children: [
             Container(
               width: 24,
@@ -60,6 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 24,
               ),
             ),
+            SizedBox(width: 8),
             Text(
               'Mon Profile',
               style: GoogleFonts.getFont(
@@ -69,10 +83,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: Colors.white,
               ),
             ),
-            SizedBox(width: 24), // Placeholder to balance space
           ],
         ),
         elevation: 0,
+        // Move the drawer icon to the right
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          ),
+        ],
+        automaticallyImplyLeading: false, // Remove the default leading icon
       ),
       body: SingleChildScrollView(
         child: Column(
