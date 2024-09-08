@@ -64,12 +64,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.menu, color: Colors.white),
-            onPressed: () {
-              Scaffold.of(context).openEndDrawer();
-            },
+               actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(Icons.menu,color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
           ),
         ],
         bottom: showSearchBar

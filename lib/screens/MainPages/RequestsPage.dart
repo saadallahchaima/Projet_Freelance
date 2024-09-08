@@ -43,50 +43,13 @@ class _MyRequestsPageState extends State<MyRequestsPage> {
               builder: (context) =>
                   MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
             ),
-      appBar: AppBar(
+
+      appBar:  CustomAppBar(
+        notificationIcon: Icon(Icons.location_on_outlined, color: Colors.white),
+        title: 'demandes',
+        showSearchBar: false,
         backgroundColor: Color(0xFF0099D6),
-  iconTheme: IconThemeData(
-    color: Colors.white,
-  ),
-  title: Stack(
-    children: [
-      Align(
-        alignment: Alignment.centerLeft,
-        child: Icon(Icons.notifications, color: Colors.white),
-      ),
-      Center(
-        child: Text(
-          'demandes',
-          style: GoogleFonts.getFont(
-            'Roboto',
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    ],
-  ),
-  elevation: 0,
-        // Move the drawer icon to the right
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-            ),
-          ),
-        ],
-        automaticallyImplyLeading: false, // Remove the default leading icon
-      ),  
-      // appBar:  CustomAppBar(
-      //   notificationIcon: Icon(Icons.location_on_outlined, color: Colors.white),
-      //   title: 'demandes',
-      //   showSearchBar: false,
-      //   backgroundColor: Color(0xFF0099D6),
-      // ),// Use
+      ),// Use
       body: LayoutBuilder(
 
         builder: (context, constraints) {

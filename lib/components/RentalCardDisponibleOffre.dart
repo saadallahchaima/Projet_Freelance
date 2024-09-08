@@ -39,6 +39,7 @@ class _RentalItemCardDisponibleOffreState
     extends State<RentalItemCardDisponibleOffre> {
   late bool statut;
   double price = 2000; // Initial price
+bool _showProposeButton = false;
 
   @override
   void initState() {
@@ -199,7 +200,14 @@ class _RentalItemCardDisponibleOffreState
 
 
 
+  bool _showOfferText = true;
 
+  void _handleCancelPressed() {
+    setState(() {
+      _showProposeButton = true;
+    });
+    // Logique pour annuler l'offre
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -305,65 +313,85 @@ class _RentalItemCardDisponibleOffreState
             SizedBox(height: 8.h),
 
             statut
-                ? Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Offre en attente',
-                  style: GoogleFonts.roboto(
-                    fontSize: 12.sp,
-                    color: Colors.green,
+                ?Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        if (_showOfferText) // Conditionally show or hide the text
+          Text(
+            'Offre en attente',
+            style: GoogleFonts.roboto(
+              fontSize: 12.sp,
+              color: Colors.green,
+            ),
+          ),
+        Row(
+          children: [
+            if (!_showProposeButton) ...[
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFEEA41D),
+                  padding: EdgeInsets.symmetric(
+                      vertical: 8.h, horizontal: 16.w),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
                   ),
                 ),
-                Row(
-                  children: [
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFEEA41D),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 8.h, horizontal: 16.w),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                      ),
-                      onPressed: widget.onRentPressed,
-                      icon: Icon(Icons.edit,
-                          size: 16.sp, color: Colors.white),
-                      label: Text(
-                        'Modifier',
-                        style: GoogleFonts.roboto(
-                          fontSize: 12.sp,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10.w),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        padding: EdgeInsets.symmetric(
-                            vertical: 8.h, horizontal: 16.w),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                      ),
-                      onPressed: () {
-                        // Logique pour annuler l'offre
-                      },
-                      icon: Icon(Icons.cancel,
-                          size: 16.sp, color: Colors.white),
-                      label: Text(
-                        'Annuler',
-                        style: GoogleFonts.roboto(
-                          fontSize: 12.sp,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
+                onPressed: widget.onRentPressed,
+                icon: Icon(Icons.edit,
+                    size: 16.sp, color: Colors.white),
+                label: Text(
+                  'Modifier',
+                  style: GoogleFonts.roboto(
+                    fontSize: 12.sp,
+                    color: Colors.white,
+                  ),
                 ),
-              ],
-            )
+              ),
+              SizedBox(width: 10.w),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: EdgeInsets.symmetric(
+                      vertical: 8.h, horizontal: 16.w),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                ),
+                onPressed: _handleCancelPressed,
+                icon: Icon(Icons.cancel,
+                    size: 16.sp, color: Colors.white),
+                label: Text(
+                  'Annuler',
+                  style: GoogleFonts.roboto(
+                    fontSize: 12.sp,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ] else ...[
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: EdgeInsets.symmetric(
+                      vertical: 8.h, horizontal: 16.w),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                ),
+                onPressed: () => _showBottomSheet(context),
+                child: Text(
+                  'Proposer une offre',
+                  style: GoogleFonts.roboto(
+                    fontSize: 12.sp,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ],
+    )
                 : Align(
               alignment: Alignment.centerRight,
               child: ElevatedButton(

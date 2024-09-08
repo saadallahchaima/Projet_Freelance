@@ -558,4 +558,3 @@ class _CustomSwitchRechercheState extends State<CustomSwitchRecherche> {
   }
 
 }
-

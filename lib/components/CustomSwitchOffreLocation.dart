@@ -121,7 +121,7 @@ class _CustomSwitchOffreState extends State<CustomSwitchLocationOffre> {
 
   Widget _buildContent() {
     return isSelected[0]
-        ? _buildDomainSection()
+        ? _buildDomainSection() 
         : _buildHistoriqueSection();
   }
 

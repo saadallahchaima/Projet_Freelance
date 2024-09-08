@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:khedma/components/appBar.dart';
 import '../../../components/CustomSwitchLocation.dart';
-import '../../../components/appBar.dart';
+
 import '../../../components/navbara.dart';
 import '../../SideMenu.dart';
 
@@ -35,43 +35,11 @@ class _DemandelocationtScreenState extends State<DemandelocationtScreen> {
               builder: (context) =>
                   MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
             ),
-appBar: AppBar(
-  backgroundColor: Color(0xFFF7AA1E),
-  iconTheme: IconThemeData(
-    color: Colors.white,
-  ),
-  title: Stack(
-    children: [
-      Align(
-        alignment: Alignment.centerLeft,
-        child: Icon(Icons.notifications, color: Colors.white),
-      ),
-      Center(
-        child: Text(
-          'Demande Location',
-          style: GoogleFonts.getFont(
-            'Roboto',
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    ],
-  ),
-  elevation: 0,
-        // Move the drawer icon to the right
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-            ),
-          ),
-        ],
-        automaticallyImplyLeading: false, // Remove the default leading icon
+ appBar: CustomAppBar(
+        notificationIcon: Icon(Icons.notifications, color: Colors.white),
+        title: 'Demande Location',
+        showSearchBar: false,
+        backgroundColor: Color(0xFFF7AA1E),
       ),
       // appBar: CustomAppBar(
       //   notificationIcon: Icon(Icons.notifications, color: Colors.white),

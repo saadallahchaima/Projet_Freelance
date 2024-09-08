@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:khedma/theme/AppTheme.dart';
 
 class CardOffre extends StatelessWidget {
   final String imageUrl;
@@ -151,55 +152,31 @@ class CardOffre extends StatelessWidget {
             ),
           ),
         ),
-        sousCard(),
+          Center(
+          child: ElevatedButton(
+            onPressed: () {
+              // Define what happens when the button is pressed
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFFECF4FF), // Blue color
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8), // Radius
+              ),
+              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 30.w),
+            ),
+            child: Text(
+              'Terminer',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.primaryColor,
+              ),
+            ),
+          ),
+        ),
+       // sousCard(),
       ],
     );
   }
 
-  Widget sousCard() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      // Ajout du padding des côtés
-      width: 350.w,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.65.r),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(8.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Offre términée",
-              style: GoogleFonts.roboto(
-                fontSize: 14.19.sp,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF585858),
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              'Accéptée : le 29 décembre 2022 à 20:34.',
-              style: GoogleFonts.roboto(
-                fontSize: 12.42.sp,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF585858),
-
-              ),
-            ),
-            Text(
-              'Términée : le 30 décembre 2022 à 14:45.',
-              style: GoogleFonts.roboto(
-                fontSize: 12.42.sp,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF585858),
-
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

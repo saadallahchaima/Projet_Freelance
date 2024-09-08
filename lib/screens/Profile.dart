@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:khedma/screens/MainPages/notification.dart';
 import 'package:khedma/screens/SideMenu.dart';
 
 import '../components/navbara.dart';
@@ -10,29 +13,59 @@ class ProfilePage  extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  TextEditingController _controller = TextEditingController(text: '20');
+ TextEditingController _controller = TextEditingController(text: '20');
   TextEditingController _resultController = TextEditingController(text: '20');
   TextEditingController _cardNumberController = TextEditingController();
   TextEditingController _monthController = TextEditingController(text: '11');
   TextEditingController _yearController = TextEditingController(text: '2000');
- 
-  void _incrementValue(TextEditingController controller) {
-    setState(() {
-      int currentValue = int.tryParse(controller.text) ?? 0;
-      currentValue += 1;
-      controller.text = currentValue.toString();
-    });
-  }
+ late StateSetter setModalState;
+// Method to increment the value
+void _incrementValue(TextEditingController controller, StateSetter setModalState) {
+  setModalState(() {
+    int currentValue = int.tryParse(controller.text) ?? 0;
+    controller.text = (currentValue + 1).toString();
+  });
+}
 
-  void _decrementValue(TextEditingController controller) {
-    setState(() {
-      int currentValue = int.tryParse(controller.text) ?? 0;
-      if (currentValue > 0) {
-        currentValue -= 1;
-      }
-      controller.text = currentValue.toString();
-    });
-  }
+// Method to decrement the value
+void _decrementValue(TextEditingController controller, StateSetter setModalState) {
+  setModalState(() {
+    int currentValue = int.tryParse(controller.text) ?? 0;
+    if (currentValue > 0) { // Prevent negative values
+      controller.text = (currentValue - 1).toString();
+    }
+  });
+}
+
+// Variable to handle long press timing
+Timer? _longPressTimer;
+
+// Start long press increment
+void _startLongPressIncrement(TextEditingController controller, StateSetter setModalState) {
+  _longPressTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+    _incrementValue(controller, setModalState);
+  });
+}
+
+// Stop long press increment
+void _stopLongPressIncrement() {
+  _longPressTimer?.cancel();
+}
+
+// Start long press decrement
+void _startLongPressDecrement(TextEditingController controller, StateSetter setModalState) {
+  _longPressTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
+    _decrementValue(controller, setModalState);
+  });
+}
+
+// Stop long press decrement
+void _stopLongPressDecrement() {
+  _longPressTimer?.cancel();
+}
+
+
+
   bool _isSettingsDrawer = false;
 
   void _toggleDrawer(BuildContext context) {
@@ -59,21 +92,30 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         backgroundColor: Color(0xFF0099D6),
         iconTheme: IconThemeData(
-          color: Colors.white, 
+          color: Colors.white,
         ),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center, 
           children: [
-            Container(
-              width: 24,
-              height: 24,
-              child: Image.asset(
-                'assets/icons/edit.png',
-                width: 24,
-                height: 24,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          NotificationScreen()), // Remplacez `NotificationScreen` par la page souhaitée
+                );
+              },
+              child: Padding(
+                padding:
+                    EdgeInsets.only(left: 16), // Ajustez le padding si nécessaire
+                child: Image.asset(
+                  'assets/icons/edit.png',
+                  width: 24,
+                  height: 24,
+                ),
               ),
             ),
-            SizedBox(width: 8),
+            Spacer(), // Ajoute un espace flexible pour centrer le texte
             Text(
               'Mon Profile',
               style: GoogleFonts.getFont(
@@ -83,10 +125,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: Colors.white,
               ),
             ),
+            Spacer(), // Ajoute un autre espace flexible
+            SizedBox(width: 1), // Espace pour équilibrer l'icône de gauche
           ],
         ),
         elevation: 0,
-        // Move the drawer icon to the right
         actions: [
           Builder(
             builder: (context) => IconButton(
@@ -97,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ],
-        automaticallyImplyLeading: false, // Remove the default leading icon
+        automaticallyImplyLeading: false, // Supprime l'icône de retour par défaut
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -117,7 +160,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                   
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 0, 0, 13),
                       child: Align(
@@ -158,199 +200,217 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                     SizedBox(width: 10),
                                     GestureDetector(
-                                      onTap: () {
-                                        showModalBottomSheet(
-  context: context,
-  isScrollControlled: true,
-  builder: (BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
-        ),
-      ),
-      child: Column(
-        children: [
-          Spacer(),
-          Container(
-            margin: EdgeInsets.all(20),
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  onTap: () {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder( // Use StatefulBuilder to handle state within the BottomSheet
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.8,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
-                        icon: Icon(Icons.close, color: Colors.black),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+                    SizedBox(height: 20),
+                    Container(
+                      margin: EdgeInsets.all(20),
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      Text(
-                        'Achat de token',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(width: 48),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Ajouter des tokens à votre compte afin que vous puissiez publier vos demandes.',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(1.2, 0, 1.2, 12),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Token',
-                        style: GoogleFonts.getFont(
-                          'Roboto',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          height: 2.2,
-                          color: Color(0xFF1C1F1E),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(45.7, 0, 0, 19.4),
-                    child: SizedBox(
-                      width: 252.6,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GestureDetector(
-                           
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(0, 8, 0, 20.6),
-                              child: Image.asset(
-                                "assets/icons/tokenicon.png",
-                                width: 35,
-                                height: 35,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.close, color: Colors.black),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              Text(
+                                'Achat de token',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              SizedBox(width: 48),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Ajouter des token à votre compte afin que vous puissiez publier vos demandes.',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(1.2, 0, 1.2, 12),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                'Token',
+                                style: GoogleFonts.getFont(
+                                  'Roboto',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  height: 2.2,
+                                  color: Color(0xFF1C1F1E),
+                                ),
                               ),
                             ),
                           ),
-                          _buildIncrementDecrementButtons(_controller),
-                          Expanded(
-                            child: _buildText(_controller),
-                          ),
                           Container(
-                            margin: EdgeInsets.fromLTRB(0, 8, 0, 10.6),
+                            margin: EdgeInsets.fromLTRB(45.7, 0, 0, 19.4),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(0, 8, 0, 20.6),
+                                      child: Image.asset(
+                                        "assets/icons/tokenicon.png",
+                                        width: 35,
+                                        height: 35,
+                                      ),
+                                    ),
+                                  ),
+                                  _buildIncrementDecrementButtons(
+                                    _controller,
+                                    setModalState, // Pass StateSetter to update state within the modal
+                                  ),
+                                  Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25.0), // Ajuster la valeur pour positionner le texte
+            child: _buildText(_resultController),
+          ),
+        ),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(0, 8, 0, 10.6),
+                                    child: Text(
+                                      '=',
+                                      style: GoogleFonts.getFont(
+                                        'Inter',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20,
+                                        color: Color(0xFF000000),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(0, 8, 0, 10.6),
+                                    child: Image.asset(
+                                      "assets/icons/euro.png",
+                                      width: 35,
+                                      height: 35,
+                                    ),
+                                  ),
+                                  _buildIncrementDecrementButtons(
+                                    _resultController,
+                                    setModalState, // Pass StateSetter to update state within the modal
+                                  ),
+                                  Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25.0), // Ajuster la valeur pour positionner le texte
+            child: _buildText(_resultController),
+          ),
+        ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Détails de paiement',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          _buildTextField(
+                            hint: 'Numéro de carte de crédit',
+                            controller: _cardNumberController,
+                          ),
+                          SizedBox(height: 10),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 0, 158.7, 1),
                             child: Text(
-                              '=',
+                              'Date d’expiration',
                               style: GoogleFonts.getFont(
-                                'Inter',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 20,
-                                color: Color(0xFF000000),
+                                'Roboto',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                                height: 2.3,
+                                color: Color(0xFF1C1F1E),
                               ),
                             ),
                           ),
+                          SizedBox(height: 10),
                           Container(
-                            margin: EdgeInsets.fromLTRB(0, 8, 0, 10.6),
-                            child: Image.asset(
-                              "assets/icons/euro.png",
-                              width: 35,
-                              height: 35,
+                            margin: EdgeInsets.fromLTRB(0, 0, 144.6, 30.2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: _buildDateField('Mois:', _monthController),
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: _buildDateField('Année:', _yearController),
+                                ),
+                              ],
                             ),
                           ),
-                          _buildIncrementDecrementButtons(_resultController),
-                          Expanded(
-                            child: _buildText(_resultController),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Action pour compléter l'achat
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                              backgroundColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Complétez votre achat',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Détails de paiement',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  _buildTextField(
-                    hint: 'Numéro de carte de crédit',
-                    controller: _cardNumberController,
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 158.7, 1),
-                    child: Text(
-                      'Date d’expiration',
-                      style: GoogleFonts.getFont(
-                        'Roboto',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                        height: 2.3,
-                        color: Color(0xFF1C1F1E),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 144.6, 30.2),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: _buildDateField('Mois:', _monthController),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: _buildDateField('Année:', _yearController),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Action pour compléter l'achat
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Complétez votre achat',
-                        style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                    SizedBox(height: 20),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          Spacer(),
-        ],
-      ),
+              ),
+            );
+          },
+        );
+      },
     );
   },
-);
-                                      },
                                       child: Container(
                                         width: 20,
                                         height: 20,
@@ -364,197 +424,216 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                             ),
-                            GestureDetector(
+                             GestureDetector(
   onTap: () {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.8,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            ),
-          ),
-          child: Column(
-            children: [
-              Spacer(),
-              Container(
-                margin: EdgeInsets.all(20),
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
+        return StatefulBuilder( // Use StatefulBuilder to handle state within the BottomSheet
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.8,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
                 ),
+              ),
+              child: SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                      
-                        IconButton(
-                        icon: Icon(Icons.close, color: Colors.black),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+                    SizedBox(height: 20),
+                    Container(
+                      margin: EdgeInsets.all(20),
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      Text(
-                        'Convertion de token',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(width: 48),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    ' Vous pouvez convertir vos tokens en Euro.',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(1.2, 0, 1.2, 12),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Token',
-                        style: GoogleFonts.getFont(
-                          'Roboto',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          height: 2.2,
-                          color: Color(0xFF1C1F1E),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(45.7, 0, 0, 19.4),
-                    child: SizedBox(
-                      width: 252.6,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GestureDetector(
-                           
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(0, 8, 0, 20.6),
-                              child: Image.asset(
-                                "assets/icons/tokenicon.png",
-                                width: 35,
-                                height: 35,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.close, color: Colors.black),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              Text(
+                                'Conversion de token',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              SizedBox(width: 48),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Vous pouvez convertir vos tokens en Euro.',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(1.2, 0, 1.2, 12),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                'Token',
+                                style: GoogleFonts.getFont(
+                                  'Roboto',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  height: 2.2,
+                                  color: Color(0xFF1C1F1E),
+                                ),
                               ),
                             ),
                           ),
-                          _buildIncrementDecrementButtons(_controller),
-                          Expanded(
-                            child: _buildText(_controller),
-                          ),
                           Container(
-                            margin: EdgeInsets.fromLTRB(0, 8, 0, 10.6),
+                            margin: EdgeInsets.fromLTRB(45.7, 0, 0, 19.4),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(0, 8, 0, 20.6),
+                                      child: Image.asset(
+                                        "assets/icons/tokenicon.png",
+                                        width: 35,
+                                        height: 35,
+                                      ),
+                                    ),
+                                  ),
+                                  _buildIncrementDecrementButtons(
+                                    _controller,
+                                    setModalState, // Pass StateSetter to update state within the modal
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+                                    child: _buildText(_controller),
+                                  ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(0, 8, 0, 10.6),
+                                    child: Text(
+                                      '=',
+                                      style: GoogleFonts.getFont(
+                                        'Inter',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20,
+                                        color: Color(0xFF000000),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(0, 8, 0, 10.6),
+                                    child: Image.asset(
+                                      "assets/icons/euro.png",
+                                      width: 35,
+                                      height: 35,
+                                    ),
+                                  ),
+                                  _buildIncrementDecrementButtons(
+                                    _resultController,
+                                    setModalState, // Pass StateSetter to update state within the modal
+                                  ),
+                                  Expanded(
+                                     
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25.0), // Ajuster la valeur pour positionner le texte
+                                    child: _buildText(_resultController),
+          ),
+        ),
+                                  
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Détails de paiement',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          _buildTextField(
+                            hint: 'Numéro de carte de crédit',
+                            controller: _cardNumberController,
+                          ),
+                          SizedBox(height: 10),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0, 0, 158.7, 1),
                             child: Text(
-                              '=',
+                              'Date d’expiration',
                               style: GoogleFonts.getFont(
-                                'Inter',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 20,
-                                color: Color(0xFF000000),
+                                'Roboto',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                                height: 2.3,
+                                color: Color(0xFF1C1F1E),
                               ),
                             ),
                           ),
+                          SizedBox(height: 10),
                           Container(
-                            margin: EdgeInsets.fromLTRB(0, 8, 0, 10.6),
-                            child: Image.asset(
-                              "assets/icons/euro.png",
-                              width: 35,
-                              height: 35,
+                            margin: EdgeInsets.fromLTRB(0, 0, 144.6, 30.2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: _buildDateField('Mois:', _monthController),
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: _buildDateField('Année:', _yearController),
+                                ),
+                              ],
                             ),
                           ),
-                          _buildIncrementDecrementButtons(_resultController),
-                          Expanded(
-                            child: _buildText(_resultController),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Action pour compléter l'achat
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                              backgroundColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Complétez votre achat',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Détails de paiement',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  _buildTextField(
-                    hint: 'Numéro de carte de crédit',
-                    controller: _cardNumberController,
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 158.7, 1),
-                    child: Text(
-                      'Date d’expiration',
-                      style: GoogleFonts.getFont(
-                        'Roboto',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                        height: 2.3,
-                        color: Color(0xFF1C1F1E),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 144.6, 30.2),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: _buildDateField('Mois:', _monthController),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: _buildDateField('Année:', _yearController),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Action pour compléter l'achat
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Complétez votre achat',
-                        style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
+                    SizedBox(height: 20),
                   ],
                 ),
               ),
-              Spacer(),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -566,7 +645,7 @@ class _ProfilePageState extends State<ProfilePage> {
     ),
     padding: EdgeInsets.fromLTRB(17.8, 7, 17.8, 8),
     child: Text(
-      'Convertion',
+      'Conversion',
       style: GoogleFonts.getFont(
         'Roboto',
         fontWeight: FontWeight.w600,
@@ -576,7 +655,6 @@ class _ProfilePageState extends State<ProfilePage> {
     ),
   ),
 ),
-
                           ],
                         ),
                       ),
@@ -615,6 +693,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                       fontSize: 32,
                                       color: Color(0xFF525252),
                                     ),
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2, // Limiter à deux lignes
                                   ),
                                   SizedBox(height: 16),
                                   Text(
@@ -639,18 +720,19 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             Container(
-                              width: 214,
-                              height: 329,
-                              margin: EdgeInsets.only(left: 16),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                      'assets/icons/imagee.png'), // Update with your image path
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
+  width: MediaQuery.of(context).size.width * 0.4,
+  height: MediaQuery.of(context).size.height * 0.4,
+  margin: EdgeInsets.only(left: 16),
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(30), 
+    image: DecorationImage(
+      image: AssetImage('assets/icons/imagee.png'),
+      fit: BoxFit.cover,
+    ),
+  ),
+  clipBehavior: Clip.hardEdge, 
+),
+
                           ],
                         ),
                       ),
@@ -702,165 +784,134 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             // Ajout des éléments adresse et icône en dessous du container bleu
             Container(
-              margin: EdgeInsets.fromLTRB(10.5, 0, 0, 0),
-              child: Row(
+              margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
+                 
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                        SizedBox(
                     width: 13.5,
                     height: 16.9,
                     child: Image.asset(
                       'assets/icons/adresse.png',
+                      
                     ),
+                    
                   ),
-                  SizedBox(width: 10),
-                  RichText(
-                    text: TextSpan(
-                      style: GoogleFonts.getFont(
-                        'Roboto',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: Color(0xFF0C3469),
+                      // Icon(Icons.location_on, color: Color(0xFF0099D6)),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          '123 Rue de la Révolution, 75001 Paris, France',
+                          style: GoogleFonts.getFont(
+                            'Roboto',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            color: Color(0xFF0C3469),
+                          ),
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2, // Limiter à deux lignes si nécessaire
+                        ),
                       ),
-                      children: [
-                        TextSpan(
-                          text: '4 Rue ',
-                          style: GoogleFonts.getFont(
-                            'Roboto',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            height: 1.3,
-                            color: Color(0xFF0C3469),
-                          ),
-                        ),
-                        TextSpan(
-                          text: "de l'Abbé Groult, 750515 Paris",
-                          style: GoogleFonts.getFont(
-                            'Roboto',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: Color(0xFF0C3469),
-                          ),
-                        ),
-                      ],
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-        SizedBox(height: 10),
- 
-            Container(
-              margin: EdgeInsets.fromLTRB(10.5, 0, 0, 0),
-              child: Row(
-                children: [
-                  SizedBox(
+                                    SizedBox(height: 8),
+
+
+                                    Row(
+                    children: [
+                        SizedBox(
                     width: 13.5,
                     height: 16.9,
                     child: Image.asset(
                       'assets/icons/phone.png',
+                      
                     ),
+                    
                   ),
-                  SizedBox(width: 10),
-                  RichText(
-                    text: TextSpan(
-                      style: GoogleFonts.getFont(
-                        'Roboto',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: Color(0xFF0C3469),
-                      ),
-                      children: [
-                       
-                        TextSpan(
-                          text: "+99-888-333-322",
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          '+99-888-333-322',
                           style: GoogleFonts.getFont(
                             'Roboto',
                             fontWeight: FontWeight.w400,
-                            fontSize: 14,
+                            fontSize: 16,
                             color: Color(0xFF0C3469),
                           ),
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2, 
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-                        SizedBox(height: 10),
-
-            Container(
-              margin: EdgeInsets.fromLTRB(10.5, 0, 0, 0),
-              child: Row(
-                children: [
-                  SizedBox(
+                    SizedBox(height: 8),
+                  Row(
+                    children: [
+                        SizedBox(
                     width: 13.5,
                     height: 16.9,
                     child: Image.asset(
                       'assets/icons/mail.png',
+                      
                     ),
+                    
                   ),
-                  SizedBox(width: 10),
-                  RichText(
-                    text: TextSpan(
-                      style: GoogleFonts.getFont(
-                        'Roboto',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: Color(0xFF0C3469),
-                      ),
-                      children: [
-                       
-                        TextSpan(
-                          text: "jessica.virgolini50@gmail.com",
+                      // Icon(Icons.location_on, color: Color(0xFF0099D6)),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'jessica.virgolini50@gmail.com',
                           style: GoogleFonts.getFont(
                             'Roboto',
                             fontWeight: FontWeight.w400,
-                            fontSize: 14,
+                            fontSize: 16,
                             color: Color(0xFF0C3469),
                           ),
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2, // Limiter à deux lignes si nécessaire
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 10),
-
-            Container(
-              margin: EdgeInsets.fromLTRB(10.5, 0, 0, 0),
-              child: Row(
-                children: [
-                  SizedBox(
+                    SizedBox(height: 8),
+                  Row(
+                    children: [
+                        SizedBox(
                     width: 13.5,
                     height: 16.9,
                     child: Image.asset(
                       'assets/icons/token.png',
+                      
                     ),
+                    
                   ),
-                  SizedBox(width: 10),
-                  RichText(
-                    text: TextSpan(
-                      style: GoogleFonts.getFont(
-                        'Roboto',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        color: Color(0xFF0C3469),
-                      ),
-                      children: [
-                        
-                        TextSpan(
-                          text: "20€ / Heure",
+                      // Icon(Icons.location_on, color: Color(0xFF0099D6)),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          '20€ / Heure',
                           style: GoogleFonts.getFont(
                             'Roboto',
                             fontWeight: FontWeight.w400,
-                            fontSize: 14,
+                            fontSize: 16,
                             color: Color(0xFF0C3469),
                           ),
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2, // Limiter à deux lignes si nécessaire
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                                      SizedBox(height: 18),
+
                 ],
               ),
             ),
@@ -868,20 +919,34 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       bottomNavigationBar: BottomNavBar(),
-
     );
   }
   
-  Widget _buildIncrementDecrementButtons(TextEditingController controller) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 0, 0, 1.3),
+Widget _buildIncrementDecrementButtons(
+  TextEditingController controller, 
+  StateSetter setModalState // Pass the StateSetter to update state within the modal
+) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      GestureDetector(
+        onTap: () => _incrementValue(controller, setModalState),
+        onLongPress: () {
+          // Long press to continuously increment the value
+          _startLongPressIncrement(controller, setModalState);
+        },
+        onLongPressUp: () {
+          // Stop incrementing when long press is released
+          _stopLongPressIncrement();
+        },
+        child: Container(
+          width: 35, // Augmenter la largeur
+          height: 35, // Augmenter la hauteur
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
           decoration: BoxDecoration(
             border: Border.all(color: Color(0xFF0099D5)),
-            borderRadius: BorderRadius.circular(6.6),
+            borderRadius: BorderRadius.circular(8.0), // Augmenter le border radius si nécessaire
             color: Color(0xFFF4F6F5),
             boxShadow: [
               BoxShadow(
@@ -891,54 +956,60 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-          child: InkWell(
-            onTap: () => _incrementValue(controller),
-            child: Container(
-              padding: EdgeInsets.fromLTRB(6.9, 1.8, 6.9, 2.8),
-              child: Text(
-                '+',
-                style: GoogleFonts.getFont(
-                  'Inter',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13.3,
-                  color: Color(0xFF1C1F1E),
-                ),
+          child: Center(
+            child: Text(
+              '+',
+              style: GoogleFonts.getFont(
+                'Inter',
+                fontWeight: FontWeight.w600,
+                fontSize: 24, // Augmenter la taille de la police
+                color: Color(0xFF1C1F1E),
               ),
             ),
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Color(0xFF0099D5)),
-            borderRadius: BorderRadius.circular(6.6),
-            color: Color(0xFFF4F6F5),
-            boxShadow: [
-              BoxShadow(
-                color: Color(0x11124565),
-                offset: Offset(0, 4),
-                blurRadius: 7,
-              ),
-            ],
-          ),
-          child: InkWell(
-            onTap: () => _decrementValue(controller),
-            child: Container(
-              padding: EdgeInsets.fromLTRB(6.9, 1.8, 6.9, 2.8),
-              child: Text(
-                '-',
-                style: GoogleFonts.getFont(
-                  'Inter',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13.3,
-                  color: Color(0xFF1C1F1E),
-                ),
+      ),
+      Container(
+        width: 35, // Augmenter la largeur
+        height: 35, // Augmenter la hauteur
+        decoration: BoxDecoration(
+          border: Border.all(color: Color(0xFF0099D5)),
+          borderRadius: BorderRadius.circular(8.0), // Augmenter le border radius si nécessaire
+          color: Color(0xFFF4F6F5),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0x11124565),
+              offset: Offset(0, 4),
+              blurRadius: 7,
+            ),
+          ],
+        ),
+        child: GestureDetector(
+          onTap: () => _decrementValue(controller, setModalState),
+          onLongPress: () {
+            // Long press to continuously decrement the value
+            _startLongPressDecrement(controller, setModalState);
+          },
+          onLongPressUp: () {
+            // Stop decrementing when long press is released
+            _stopLongPressDecrement();
+          },
+          child: Center(
+            child: Text(
+              '-',
+              style: GoogleFonts.getFont(
+                'Inter',
+                fontWeight: FontWeight.w600,
+                fontSize: 24, // Augmenter la taille de la police
+                color: Color(0xFF1C1F1E),
               ),
             ),
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 
   Widget _buildText(TextEditingController controller) {
     return Container(

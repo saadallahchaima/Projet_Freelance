@@ -40,47 +40,13 @@ endDrawer: _isSettingsDrawer
                   MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
             ),
 
-  appBar: AppBar(
+      appBar: CustomAppBar(
+        notificationIcon: Icon(Icons.notifications, color: Colors.white),
+    title: 'Notifications',
+    showSearchBar: true,
     backgroundColor: Color(0xFF0099D6),
+    ),// Use the new CustomAppBar
 
-
-  iconTheme: IconThemeData(
-    color: Colors.white,
-  ),
-  title: Stack(
-    children: [
-      Align(
-        alignment: Alignment.centerLeft,
-        child: Icon(Icons.notifications, color: Colors.white),
-      ),
-      Center(
-        child: Text(
-          'Notifications',
-          style: GoogleFonts.getFont(
-            'Roboto',
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    ],
-  ),
-  elevation: 0,
-        // Move the drawer icon to the right
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-            ),
-          ),
-        ],
-        automaticallyImplyLeading: false, // Remove the default leading icon
-      ),
-      
 
     body: Container(
         padding: EdgeInsets.all(16.w),

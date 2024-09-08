@@ -363,15 +363,19 @@ class SettingsDrawer extends StatelessWidget {
                                 icon: Icon(Icons.close, color: Color(0xFF0099D6)),
                                 onPressed: toggleDrawer,
                               ),
-                              Text(
-                                'Pramétre',
-                                style: GoogleFonts.getFont(
-                                  'Roboto',
-                                  fontWeight: FontWeight.bold,  // Set to bold
-                                  fontSize: 20,
-                                  color: Color(0xFF0099D6),
-                                ),
-                              ),
+                                 Expanded(
+        child: Center(
+          child: Text(
+            'Paramétre',
+            style: GoogleFonts.getFont(
+              'Roboto',
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Color(0xFF0099D6),
+            ),
+          ),
+        ),
+      ),
                                                      ],
                           ),
                         ),

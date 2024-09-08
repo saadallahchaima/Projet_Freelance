@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:khedma/components/appBar.dart';
+import 'package:khedma/components/navbara.dart';
 import 'package:khedma/screens/ChatMessage.dart';
 import 'package:khedma/screens/SideMenu.dart';
 
@@ -10,46 +12,36 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
+ bool _isSettingsDrawer = false;
+
+  void _toggleDrawer(BuildContext context) {
+    setState(() {
+      _isSettingsDrawer = !_isSettingsDrawer;
+    });
+    Navigator.of(context).pop(); // Close the current drawer
+    Scaffold.of(context).openEndDrawer(); // Open the new drawer
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
- endDrawer: MyDrawer(
-        toggleDrawer: () {
-          // Handle the drawer toggle action if needed
-          Scaffold.of(context).openEndDrawer();
-        },
-      ),      appBar: AppBar(
+        endDrawer: _isSettingsDrawer
+          ? Builder(
+              builder: (context) =>
+                  SettingsDrawer(toggleDrawer: () => _toggleDrawer(context)),
+            )
+          : Builder(
+              builder: (context) =>
+                  MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
+            ),
+ appBar: CustomAppBar(
+        notificationIcon: Icon(Icons.notifications, color: Colors.white),
+        title: 'Mes Messages',
+        showSearchBar: true,
         backgroundColor: Color(0xFF0099D6),
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: 24,
-              height: 24,
-              child: Image.asset(
-                'assets/icons/notification.png',
-                width: 24,
-                height: 24,
-              ),
-            ),
-            Text(
-              'Mes Messages',
-              style: GoogleFonts.getFont(
-                'Roboto',
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(width: 24),
-          ],
-        ),
-        elevation: 0,
       ),
+
       body: Column(
         children: [
           Container(
@@ -61,64 +53,7 @@ class _MessagePageState extends State<MessagePage> {
                 bottomLeft: Radius.circular(25),
               ),
             ),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(17, 29, 18.6, 16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xFFEDF4FF),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(14.2, 9.3, 10, 7.6),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.fromLTRB(0, 0, 12.6, 0),
-                                width: 31,
-                                height: 31,
-                                child: Image.asset(
-                                  'assets/drawericons/recherche.png',
-                                  width: 19.2,
-                                  height: 19.1,
-                                ),
-                              ),
-                              Text(
-                                'Recherche',
-                                style: GoogleFonts.getFont(
-                                  'Montserrat',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Color(0xFFB7B7B7),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            width: 12,
-                            height: 12,
-                            child: Image.asset(
-                              'assets/drawericons/Close.png',
-                              width: 12,
-                              height: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            
           ),
           Expanded(
             child: ListView(
@@ -277,6 +212,8 @@ class _MessagePageState extends State<MessagePage> {
           ),
         ],
       ),
+            bottomNavigationBar: BottomNavBar(),
+
     );
   }
 }
