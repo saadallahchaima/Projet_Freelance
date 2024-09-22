@@ -8,6 +8,7 @@ class ServiceCard extends StatelessWidget {
   final String date;
   final int offers;
   final List<String> profileImages;
+  final String imageUrl; // Pour l'image principale
 
   const ServiceCard({
     Key? key,
@@ -15,35 +16,35 @@ class ServiceCard extends StatelessWidget {
     required this.date,
     required this.offers,
     required this.profileImages,
+    required this.imageUrl,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 351.w,
-      height: 393.h,
+      width: 321.w,
+      height: 270.h,
       child: Card(
-        color: Colors.white.withOpacity(0.68), // Light background color with opacity
+        color: Colors.white.withOpacity(0.68),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(17),
         ),
         elevation: 4,
-        shadowColor: Color(0x3F000000), // Shadow properties
+        shadowColor: Color(0x3F000000),
         child: Padding(
-          padding: EdgeInsets.all(8.w), // Padding inside the card
+          padding: EdgeInsets.all(8.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(17), // Définir le rayon des coins arrondis
-                child: Image.asset(
-                  "assets/images/menage.jpeg",
-                  width: 323.39.w,
+                borderRadius: BorderRadius.circular(17),
+                child: Image.network( // Utiliser NetworkImage pour une image dynamique
+                  imageUrl,
+                  width: 303.39.w,
                   height: 100.11.h,
                   fit: BoxFit.cover,
                 ),
               ),
-
               SizedBox(height: 10.h),
               Text(
                 title,
@@ -60,10 +61,10 @@ class ServiceCard extends StatelessWidget {
                   color: Color(0xFF585858),
                 ),
               ),
-              SizedBox(height: 10.h), // Adjust this height if needed
+              SizedBox(height: 10.h),
               Flexible(
                 child: SingleChildScrollView(
-                  child: sousCard(), // Add SingleChildScrollView to avoid overflow
+                  child: sousCard(), // Utilisation de SingleChildScrollView pour éviter le débordement
                 ),
               ),
             ],
@@ -77,16 +78,16 @@ class ServiceCard extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 323.39.w,
-          height: 75.68.h,
+          width: 303.39.w,
+          height: 100.68.h,
           child: Stack(
             children: [
               Positioned(
                 left: 0,
                 top: 0,
                 child: Container(
-                   width: 320.39.w,
-                   height: 75.68.h,
+                  width: 300.39.w,
+                  height: 70.90.h,
                   decoration: ShapeDecoration(
                     color: Color(0xFFFFFAF1),
                     shape: RoundedRectangleBorder(
@@ -105,7 +106,7 @@ class ServiceCard extends StatelessWidget {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: '+1 aut',
+                          text: '+$offers aut',
                           style: TextStyle(
                             color: Color(0xFF707070),
                             fontSize: 8.87.sp,
@@ -135,23 +136,23 @@ class ServiceCard extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.notifications_none_outlined,
-                      color: AppTheme.orange, // Change to your desired color
+                      color: AppTheme.orange,
                       size: 17.12.w,
                       shadows: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2), // Shadow color
-                          spreadRadius: 1, // Shadow spread radius
-                          blurRadius: 3, // Shadow blur radius
-                          offset: Offset(0, 2), // Shadow offset
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 1,
+                          blurRadius: 3,
+                          offset: Offset(0, 2),
                         ),
                       ],
                     ),
-                    SizedBox(width: 8.w), // Space between icon and text
+                    SizedBox(width: 8.w),
                     SizedBox(
                       width: 229.w,
                       height: 53.20.h,
                       child: Text(
-                        'Vous avez reçu 4 offres',
+                        'Vous avez reçu $offers offres',
                         style: TextStyle(
                           color: Color(0xFF525252),
                           fontSize: 12.42.sp,
@@ -173,7 +174,7 @@ class ServiceCard extends StatelessWidget {
                     children: List.generate(
                       profileImages.length,
                           (index) => Positioned(
-                        left: index * 22.18.w, // Adjust spacing based on image width
+                        left: index * 22.18.w,
                         top: 0,
                         child: Container(
                           width: 22.18.w,

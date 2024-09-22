@@ -4,11 +4,13 @@ import 'package:khedma/theme/AppTheme.dart';
 
 class CustomYesNoButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final bool isYes; // Use this boolean to determine if the button is "Oui" or "Non"
+  final bool isYes;
+  final bool isSelected;
 
   CustomYesNoButton({
     required this.onPressed,
     required this.isYes,
+    required this.isSelected,
   });
 
   @override
@@ -18,44 +20,42 @@ class CustomYesNoButton extends StatelessWidget {
     Color textColor;
     String buttonText;
 
-    // Determine colors and text based on button type
-    if (isYes) {
-      backgroundColor = AppTheme.primaryColor; // Blue for "Oui"
-      borderColor = Colors.blueAccent;
+    // Détermine les couleurs en fonction de l'état sélectionné
+    if (isSelected) {
+      backgroundColor = AppTheme.primaryColor; // Bleu pour le bouton sélectionné
+      borderColor = AppTheme.primaryColor;
       textColor = Colors.white;
-      buttonText = 'OUI';
-
     } else {
-      backgroundColor = Color(0xFFDDE0E1); // Gray for "Non"
+      backgroundColor = Color(0xFFDDE0E1); // Gris pour le bouton non sélectionné
       borderColor = Color(0xFFDDE0E1);
       textColor = Colors.black;
-      buttonText = 'NON';
     }
 
+    buttonText = isYes ? 'OUI' : 'NON';
+
     return SizedBox(
-      width: 80.w, // Fixed width
-      height: 39.h, // Fixed height
+      width: 80.w,
+      height: 39.h,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor, // Button background color
+          foregroundColor: textColor, backgroundColor: backgroundColor, // Utilise onPrimary pour la couleur du texte
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0), // Rounded border
+            borderRadius: BorderRadius.circular(20.0),
             side: BorderSide(
-              color: borderColor, // Border color
-              width: 1.0, // Border width
-              style: BorderStyle.solid, // Border style
+              color: borderColor,
+              width: 1.0,
+              style: BorderStyle.solid,
             ),
           ),
-          padding: EdgeInsets.zero, // No extra padding
+          padding: EdgeInsets.zero,
         ),
         child: Center(
           child: Text(
             buttonText,
             style: TextStyle(
-              color: textColor, // Text color
-              fontSize: 12.sp, // Font size
-              fontWeight: FontWeight.bold, // Bold text
+              fontSize: 12.sp,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/AppTheme.dart';
-import 'CustomYesNoButton.dart';
+import 'IndependentButtonGroup.dart';
 import 'MyButtons.dart';
 
 class CustomSwitch2 extends StatefulWidget {
@@ -17,13 +17,23 @@ class CustomSwitch2 extends StatefulWidget {
 class _CustomSwitch2State extends State<CustomSwitch2> {
   List<bool> isSelected = [true, false];
   final TextEditingController _searchController = TextEditingController();
-  double min = 500;
-  double max = 5000;
+  final TextEditingController _budgetController = TextEditingController();
+  bool showExpertQuestion = false;
+  bool showBudgetField = false;
+  bool showBudgetSlider = false;
   RangeValues _currentRangeValues = RangeValues(500, 5000);
+  bool budgetUnder5000 = true;  // Par défaut, on suppose que le budget est sous 5000€
+  String? _selectedUnit; // Variable d'état pour la sélection du dropdown
+  TextEditingController _quantityController = TextEditingController(); // Contrôleur pour le TextField
+  bool isYesSelected = false;
+  bool isYesSelectedGroup1 = false;
+  bool isYesSelectedGroup2 = false;
 
   @override
   void dispose() {
     _searchController.dispose();
+    _budgetController.dispose();
+    _quantityController.dispose();
     super.dispose();
   }
 
@@ -81,8 +91,9 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
               ],
               onPressed: (int index) {
                 setState(() {
-                  for (int buttonIndex = 0; buttonIndex <
-                      isSelected.length; buttonIndex++) {
+                  for (int buttonIndex = 0;
+                  buttonIndex < isSelected.length;
+                  buttonIndex++) {
                     isSelected[buttonIndex] = (buttonIndex == index);
                   }
                 });
@@ -105,15 +116,10 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
           if (isSelected[0]) ...[
             _buildDomainSection(),
             SizedBox(height: 30.h),
-            _buildBudgetSection(),
-
-          ] else
-            if (isSelected[1]) ...[
-              _buildCategorieSection(),
-            ] else
-              ...[
-                // Placeholder for default content if needed
-              ],
+            _buildTerminerSection(),
+          ] else if (isSelected[1]) ...[
+            _buildCategorieSection(),
+          ],
         ],
       ),
     );
@@ -124,7 +130,7 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Domain',
+          'Domaine',
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.bold,
@@ -172,7 +178,8 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
           ],
         ),
         SizedBox(height: 30.h),
-        _buildTextField('Déscription:'),
+        _buildTextField('Description', 'Description'),
+
         SizedBox(height: 30.h),
         Text(
           'Est-ce que votre demande dépasse 5000€ ?',
@@ -187,9 +194,31 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomYesNoButton(onPressed: () {}, isYes: true),
+
+              CustomYesNoButton(
+                onPressed: () {
+                  setState(() {
+                    showExpertQuestion = false;
+                    showBudgetField = false;
+                    showBudgetSlider = true;
+                    isYesSelectedGroup1 = false; // Mettez à jour pour le premier groupe
+                  });
+                },
+                isYes: false,
+                isSelected: !isYesSelectedGroup1,
+              ),
               SizedBox(width: 30.w),
-              CustomYesNoButton(onPressed: () {}, isYes: false),
+              CustomYesNoButton(
+                onPressed: () {
+                  setState(() {
+                    showExpertQuestion = true;
+                    showBudgetSlider = false;
+                    isYesSelectedGroup1 = true; // Mettez à jour pour le premier groupe
+                  });
+                },
+                isYes: true,
+                isSelected: isYesSelectedGroup1,
+              ),
             ],
           ),
         ),
@@ -206,99 +235,56 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
             ),
           ),
         ),
-
-      ],
-    );
-  }
-
-  Widget _buildBudgetSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Budget',
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        SizedBox(height: 10.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Min',
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                child: RangeSlider(
-                  values: _currentRangeValues,
-                  min: min,
-                  max: max,
-                  divisions: 450,
-                  labels: RangeLabels(
-                    '£${_currentRangeValues.start.round()}',
-                    '£${_currentRangeValues.end.round()}',
-                  ),
-                  onChanged: (RangeValues newValues) {
-                    setState(() {
-                      _currentRangeValues = RangeValues(
-                        newValues.start < min ? min : newValues.start,
-                        newValues.end > max ? max : newValues.end,
-                      );
-                    });
-                  },
-                ),
-              ),
-            ),
-            Text(
-              'Max',
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 20.h), // Space between RangeSlider and button
-
-        if (_currentRangeValues.end >= max) ...[
+        SizedBox(height: 30.h),
+        if (showExpertQuestion) ...[
           SizedBox(height: 30.h),
-          Center(
-            child: Text(
-              'Avez-vous besoin d’un expert ?',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
+          Text(
+            'Avez-vous besoin d’un expert ?',
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 30.h),
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomYesNoButton(onPressed: () {}, isYes: true),
+                CustomYesNoButton(
+                  onPressed: () {
+                    setState(() {
+                      isYesSelectedGroup2 = true; // Mettez à jour pour le deuxième groupe
+                      showBudgetField = false;
+                      showBudgetSlider = false;
+                    });
+                  },
+                  isYes: true,
+                  isSelected: isYesSelectedGroup2,
+                ),
                 SizedBox(width: 30.w),
-                CustomYesNoButton(onPressed: () {}, isYes: false),
+
+                CustomYesNoButton(
+                  onPressed: () {
+                    setState(() {
+                      isYesSelectedGroup2 = false;
+                      showBudgetField = true;
+                      showBudgetSlider = false;// Mettez à jour pour le deuxième groupe
+                    });
+                  },
+                  isYes: false,
+                  isSelected: !isYesSelectedGroup2,
+                ),
               ],
             ),
+
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 30.h),
           Center(
             child: Text(
-              'L’expert aura une tariffe indépendante qui sera inclus dans le montant total.',
               textAlign: TextAlign.center,
+
+              'Si votre demande dépasse les 5000€, nous vous conseillons de consulter un expert.',
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
@@ -306,19 +292,50 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
               ),
             ),
           ),
-
         ],
-        SizedBox(height: 20.h),
+        if (showBudgetField) ...[
+          SizedBox(height: 30.h),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: _buildBudgetField()
 
+              ),
+            ],
+          ),
+        ],
+        if (showBudgetSlider) ...[
+          SizedBox(height: 30.h),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                  child: _buildBudgetSlider()
+
+              ),
+            ],
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildTerminerSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        SizedBox(height: 20.h),
         Center(
           child: ElevatedButton(
             onPressed: () {
-              // Define what happens when the button is pressed
+              // Action à définir lors de l'appui sur le bouton
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryColor, // Blue color
+              backgroundColor: AppTheme.primaryColor, // Couleur bleue
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20), // Radius
+                borderRadius: BorderRadius.circular(20), // Rayon
               ),
               padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 50.w),
             ),
@@ -335,7 +352,6 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
       ],
     );
   }
-
 
   Widget _buildCategorieSection() {
     return Column(
@@ -411,7 +427,9 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
           ],
         ),
         SizedBox(height: 30.h),
-        _buildTextField('Déscription:'),
+        _buildTextField('', 'Déscription'),
+        SizedBox(height: 30.h),
+
         Container(
           margin: EdgeInsets.only(bottom: 30.8),
           child: Row(
@@ -437,7 +455,7 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Color(0xFF0099D5),
+                            color: AppTheme.primaryColor,
                           ),
                         ),
                         contentPadding: EdgeInsets.symmetric(
@@ -472,16 +490,16 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: Color(0xFF0099D5),
+                            color: AppTheme.primaryColor,
                           ),
                         ),
                         contentPadding: EdgeInsets.symmetric(
                           vertical: 5,
-                          horizontal: 8,
+                          horizontal: 4,
                         ),
                       ),
-                      value: 'Heure',
-                      items: <String>['Heure', 'Jour', 'Semaine', 'Mois', 'Année']
+                      value: 'Heure',  // Initial value
+                      items: <String>['Heure', 'Jour', 'Semaine', 'Mois', 'Année']  // Dropdown options
                           .map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -492,6 +510,7 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
                         // Handle dropdown value change
                       },
                     ),
+
                   ),
                 ],
               ),
@@ -525,7 +544,6 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
       ],
     );
   }
-
 
   Widget _buildCard( double size, Color color, String imagePath) {
     return Column(
@@ -585,7 +603,7 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
     );
   }
 
-  Widget _buildCardPlus( double size, Color color, String imagePath) {
+  Widget _buildCardPlus(double size, Color color, String imagePath) {
     return Column(
       children: [
         Stack(
@@ -610,7 +628,7 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
                 child: Padding(
                   padding: EdgeInsets.only(bottom: size * 0.1),
                   child: Image.asset(
-                    imagePath, // Utilisez le paramètre imagePath ici
+                    imagePath, // Use the parameter imagePath here
                     width: size * 0.4,
                     height: size * 0.4,
                   ),
@@ -620,7 +638,183 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
 
           ],
         ),
+      ],
+    );
+  }
 
+
+  Widget _buildTextField(String label, String hintText) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        SizedBox(height: 10.h),
+        TextField(
+          controller: _budgetController,  // Assure-toi d'utiliser le bon controller si besoin
+          keyboardType: TextInputType.number,  // Personnalise si nécessaire pour chaque TextField
+          decoration: InputDecoration(
+            hintText: hintText,  // Hint personnalisé
+            filled: true,
+            fillColor: Color(0xFFEDF4FF),
+            contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Widget _buildBudgetSlider() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Budget :',
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        SizedBox(height: 10.h),
+        Row(
+          children: [
+            // Label Min
+            SizedBox(
+              width: 50.w, // Ajustez la largeur selon vos besoins
+              child:  Text(
+                'Min',
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Color(0xFF000000),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+
+
+            Expanded(
+              child: RangeSlider(
+                values: _currentRangeValues,
+                min: 0,
+                max: 5000,
+                divisions: 10,
+                labels: RangeLabels(
+                  _currentRangeValues.start.toStringAsFixed(0) + '€',
+                  _currentRangeValues.end.toStringAsFixed(0) + '€',
+                ),
+                onChanged: (RangeValues values) {
+                  setState(() {
+                    _currentRangeValues = values;
+                    budgetUnder5000 = values.start <= 5000 && values.end <= 5000;
+                  });
+                },
+              ),
+            ),
+            // Label Max
+            SizedBox(
+              width: 50.w, // Ajustez la largeur selon vos besoins
+              child:  Text(
+                'Max',
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Color(0xFF000000),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+
+          ],
+        ),
+        SizedBox(height: 10.h),
+        if (budgetUnder5000) ...[
+          SizedBox(height: 30.h),
+          Container(
+            margin: EdgeInsets.only(bottom: 30.8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Label 'Par :'
+                Text(
+                  'Par :',
+                  style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: Color(0xFF000000),
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                Expanded(
+                  flex: 2,
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: AppTheme.primaryColor,
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 5,
+                        horizontal: 4,
+                      ),
+                    ),
+                    value: _selectedUnit,
+                    items: <String>[
+                      'Heure',
+                      'Jour',
+                      'Semaine',
+                      'Mois',
+                      'Année',
+                      'Mètre',
+                      'Litre'
+                    ].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedUnit = newValue;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                if (_selectedUnit == 'Mètre' || _selectedUnit == 'Litre') ...[
+                  Expanded(
+                    flex: 3,
+                    child: TextField(
+                      controller: _quantityController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Quantité',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            color: AppTheme.primaryColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -629,25 +823,40 @@ class _CustomSwitch2State extends State<CustomSwitch2> {
 
 
 
-
-
-  Widget _buildTextField(String hintText) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.0.w, vertical: 8.0.h),
-      padding: EdgeInsets.symmetric(horizontal: 12.0.w),
-      decoration: BoxDecoration(
-        color: Color(0xFFF4F6F5),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey),
-          border: InputBorder.none,
+  Widget _buildBudgetField() {
+    return Row(
+      children: [
+        Text(
+          'Budget :',
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
-        maxLines: 4,
-        minLines: 1,
-      ),
+        SizedBox(width: 10.w),  // Espacement entre le texte et le champ de texte
+        Container(
+          width: 100.w,  // Largeur personnalisée du champ de texte
+          child: TextField(
+            controller: _budgetController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.r),
+                borderSide: BorderSide(color: Colors.grey.shade400),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: 10.w),  // Espacement entre le champ de texte et l'icône
+        Image.asset(
+          'assets/icons/coin.png',
+          height: 75.h,
+          width: 75.w,
+        ),
+      ],
     );
   }
+
 }

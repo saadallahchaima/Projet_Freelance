@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:khedma/theme/AppTheme.dart';
 
 import 'CardItemHistorique.dart';
 import 'RentalItemCard.dart';
@@ -136,6 +137,8 @@ class _CustomSwitchLocationState extends State<CustomSwitchLocation> {
           },
           onRentPressed: () {
             // Action lorsque le bouton 'Louer cette article' est pressé
+            _showPriceProposalBottomSheet(items[index].title, context); // Open bottom sheet on rent press
+
           },
         );
       },
@@ -163,8 +166,210 @@ class _CustomSwitchLocationState extends State<CustomSwitchLocation> {
     );
   }
 }
+void _showPriceProposalBottomSheet(String itemId, BuildContext context) {
+  showModalBottomSheet(
+    backgroundColor: Colors.white,
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+    ),
+    builder: (context) {
+      return PriceProposalBottomSheet(itemId: itemId);
+    },
+  );
+}
 
-class RentalItem {
+class PriceProposalBottomSheet extends StatefulWidget {
+  final String itemId;
+
+  const PriceProposalBottomSheet({Key? key, required this.itemId}) : super(key: key);
+
+  @override
+  _PriceProposalBottomSheetState createState() => _PriceProposalBottomSheetState();
+}
+
+class _PriceProposalBottomSheetState extends State<PriceProposalBottomSheet> {
+  int period = 1;
+  int price = 20;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.close, color: Colors.black),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    "Proposition de prix",
+                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          Center(
+            child: Text(
+              "Proposez une offre de prix afin de répondre à cette demande.",
+              style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(height: 20.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center, // Aligne verticalement les éléments
+            children: [
+              _buildIncrementDecrementWidget(
+                  "Période(Nuit)", period, (newPeriod) {
+                setState(() {
+                  period = newPeriod;
+                });
+              }),
+              SizedBox(width: 20.w), // Ajoute un espace entre les widgets
+              Row(
+                mainAxisSize: MainAxisSize.min, // Évite que la Row prenne toute la largeur disponible
+                children: [
+                  _buildIncrementDecrementWidget(
+                      "Prix", price, (newPrice) {
+                    setState(() {
+                      price = newPrice;
+                    });
+                  }),
+                  SizedBox(width: 10.w), // Ajoute un espace entre le widget et l'image
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 0.h), // Ajuste l'espace inférieur
+                    child: Image.asset(
+                      "assets/icons/coins.png",
+                      width: 50.w, // Ajuste la largeur en fonction de l'image
+                      height: 50.h, // Ajuste la hauteur en fonction de l'image
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 20.h),
+          ElevatedButton(
+            onPressed: () {
+              // Handle validation logic here
+              Navigator.pop(context);
+            },
+            child: Text("Valider"),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: AppTheme.primaryColor, // Utilisez votre couleur principale ici
+              fixedSize: Size(150.w, 44.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0), // Ajustez la valeur selon vos besoins
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIncrementDecrementWidget(String label, int value, Function(int) onChanged, {bool showCoin = false}) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontSize: 14.19.sp, color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8.h), // Add some space between the label and the controls
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center, // Center the row content
+          children: [
+            Column(
+              children: [
+                Container(
+                  width: 30.w,
+                  height: 30.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Color(0xFF0099D5)),
+                    borderRadius: BorderRadius.circular(6.6),
+                  ),
+                  child: Center(
+                    child: IconButton(
+                      iconSize: 20.w,
+                      padding: EdgeInsets.zero, // Remove default padding to ensure proper centering
+                      onPressed: () {
+                        if (value > 1) {
+                          onChanged(value - 1);
+                        }
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h), // Add some space between buttons
+                Container(
+                  width: 30.w,
+                  height: 30.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Color(0xFF0099D5)),
+                    borderRadius: BorderRadius.circular(6.6),
+                  ),
+                  child: Center(
+                    child: IconButton(
+                      iconSize: 20.w,
+                      padding: EdgeInsets.zero, // Remove default padding to ensure proper centering
+                      onPressed: () {
+                        onChanged(value + 1);
+                      },
+                      icon: Icon(Icons.add),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 5.w), // Add space between the buttons and the value
+            Container(
+              width: 70.w, // Adjust width as needed
+              height: 40.h,
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 1.3),
+              decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFF0099D5)),
+                borderRadius: BorderRadius.circular(6),
+                color: Color(0xFFF4F6F5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x11124565),
+                    offset: Offset(0, 4),
+                    blurRadius: 7,
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center, // Center the content in the container
+                children: [
+                  Text(
+                    "$value",
+                    style: TextStyle(fontSize: 16.sp),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+
+  class RentalItem {
   final String imageUrl;
   final String title;
   final String description;

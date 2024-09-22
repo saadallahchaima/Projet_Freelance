@@ -336,7 +336,7 @@ class _CustomSwitchRechercheState extends State<CustomSwitchRecherche> {
                       ),
                       contentPadding: EdgeInsets.symmetric(
                         vertical: 0,
-                        horizontal: 8,
+                        horizontal: 4,
                       ),
                     ),
                     value: 'Heure',
@@ -533,7 +533,7 @@ class _CustomSwitchRechercheState extends State<CustomSwitchRecherche> {
                       ),
                       contentPadding: EdgeInsets.symmetric(
                         vertical: 0,
-                        horizontal: 8,
+                        horizontal: 4,
                       ),
                     ),
                     value: 'Heure',

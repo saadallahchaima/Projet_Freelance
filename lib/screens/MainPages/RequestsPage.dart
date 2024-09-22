@@ -29,9 +29,9 @@ class _MyRequestsPageState extends State<MyRequestsPage> {
       backgroundColor: Colors.white, // Set the background color to white
       endDrawer: _isSettingsDrawer
           ? Builder(
-              builder: (context) =>
-                  SettingsDrawer(toggleDrawer: () => _toggleDrawer(context)),
-            )
+        builder: (context) =>
+            SettingsDrawer(toggleDrawer: () => _toggleDrawer(context)),
+      )
           : Builder(
               builder: (context) =>
                   MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
