@@ -20,8 +20,8 @@ class ServiceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 321.w,
-      height: 253.h,
+      width: 351.w,
+      height: 393.h,
       child: Card(
         color: Colors.white.withOpacity(0.68), // Light background color with opacity
         shape: RoundedRectangleBorder(
@@ -38,7 +38,7 @@ class ServiceCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(17), // Définir le rayon des coins arrondis
                 child: Image.asset(
                   "assets/images/menage.jpeg",
-                  width: 303.39.w,
+                  width: 323.39.w,
                   height: 100.11.h,
                   fit: BoxFit.cover,
                 ),
@@ -77,16 +77,16 @@ class ServiceCard extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 303.39.w,
-          height: 61.68.h,
+          width: 323.39.w,
+          height: 75.68.h,
           child: Stack(
             children: [
               Positioned(
                 left: 0,
                 top: 0,
                 child: Container(
-                  width: 280.39.w,
-                  height: 59.90.h,
+                   width: 320.39.w,
+                   height: 75.68.h,
                   decoration: ShapeDecoration(
                     color: Color(0xFFFFFAF1),
                     shape: RoundedRectangleBorder(
@@ -97,10 +97,10 @@ class ServiceCard extends StatelessWidget {
               ),
               Positioned(
                 left: 94.03.w,
-                top: 34.57.h,
-                child: SizedBox(
-                  width: 72.w,
-                  height: 8.80.h,
+              top: 42.57.h,
+                 child: SizedBox(
+                  width: 102.w,
+                  height: 28.80.h,
                   child: Text.rich(
                     TextSpan(
                       children: [
@@ -148,8 +148,8 @@ class ServiceCard extends StatelessWidget {
                     ),
                     SizedBox(width: 8.w), // Space between icon and text
                     SizedBox(
-                      width: 129.w,
-                      height: 13.20.h,
+                      width: 229.w,
+                      height: 53.20.h,
                       child: Text(
                         'Vous avez reçu 4 offres',
                         style: TextStyle(
@@ -165,7 +165,7 @@ class ServiceCard extends StatelessWidget {
               ),
               Positioned(
                 left: 33.71.w,
-                top: 28.33.h,
+                top: 38.33.h,
                 child: Container(
                   width: 55.89.w,
                   height: 19.52.h,
