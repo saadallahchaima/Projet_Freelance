@@ -124,6 +124,7 @@ class _CustomSwitchOffreServicesState extends State<CustomSwitchOffreServices> {
           location: items[index].location,
           ownerName: items[index].ownerName,
           statut: items[index].statut,
+
           onProposerOffrePressed: () {
             // Action pour proposer une offre
           },

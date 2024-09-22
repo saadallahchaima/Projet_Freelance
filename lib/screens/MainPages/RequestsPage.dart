@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:khedma/components/CustomSwitchDemandes.dart';
 
-import '../../components/CustomSwitch1.dart';
-import '../../components/ServiceCard.dart';
 import '../../components/appBar.dart';
 import '../../components/navbara.dart';
 import '../../theme/AppTheme.dart';
@@ -27,30 +25,50 @@ class _MyRequestsPageState extends State<MyRequestsPage> {
     Scaffold.of(context).openEndDrawer(); // Open the new drawer
   }
 
- 
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
 
-      backgroundColor: Color(0xFF0099D6),
- endDrawer: _isSettingsDrawer
+      backgroundColor: Colors.white,
+      endDrawer: _isSettingsDrawer
           ? Builder(
-              builder: (context) =>
-                  SettingsDrawer(toggleDrawer: () => _toggleDrawer(context)),
-            )
+        builder: (context) =>
+            SettingsDrawer(toggleDrawer: () => _toggleDrawer(context)),
+      )
           : Builder(
-              builder: (context) =>
-                  MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
-            ),
+        builder: (context) =>
+            MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
+      ),
 
-      appBar:  CustomAppBar(
-        notificationIcon: Icon(Icons.location_on_outlined, color: Colors.white),
-        title: 'demandes',
+      appBar: CustomAppBar(
+        notificationIcon: Icon(Icons.notifications, color: Colors.white),
+        title: 'Mes Demandes',
         showSearchBar: false,
-        backgroundColor: Color(0xFF0099D6),
-      ),// Use
-      body: LayoutBuilder(
+        backgroundColor: AppTheme.primaryColor
+      ),
+      body: Column(
+        children: [
+      // Center the switch horizontally
+      Expanded(
+      child: Center(
+      child: CustomSwitchDemandes(
+            buttonLabels: ['Disponible', 'Historique'],
+      ),
+      ),
+      ),
+
+        ],
+      ),
+
+      bottomNavigationBar: BottomNavBar(),
+
+
+    );
+
+    // Use
+      /* body: LayoutBuilder(
 
         builder: (context, constraints) {
           bool isPortrait = constraints.maxHeight > constraints.maxWidth;
@@ -75,92 +93,13 @@ class _MyRequestsPageState extends State<MyRequestsPage> {
       bottomNavigationBar: BottomNavBar(),
     );
   }
+*/
 
 
-
-  Widget _buildHeader(BuildContext context, bool isPortrait) {
-    return Container(
-      width: double.infinity,
-      height: isPortrait ? 431.h : 250.h,
-      decoration: BoxDecoration(
-        color: AppTheme.primaryColor,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(30.h)),
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 20.h),
-            child: CustomSwitch(buttonLabels: ["en cours","Terminés"],),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(20.h),
-                  child: const ServiceCard(
-                    title: 'Mon titre',
-                    date: 'Aujourd\'hui',
-                    offers: 2,
-                    profileImages: [
-                      'https://via.placeholder.com/150',
-                      'https://via.placeholder.com/150'
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          _buildButtons(),
-        ],
-      ),
-    );
   }
 
-  Widget _buildButtons() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 20.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildButton('Détails', AppTheme.primaryColor, Colors.white),
-          _buildButton('Modifier', Colors.white, AppTheme.primaryColor, hasIcon: true),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildButton(String text, Color bgColor, Color textColor, {bool hasIcon = false}) {
-    return TextButton(
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all<Color>(bgColor),
-        side: WidgetStateProperty.all<BorderSide>(const BorderSide(color: Colors.white, width: 1)),
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(3),
-          ),
-        ),
-      ),
-      onPressed: () {},
-      child: Container(
-        width: 90.75.w,
-        height: 20.87.h,
-        alignment: Alignment.center,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (hasIcon)
-              Image.asset("assets/images/edit.png", width: 16.sp, height: 16.sp),
-            if (hasIcon) SizedBox(width: 8.w),
-            Text(
-              text,
-              style: TextStyle(color: textColor),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
   Widget _buildOffersTitle() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -191,7 +130,7 @@ class Group extends StatelessWidget {
 
       ),
       elevation: 4,
-      color: Colors.white, // Set the background color here
+      color: Colors.white,
 
       child: Container(
         width: 308.w,
@@ -208,7 +147,7 @@ class Group extends StatelessWidget {
                     height: 16.1.h,
                     width: 9.6.w,
                   ),
-                  SizedBox(width: 8.w), // Spacing between the icon and text
+                  SizedBox(width: 8.w),
                   Text.rich(
                     TextSpan(
                       children: [

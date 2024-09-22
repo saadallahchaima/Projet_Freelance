@@ -3,11 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/AppTheme.dart';
+import 'RentalItemDetailPage.dart';
 
 class RentalItemCardDisponibleOffre extends StatefulWidget {
   final String imageUrl;
   final String title;
   final String date;
+
   final bool evalue;
   final double budget;
   final String location;
@@ -15,6 +17,7 @@ class RentalItemCardDisponibleOffre extends StatefulWidget {
   final bool statut;
   final VoidCallback onProposerOffrePressed;
   final VoidCallback onRentPressed;
+
 
   const RentalItemCardDisponibleOffre({
     Key? key,
@@ -35,12 +38,11 @@ class RentalItemCardDisponibleOffre extends StatefulWidget {
       _RentalItemCardDisponibleOffreState();
 }
 
-class _RentalItemCardDisponibleOffreState
-    extends State<RentalItemCardDisponibleOffre> {
+class _RentalItemCardDisponibleOffreState extends State<RentalItemCardDisponibleOffre> {
   late bool statut;
-  double price = 2000; // Initial price
 bool _showProposeButton = false;
-
+  int period = 1; // Local state for period (e.g., number of nights)
+  int price = 20;
   @override
   void initState() {
     super.initState();
@@ -51,132 +53,92 @@ bool _showProposeButton = false;
       backgroundColor: Colors.white,
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
       ),
       builder: (BuildContext context) {
+        int period = 1; // Local state for period (e.g., number of nights)
+        int price = 20; // Local state for price
+
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            double localPrice = price; // Local state for price
-
             return Padding(
               padding: EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      icon: Icon(Icons.close, color: Colors.black),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-                  Text(
-                    'Proposition de prix',
-                    style: GoogleFonts.roboto(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.close, color: Colors.black),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            'Proposition de prix',
+                            style: GoogleFonts.roboto(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10.h),
                   Text(
                     'Proposez une offre de prix afin de répondre à cette demande.',
                     style: GoogleFonts.roboto(
-                      fontSize: 14.sp,
+                      fontSize: 12.sp,
                       color: Colors.grey,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 20.h),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Column(
+                      _buildIncrementDecrementWidget(
+                          "Période(Nuit)", period, (newPeriod) {
+                        setState(() {
+                          period = newPeriod;
+                        });
+                      }),
+                      SizedBox(width: 20.w),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                localPrice += 100; // Increase the price
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6),
-                                side: BorderSide(color: Colors.blue),
-                              ),
-                              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
-                            ),
-                            child: Text(
-                              '+',
-                              style: TextStyle(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10.h), // Space between + and -
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                if (localPrice > 0) {
-                                  localPrice -= 100; // Decrease the price
-                                }
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6),
-                                side: BorderSide(color: Colors.blue),
-                              ),
-                              padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
-                            ),
-                            child: Text(
-                              '-',
-                              style: TextStyle(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                              ),
+                          _buildIncrementDecrementWidget(
+                              "Prix", price, (newPrice) {
+                            setState(() {
+                              price = newPrice;
+                            });
+                          }),
+                          SizedBox(width: 10.w),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 0.h),
+                            child: Image.asset(
+                              "assets/icons/coins.png",
+                              width: 50.w,
+                              height: 50.h,
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(width: 20.w), // Space between buttons and price
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 40.w),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Text(
-                          '$localPrice',
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 10.w),
-                      Image.asset("assets/icons/euro.png"),
                     ],
                   ),
                   SizedBox(height: 20.h),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context); // Close the BottomSheet
-                      setState(() {
-                        statut = true; // Update the status
-                        price = localPrice; // Update the global price state
-                      });
+                      Navigator.pop(context);
+                      // Update the global price state here if needed
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryColor, // Blue color
+                      backgroundColor: AppTheme.primaryColor,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.r), // Radius
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
                       padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 50.w),
                     ),
@@ -198,6 +160,99 @@ bool _showProposeButton = false;
     );
   }
 
+  Widget _buildIncrementDecrementWidget(
+      String label, int value, Function(int) onChanged, {
+        bool showCoin = false,
+      }) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14.19.sp,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 8.h), // Add some space between the label and the controls
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center, // Center the row content
+          children: [
+            Column(
+              children: [
+                Container(
+                  width: 30.w,
+                  height: 30.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Color(0xFF0099D5)),
+                    borderRadius: BorderRadius.circular(6.6),
+                  ),
+                  child: Center(
+                    child: IconButton(
+                      iconSize: 20.w,
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        if (value > 1) {
+                          onChanged(value - 1);
+                        }
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Container(
+                  width: 30.w,
+                  height: 30.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Color(0xFF0099D5)),
+                    borderRadius: BorderRadius.circular(6.6),
+                  ),
+                  child: Center(
+                    child: IconButton(
+                      iconSize: 20.w,
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        onChanged(value + 1);
+                      },
+                      icon: Icon(Icons.add),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: 5.w),
+            Container(
+              width: 70.w,
+              height: 40.h,
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 1.3),
+              decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFF0099D5)),
+                borderRadius: BorderRadius.circular(6),
+                color: Color(0xFFF4F6F5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0x11124565),
+                    offset: Offset(0, 4),
+                    blurRadius: 7,
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  "$value",
+                  style: TextStyle(fontSize: 16.sp),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+
+
 
 
   bool _showOfferText = true;
@@ -211,7 +266,26 @@ bool _showProposeButton = false;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RentalItemDetailPage(
+              imageUrl: widget.imageUrl,
+              title: widget.title,
+              date: widget.date,
+              evalue: widget.evalue,
+              budget: widget.budget,
+              location: widget.location,
+              ownerName: widget.ownerName,
+              statut: widget.statut,
+              ownerImageUrl: '',
+            ),
+          ),
+        );
+      },
+    child: Card(
       margin: EdgeInsets.all(8.w),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.r),
@@ -427,6 +501,7 @@ bool _showProposeButton = false;
           ],
         ),
       ),
+    ),
     );
   }
 }
