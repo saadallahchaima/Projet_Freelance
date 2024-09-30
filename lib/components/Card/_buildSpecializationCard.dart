@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
-
 Widget buildSpecializationCard(String text) {
   return Container(
     margin: EdgeInsets.only(right: 12),

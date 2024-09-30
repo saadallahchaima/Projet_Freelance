@@ -2,13 +2,8 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:khedma/screens/SignUp/Complete_Pro_Expert.dart';
-import 'package:khedma/screens/SignUp/Diplome.dart';
-import 'package:khedma/screens/SignUp/societe_exper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../screens/MainPages/HomePage.dart';
-import '../../screens/SignUp/formDiplome.dart';
-import '../../screens/SignUp/form_Societe2.dart';
 import '../Buttons/MyButtons.dart';
 import '../Buttons/_buildGenderButton.dart';
 import '../Card/_buildCard.dart';
@@ -18,7 +13,6 @@ import '../CustomInput.dart';
 import '../Dots/_buildDotsIndicator.dart';
 import '../_buildDateField.dart';
 import '../_buildTextField.dart';
-import 'stepperComplet.dart';
 import '../../screens/SignUp/verifMail.dart';
 import '../../screens/SignUp/verificationTel.dart';
 import '../../theme/AppTheme.dart';
@@ -27,53 +21,49 @@ class CustomStepper extends StatefulWidget {
   @override
   _CustomStepperState createState() => _CustomStepperState();
 }
-Future<Map<String, String>> getUserData() async {
-  final prefs = await SharedPreferences.getInstance();
-  return {
-    'email': prefs.getString('email') ?? '',
-    'firstName': prefs.getString('firstName') ?? '',
-    'lastName': prefs.getString('lastName') ?? '',
-    'password': prefs.getString('password') ?? '',
-    'adresse': prefs.getString('adresse') ?? '',
-    'Pay': prefs.getString('Pay') ?? '',
-    'codePostal': prefs.getString('codePostal') ?? '',
-    'ville': prefs.getString('ville') ?? '',
-    'dateNaissance': prefs.getString('dateNaissance') ?? '',
-    'gendre': prefs.getString('gendre') ?? '',
-    'numTel': prefs.getString('numTel') ?? '',
-    'nomSociete': prefs.getString('nomSociete') ?? '',
-    'domainActivite': prefs.getString('domainActivite') ?? '',
-    'rib': prefs.getString('domainActivite') ?? '',
-  };
-}
 
 String _selectedGender = 'Male';
+// Controllers for form fields
 final TextEditingController _prenomController = TextEditingController();
 final TextEditingController _nomController = TextEditingController();
 final TextEditingController _emailController = TextEditingController();
 final TextEditingController _passwordController = TextEditingController();
+final TextEditingController _adresseController = TextEditingController();
+final TextEditingController _villeController = TextEditingController();
+final TextEditingController _postalCodeController = TextEditingController();
+final TextEditingController _paysController = TextEditingController();
+final TextEditingController _numTel = TextEditingController();
+final TextEditingController _nomSociete = TextEditingController();
+final TextEditingController _titreExperience = TextEditingController();
+final TextEditingController _nomSocietePrecedente = TextEditingController();
+final TextEditingController _descriptionExperience = TextEditingController();
+final TextEditingController _prix = TextEditingController();
+final TextEditingController _domaineActivite = TextEditingController();
+final TextEditingController _nbSalarie = TextEditingController();
+final TextEditingController _descriptionProfile = TextEditingController();
+final TextEditingController _specialite = TextEditingController();
+final TextEditingController _specialiteDiplome = TextEditingController();
+final TextEditingController _ancienClient = TextEditingController();
+String _selectedDropdownValue = 'Heure'; // Default value
+String _day = '23'; // Default value
+String _month = '11'; // Default value
+String _year = '2000'; // Default value
 String selectedProfile = '';
 String selectedCountryFlag = '🇺🇸'; // Default country flag (USA)
 String selectedCountryCode = '+1'; // Default country code
-final TextEditingController _AdresseController = TextEditingController();
-final TextEditingController _VilleController = TextEditingController();
-final TextEditingController _postalCodeController = TextEditingController();
-final TextEditingController _PaysController = TextEditingController();
-final TextEditingController _NumTel = TextEditingController();
-final TextEditingController _NomSociete = TextEditingController();
-final TextEditingController _TitreExperience = TextEditingController();
-final TextEditingController _NomSocietePrecedente = TextEditingController();
-final TextEditingController _DescriptionExperience = TextEditingController();
-final TextEditingController _Prix = TextEditingController();
-final TextEditingController _DomaineActivite = TextEditingController();
-final TextEditingController _Ancienlient = TextEditingController();
-final TextEditingController _NbSalarie = TextEditingController();
-
 class _CustomStepperState extends State<CustomStepper> {
   int currentStep = 0;
 
   @override
+  void initState() {
+    super.initState();
+    // Optionally load existing user data
+    _loadDataFromPreferences();
+  }
+
+  @override
   void dispose() {
+    /*  _Prix.dispose(); // Clean up the controller when the widget is disposed
     _prenomController.dispose();
     _nomController.dispose();
     _emailController.dispose();
@@ -82,14 +72,136 @@ class _CustomStepperState extends State<CustomStepper> {
     _VilleController.dispose();
     _postalCodeController.dispose();
     _PaysController.dispose();
-    // _dateControllers.values.forEach((controller) => controller.dispose());
+    _NumTel.dispose();
+    _NomSociete.dispose();
+    _TitreExperience.dispose();
+    _NomSocietePrecedente.dispose();
+    _DescriptionExperience.dispose();
+    _DomaineActivite.dispose();
+    _Ancienlient.dispose();
+    _NbSalarie.dispose();
+*/
     super.dispose();
   }
+
+  // Load data from SharedPreferences
+  _loadDataFromPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      _prenomController.text = prefs.getString('prenom') ?? '';
+      _nomController.text = prefs.getString('nom') ?? '';
+      _emailController.text = prefs.getString('email') ?? '';
+      _passwordController.text = prefs.getString('password') ?? '';
+      _numTel.text = prefs.getString('NumTel') ?? '';
+      _adresseController.text = prefs.getString('adresse') ?? '';
+      _paysController.text = prefs.getString('Pays') ?? '';
+      _villeController.text = prefs.getString('ville') ?? '';
+      double savedPrix = prefs.getDouble('Prix') ?? 0.0; // Load as double
+      _prix.text = savedPrix.toString(); // Set the text of the controller
+      _postalCodeController.text = prefs.getString('codePostal') ?? '';
+      _selectedGender = prefs.getString('selectedGender') ?? '';
+      _day = prefs.getString('day') ?? '23';
+      _month = prefs.getString('month') ?? '11';
+      _year = prefs.getString('year') ?? '2000';
+      selectedProfile = prefs.getString('selectedProfile') ?? ''; // Load selectedProfile
+      _selectedDropdownValue = prefs.getString('dropdownValue') ?? 'Heure';
+      _descriptionProfile.text = prefs.getString('descriptionProfile') ?? '';
+      _specialite.text = prefs.getString('Specialite') ?? '';
+      _specialiteDiplome.text = prefs.getString('SpecialiteDiplome') ?? '';
+      _ancienClient.text = prefs.getString('AncientClient') ?? '';
+      _nomSociete.text = prefs.getString('NomSociete') ?? '';
+      _titreExperience.text = prefs.getString('TitreExp') ?? '';
+      _nomSocietePrecedente.text = prefs.getString('SocietePrecedente') ?? '';
+      _domaineActivite.text = prefs.getString('DomainActivite') ?? '';
+    });
+  }
+
+  _saveDataToPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Save data to SharedPreferences
+    await prefs.setString('prenom', _prenomController.text);
+    await prefs.setString('nom', _nomController.text);
+    await prefs.setString('email', _emailController.text);
+    await prefs.setString('password', _passwordController.text);
+    await prefs.setString('adresse', _adresseController.text);
+    await prefs.setString('Pays', _paysController.text);
+    await prefs.setString('ville', _villeController.text);
+    await prefs.setString('descriptionProfile', _descriptionProfile.text);
+    await prefs.setString('Specialite', _specialite.text);
+    await prefs.setString('SpecialiteDiplome', _specialiteDiplome.text);
+    await prefs.setString('TitreExp', _titreExperience.text);
+    await prefs.setString('codePostal', _postalCodeController.text);
+    await prefs.setString('NumTel', _numTel.text);
+    // Ensure the gender variable is defined in your widget
+    await prefs.setString('selectedGender', _selectedGender);
+    await prefs.setString('selectedProfile', selectedProfile);
+    // Convert Prix to double for saving
+    double prixValue = double.tryParse(_prix.text) ?? 0.0; // Convert to double
+    await prefs.setDouble('Prix', prixValue); // Save as double
+    await prefs.setString('NomSociete', _nomSociete.text); // Save as double
+    await prefs.setString('dropdownValue', _selectedDropdownValue);
+    await prefs.setString('AncientClient', _ancienClient.text);
+    await prefs.setString('SocietePrecedente', _nomSocietePrecedente.text);
+    await prefs.setString('DomainActivite', _domaineActivite.text);
+
+    String? day = prefs.getString('day');
+    String? month = prefs.getString('month');
+    String? year = prefs.getString('year');
+    // Verify if the data is saved
+    String? savedPrenom = prefs.getString('prenom');
+    String? savedNom = prefs.getString('nom');
+    String? savedEmail = prefs.getString('email');
+    String? savedPassword = prefs.getString('password');
+    String? savedAdresse = prefs.getString('adresse');
+    String? savedPays = prefs.getString('Pays');
+    String? savedVille = prefs.getString('ville');
+    String? savedCodePostal = prefs.getString('codePostal');
+    String? savedNumTel = prefs.getString('NumTel');
+    String? savedGender = prefs.getString('selectedGender'); // Add gender verification
+    String? savedDescriptionProfile = prefs.getString('descriptionProfile');
+    String? savedSpecialite = prefs.getString('Specialite');
+    String? savedSpecialiteDiplome = prefs.getString('SpecialiteDiplome');
+    String? savedAncientClient = prefs.getString('AncientClient');
+    String? savedTitreExp = prefs.getString('TitreExp');
+    String? savedNomSociete = prefs.getString('NomSociete');
+    String? savedSocietePrecedente = prefs.getString('SocietePrecedente');
+    String? savedDomainActivite = prefs.getString('DomainActivite');
+
+    // Print to console for verification
+    print("Saved Data: ");
+    print("Prénom: $savedPrenom");
+    print("Nom: $savedNom");
+    print("Email: $savedEmail");
+    print("Mot de passe: $savedPassword");
+    print("Adresse: $savedAdresse");
+    print("Pays: $savedPays");
+    print("Ville: $savedVille");
+    print("Code Postal: $savedCodePostal");
+    print("Numéro de Téléphone: $savedNumTel");
+    print("Genre: $savedGender"); // Print saved gender
+    print('Day: $day, Month: $month, Year: $year');
+    print("Saved selectedProfile: $selectedProfile");
+    print("Saved Prix: $prixValue");
+    print("Prix Saved Par: $_selectedDropdownValue");
+    print("DescriptionProdile Saved : $savedDescriptionProfile");
+    print("Specialite Saved : $savedSpecialite");
+    print("SpecialiteDiplome Saved : $savedSpecialiteDiplome");
+
+    print("TitreExp Saved : $savedTitreExp");
+    print("AncientClient Saved : $savedAncientClient");
+    print("savedNomSociete Saved : $savedNomSociete");
+    print("savedSocietePrecedente Saved : $savedSocietePrecedente");
+    print("savedDomainActivite Saved : $savedDomainActivite");
+  }
+
   void _onGenderSelected(String gender) {
     setState(() {
       _selectedGender = gender; // Update the selected gender
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +213,7 @@ class _CustomStepperState extends State<CustomStepper> {
         title: Row(
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.black),
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () {
                 if (currentStep > 0) {
                   setState(() {
@@ -123,7 +235,7 @@ class _CustomStepperState extends State<CustomStepper> {
                       child: LinearProgressIndicator(
                         value: currentStep / 14,
                         backgroundColor: Colors.grey[200],
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
                         minHeight: 4.h,
                       ),
                     ),
@@ -150,7 +262,8 @@ class _CustomStepperState extends State<CustomStepper> {
           children: [
             Expanded(
               child: Stack(
-                alignment: Alignment.bottomCenter,
+                ///////////houuni
+                alignment: Alignment.topCenter,
                 children: [
                   _getPageForStep(currentStep),
                   if (_hasDotsForStep(currentStep))
@@ -233,6 +346,7 @@ class _CustomStepperState extends State<CustomStepper> {
                           onSelect: (Country country) {
                             setState(() {
                               selectedCountryFlag = country.flagEmoji;
+                              _paysController.text = country.name;
                             });
                             print('Select country: ${country.displayName}');
                           },
@@ -249,14 +363,14 @@ class _CustomStepperState extends State<CustomStepper> {
                           children: [
                             Text(selectedCountryFlag,
                                 style: TextStyle(fontSize: 24.sp)),
-                            Icon(Icons.arrow_drop_down),
+                            const Icon(Icons.arrow_drop_down),
                           ],
                         ),
                       ),
                     ),
                     Expanded(
                       child: CustomInput(
-                        controller: _PaysController,
+                        controller: _paysController,
                         // ou n'importe quel contrôleur
                         hint: 'Pays',
                         // ou le texte d'indication souhaité
@@ -269,7 +383,7 @@ class _CustomStepperState extends State<CustomStepper> {
                 ),
                 SizedBox(height: 30.h),
                 CustomInput(
-                  controller: _VilleController, // ou n'importe quel contrôleur
+                  controller: _villeController, // ou n'importe quel contrôleur
                   hint: 'Ville', // ou le texte d'indication souhaité
                   onChanged: (value) {
                     // Action à faire lorsque le texte change
@@ -277,7 +391,7 @@ class _CustomStepperState extends State<CustomStepper> {
                 ),
                 SizedBox(height: 30.h),
                 CustomInput(
-                  controller: _AdresseController,
+                  controller: _adresseController,
                   // ou n'importe quel contrôleur
                   hint: 'Adresse',
                   // ou le texte d'indication souhaité
@@ -375,14 +489,14 @@ class _CustomStepperState extends State<CustomStepper> {
                             SizedBox(width: 8.w),
                             Text(selectedCountryCode,
                                 style: TextStyle(fontSize: 16.sp)),
-                            Icon(Icons.arrow_drop_down),
+                            const Icon(Icons.arrow_drop_down),
                           ],
                         ),
                       ),
                     ),
                     Expanded(
                       child: CustomInput(
-                        controller: _NumTel, // ou n'importe quel contrôleur
+                        controller: _numTel, // ou n'importe quel contrôleur
                         hint: 'Tel', // ou le texte d'indication souhaité
                         onChanged: (value) {
                           // Action à faire lorsque le texte change
@@ -446,34 +560,43 @@ class _CustomStepperState extends State<CustomStepper> {
                 ),
                 SizedBox(height: 30.h),
                 Column(
-                      children: [
-                        buildTextField(
-                          textFieldData: {'label': 'Prénom', 'hint': 'Entrez votre prénom'},
-                          controller: _prenomController,
-                        ),
-                        SizedBox(height: 30.h),
-
-                        buildTextField(
-                          textFieldData: {'label': 'Nom', 'hint': 'Entrez votre nom'},
-                          controller: _nomController,
-                        ),
-                        SizedBox(height: 30.h),
-
-                        buildTextField(
-                          textFieldData: {'label': 'Email', 'hint': 'Entrez votre email'},
-                          controller: _emailController,
-                        ),
-                        SizedBox(height: 30.h),
-
-                        buildTextField(
-                          textFieldData: {'label': 'Password', 'hint': 'Entrez votre mot de passe'},
-                          controller: _passwordController,
-                        ),
-                      ],
+                  children: [
+                    buildTextField(
+                      textFieldData: {
+                        'label': 'Prénom',
+                        'hint': 'Entrez votre prénom'
+                      },
+                      controller: _prenomController,
                     ),
+                    SizedBox(height: 30.h),
+                    buildTextField(
+                      textFieldData: {
+                        'label': 'Nom',
+                        'hint': 'Entrez votre nom'
+                      },
+                      controller: _nomController,
+                    ),
+                    SizedBox(height: 30.h),
+                    buildTextField(
+                      textFieldData: {
+                        'label': 'Email',
+                        'hint': 'Entrez votre email'
+                      },
+                      controller: _emailController,
+                    ),
+                    SizedBox(height: 30.h),
+                    buildTextField(
+                      textFieldData: {
+                        'label': 'Password',
+                        'hint': 'Entrez votre mot de passe'
+                      },
+                      controller: _passwordController,
+                    ),
+                  ],
+                ),
                 SizedBox(height: 20.h),
                 Text(
-                  'Your gender',
+                  'Genre',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
@@ -487,20 +610,22 @@ class _CustomStepperState extends State<CustomStepper> {
                       'Homme',
                       Icons.man,
                       _selectedGender == 'Homme',
-                          () => _onGenderSelected('Homme'), // Update selection on tap
+                      () =>
+                          _onGenderSelected('Homme'), // Update selection on tap
                     ),
                     SizedBox(width: 10.w),
                     buildGenderButton(
-                      'Female',
+                      'Femme',
                       Icons.woman,
                       _selectedGender == 'Femme',
-                          () => _onGenderSelected('Femme'), // Update selection on tap
+                      () =>
+                          _onGenderSelected('Femme'), // Update selection on tap
                     ),
                   ],
                 ),
                 SizedBox(height: 20.h),
                 Text(
-                  'Your birthday',
+                  'Date de Naissance',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
@@ -510,11 +635,14 @@ class _CustomStepperState extends State<CustomStepper> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    buildDateField('Day', '23'),
+                    buildDateField('Jour', '23', 'day'),
+                    // Pass 'day' as the prefKey
                     SizedBox(width: 10.h),
-                    buildDateField('Month', '11'),
+                    buildDateField('Mois', '11', 'month'),
+                    // Pass 'month' as the prefKey
                     SizedBox(width: 10.h),
-                    buildDateField('Year', '2000'),
+                    buildDateField('Année', '2000', 'year'),
+                    // Pass 'year' as the prefKey
                   ],
                 ),
               ],
@@ -527,18 +655,18 @@ class _CustomStepperState extends State<CustomStepper> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFFFFFFFF),
+                  color: const Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.circular(40),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 13, 26, 50.1),
+                  padding: const EdgeInsets.fromLTRB(20, 13, 26, 50.1),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        margin: EdgeInsets.fromLTRB(4.5, 0, 0, 88.9),
-                        child: SizedBox(
+                        margin: const EdgeInsets.fromLTRB(4.5, 0, 0, 88.9),
+                        child: const SizedBox(
                           width: 261.5,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -559,7 +687,7 @@ class _CustomStepperState extends State<CustomStepper> {
                       ),
                       SizedBox(height: 50.h),
                       Container(
-                        margin: EdgeInsets.fromLTRB(5.2, 0, 0, 10.6),
+                        margin: const EdgeInsets.fromLTRB(5.2, 0, 0, 10.6),
                         child: Column(
                           children: [
                             Row(
@@ -587,21 +715,21 @@ class _CustomStepperState extends State<CustomStepper> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(5.2, 0, 0, 22.4),
+                        margin: const EdgeInsets.fromLTRB(5.2, 0, 0, 22.4),
                         child: Text(
                           'Nous souhaitons mieux vous connaître afin de finaliser votre profile.',
                           textAlign: TextAlign.center,
                           style: GoogleFonts.dmSans(
                             fontWeight: FontWeight.w500,
                             fontSize: 12,
-                            color: Color(0xFFA7A6A5),
+                            color: const Color(0xFFA7A6A5),
                           ),
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(1.2, 0, 0, 26.2),
+                        margin: const EdgeInsets.fromLTRB(1.2, 0, 0, 26.2),
                         child: Container(
-                          padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
                           child: Stack(
                             clipBehavior: Clip.none,
                             children: [
@@ -611,12 +739,12 @@ class _CustomStepperState extends State<CustomStepper> {
                                 children: [
                                   Container(
                                     margin:
-                                        EdgeInsets.fromLTRB(1.8, 0, 0, 14.3),
+                                        const EdgeInsets.fromLTRB(1.8, 0, 0, 14.3),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
-                                      color: Color(0xFFFFFFFF),
+                                      color: const Color(0xFFFFFFFF),
                                       boxShadow: [
-                                        BoxShadow(
+                                        const BoxShadow(
                                           color: Color(0x11124565),
                                           offset: Offset(0, 12),
                                           blurRadius: 7.5,
@@ -626,7 +754,7 @@ class _CustomStepperState extends State<CustomStepper> {
                                     child: SizedBox(
                                       width: 92,
                                       child: Padding(
-                                        padding: EdgeInsets.fromLTRB(
+                                        padding: const EdgeInsets.fromLTRB(
                                             0, 26.3, 0, 26.2),
                                         child: Column(
                                           mainAxisAlignment:
@@ -635,7 +763,7 @@ class _CustomStepperState extends State<CustomStepper> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Container(
-                                              margin: EdgeInsets.fromLTRB(
+                                              margin: const EdgeInsets.fromLTRB(
                                                   0, 0, 0, 4.3),
                                               child: SizedBox(
                                                 width: 50,
@@ -655,7 +783,7 @@ class _CustomStepperState extends State<CustomStepper> {
                                     style: GoogleFonts.roboto(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 16,
-                                      color: Color(0xFF0099D5),
+                                      color: const Color(0xFF0099D5),
                                     ),
                                   ),
                                 ],
@@ -676,23 +804,23 @@ class _CustomStepperState extends State<CustomStepper> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(1, 0, 0, 25),
+                        margin: const EdgeInsets.fromLTRB(1, 0, 0, 25),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xFF064BA6)),
+                          border: Border.all(color: const Color(0xFF064BA6)),
                           borderRadius: BorderRadius.circular(11),
-                          color: Color(0xFFFFFFFF),
+                          color: const Color(0xFFFFFFFF),
                         ),
                         child: SizedBox(
                           width: 208,
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(0, 6, 1.2, 5),
+                            padding: const EdgeInsets.fromLTRB(0, 6, 1.2, 5),
                             child: Center(
                               child: Text(
                                 'Développez votre profile',
                                 style: GoogleFonts.roboto(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14.9,
-                                  color: Color(0xFF064BA6),
+                                  color: const Color(0xFF064BA6),
                                 ),
                               ),
                             ),
@@ -727,7 +855,7 @@ class _CustomStepperState extends State<CustomStepper> {
                               width: 93,
                               height: 93,
                               decoration: BoxDecoration(
-                                color: Color(0xFFD9D9D9),
+                                color: const Color(0xFFD9D9D9),
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: selectedProfile == 'expert'
@@ -745,7 +873,7 @@ class _CustomStepperState extends State<CustomStepper> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
                               'expert',
                               style: GoogleFonts.roboto(
@@ -773,7 +901,7 @@ class _CustomStepperState extends State<CustomStepper> {
                               width: 93,
                               height: 93,
                               decoration: BoxDecoration(
-                                color: Color(0xFFD9D9D9),
+                                color: const Color(0xFFD9D9D9),
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: selectedProfile == 'amateur certifié'
@@ -790,7 +918,7 @@ class _CustomStepperState extends State<CustomStepper> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
                               'amateur certifié',
                               style: GoogleFonts.roboto(
@@ -818,7 +946,7 @@ class _CustomStepperState extends State<CustomStepper> {
                               width: 93,
                               height: 93,
                               decoration: BoxDecoration(
-                                color: Color(0xFFD9D9D9),
+                                color: const Color(0xFFD9D9D9),
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: selectedProfile == 'professionel'
@@ -835,7 +963,7 @@ class _CustomStepperState extends State<CustomStepper> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             Text(
                               'professionel',
                               style: GoogleFonts.roboto(
@@ -861,72 +989,53 @@ class _CustomStepperState extends State<CustomStepper> {
         return SingleChildScrollView(
           child: Container(
             decoration: BoxDecoration(
-              color: Color(0xFFFFFFFF),
+              color: const Color(0xFFFFFFFF),
               borderRadius: BorderRadius.circular(40),
             ),
             child: Padding(
-              padding: EdgeInsets.fromLTRB(34, 123, 34, 55.1),
+              padding: const EdgeInsets.fromLTRB(34, 123, 34, 55.1),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(bottom: 10.6),
+                    margin: const EdgeInsets.only(bottom: 10.6),
                     child: Text(
                       'Complétez votre profile',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w600,
                         fontSize: 22.3,
                         height: 1.4,
-                        color: Color(0xFF1C1F1E),
+                        color: const Color(0xFF1C1F1E),
                       ),
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 17.4),
+                    margin: const EdgeInsets.only(bottom: 17.4),
                     child: Text(
                       'Nous souhaitons mieux vous connaître afin de finaliser votre profile.',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.dmSans(
                         fontWeight: FontWeight.w500,
                         fontSize: 12,
-                        color: Color(0xFFA7A6A5),
+                        color: const Color(0xFFA7A6A5),
                       ),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 22.1),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7),
-                          color: Color(0xFFF4F6F5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0x11124565),
-                              offset: Offset(0, 4.8),
-                              blurRadius: 7.14,
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(19, 11.4, 19, 11.4),
-                          child: Text(
-                            'Spécialisé en:',
-                            style: GoogleFonts.roboto(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13.3,
-                              height: 1.6,
-                              color: Color(0xFF141414),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+
+                  SizedBox(height: 10.h),
+                  CustomInput(
+                    controller: _specialite,
+                    hint: 'Spécialisé en',
+                    onChanged: (value) {
+                      print('Spécialisé: $value');
+                    },
                   ),
+                  SizedBox(height: 10.h),
+
+                  /////dataset//////
                   Container(
-                    margin: EdgeInsets.only(bottom: 24),
+                    margin: const EdgeInsets.only(bottom: 24),
                     child: SizedBox(
                       width: 264,
                       child: Row(
@@ -934,56 +1043,35 @@ class _CustomStepperState extends State<CustomStepper> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           buildSpecializationCard('Design'),
-                          SizedBox(width: 12), // Adjust spacing between cards
+                          const SizedBox(width: 12), // Adjust spacing between cards
                           buildSpecializationCard('Web Dev'),
                         ],
                       ),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 20.1),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7),
-                          color: Color(0xFFF4F6F5),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0x11124565),
-                              offset: Offset(0, 4.8),
-                              blurRadius: 7.14,
-                            ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(19, 11.4, 19, 11.4),
-                          child: Text(
-                            'Description:',
-                            style: GoogleFonts.roboto(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 13.3,
-                              height: 1.6,
-                              color: Color(0xFF141414),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                  ////////
+                  SizedBox(height: 10.h),
+                  CustomInput(
+                    controller: _descriptionProfile,
+                    hint: 'Déscription',
+                    onChanged: (value) {
+                      print('Descriptiin: $value');
+                    },
                   ),
+                  SizedBox(height: 10.h),
                   Container(
-                    margin: EdgeInsets.fromLTRB(5.2, 0, 0, 17),
+                    margin: const EdgeInsets.fromLTRB(5.2, 0, 0, 17),
                     child: Text(
                       'Proposez votre tarif par l’unité qui vous convient.',
                       style: GoogleFonts.dmSans(
                         fontWeight: FontWeight.w500,
                         fontSize: 12,
-                        color: Color(0xFFA7A6A5),
+                        color: const Color(0xFFA7A6A5),
                       ),
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 30.8),
+                    margin: const EdgeInsets.only(bottom: 30.8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -996,32 +1084,32 @@ class _CustomStepperState extends State<CustomStepper> {
                               style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
-                                color: Color(0xFF000000),
+                                color: const Color(0xFF000000),
                               ),
                             ),
-                            SizedBox(height: 5),
+                            const SizedBox(height: 5),
                             SizedBox(
                               width: 60, // Minimum width for the text field
                               child: TextFormField(
+                                controller: _prix,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                       color: Color(0xFF0099D5),
                                     ),
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(
+                                  contentPadding: const EdgeInsets.symmetric(
                                     vertical: 10,
                                     horizontal: 12,
                                   ),
                                 ),
                                 keyboardType: TextInputType.number,
-                                initialValue: '50',
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(width: 30),
+                        const SizedBox(width: 30),
                         // Par Section
                         Expanded(
                           child: Column(
@@ -1032,40 +1120,41 @@ class _CustomStepperState extends State<CustomStepper> {
                                 style: GoogleFonts.inter(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
-                                  color: Color(0xFF000000),
+                                  color: const Color(0xFF000000),
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
                               DropdownButtonFormField<String>(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF0099D5),
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xFF0099D5),
+                                      ),
+                                    ),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                      horizontal: 12,
                                     ),
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: 10,
-                                    horizontal: 12,
-                                  ),
-                                ),
-                                value: 'Heure',
-                                items: <String>[
-                                  'Heure',
-                                  'Jour',
-                                  'Semaine',
-                                  'Mois',
-                                  'Année'
-                                ].map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  // Handle dropdown value change
-                                },
-                              ),
+                                  value: _selectedDropdownValue,
+                                  items: <String>[
+                                    'Heure',
+                                    'Jour',
+                                    'Semaine',
+                                    'Mois',
+                                    'Année'
+                                  ].map((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    _selectedDropdownValue = newValue!;
+                                    _saveDataToPreferences();
+                                    // Save the new value to SharedPreferences                                },
+                                  }),
                             ],
                           ),
                         ),
@@ -1073,13 +1162,13 @@ class _CustomStepperState extends State<CustomStepper> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 30.1),
+                    margin: const EdgeInsets.only(bottom: 30.1),
                     child: Text(
                       'Ajoutez vos projets',
                       style: GoogleFonts.roboto(
                         fontWeight: FontWeight.w600,
                         fontSize: 14.9,
-                        color: Color(0xFF1C1F1E),
+                        color: const Color(0xFF1C1F1E),
                       ),
                     ),
                   ),
@@ -1103,15 +1192,475 @@ class _CustomStepperState extends State<CustomStepper> {
         );
       //return FormExperience();
       case 7:
-        return diplome();
-      // return FormSociete();
+        //  return diplome();
+        // return FormSociete();
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20.h),
+                Center(
+                  child: Image.asset(
+                    "assets/images/logo_rent_me-removebg-preview 2.png",
+                    width: 50.w,
+                    height: 50.h,
+                  ),
+                ),
+                SizedBox(height: 50.h),
+                // Ajustez cette valeur pour réduire l'espace
+
+                Center(
+                  child: Container(
+                    width: 0.8.sw,
+                    child: Text(
+                      'Avez vous un diplôme ?',
+                      style: TextStyle(
+                        fontSize: 0.06.sw,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.secondaryColor,
+                        fontFamily: 'Roboto',
+                        height: 1.4,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Center(
+                  child: Container(
+                    width: 0.8.sw,
+                    child: Text(
+                      'Nous souhaitons mieux vous connaître afin de finaliser votre profile.',
+                      style: TextStyle(
+                        fontSize: 0.04.sw,
+                        color: AppTheme.accentColor,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 50.h),
+                Text(
+                  'Diplome',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildCard(0.27.sw, AppTheme.primaryColor,
+                        'assets/icons/img_6.png'),
+                  ],
+                ),
+                SizedBox(height: 50.h),
+                Text(
+                  'Formations',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20.h),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildCard(0.27.sw, AppTheme.primaryColor,
+                        'assets/icons/img_6.png'),
+                    SizedBox(width: 10.h),
+                    buildCard(0.27.sw, AppTheme.primaryColor,
+                        'assets/icons/img_6.png'),
+                    SizedBox(width: 10.h),
+                    buildCard(0.27.sw, AppTheme.primaryColor,
+                        'assets/icons/img_6.png'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
       case 8:
-        return SocieteExper();
-      //return FormSociete2();
+        // return SocieteExper();
+        //return FormSociete2();
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20.h),
+
+                SizedBox(height: 50.h),
+                // Ajustez cette valeur pour réduire l'espace
+
+                Center(
+                  child: Container(
+                    width: 0.8.sw,
+                    child: Text(
+                      'Avez-vous une expérience ?',
+                      style: TextStyle(
+                        fontSize: 0.05.sw,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.secondaryColor,
+                        fontFamily: 'Roboto',
+                        height: 1.4,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Center(
+                  child: Container(
+                    width: 0.8.sw,
+                    child: Text(
+                      'Nous souhaitons mieux vous connaître afin de finaliser votre profile.',
+                      style: TextStyle(
+                        fontSize: 0.03.sw,
+                        color: AppTheme.accentColor,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 30.h),
+
+                CustomInput(
+                  controller: _titreExperience,
+                  hint: 'Titre',
+                  onChanged: (value) {
+                    print('Titre: $value');
+                  },
+                ),
+                SizedBox(height: 10.h),
+                CustomInput(
+                  controller: _nomSociete,
+                  hint: 'Nom de société',
+                  onChanged: (value) {
+                    print('Nom de société: $value');
+                  },
+                ),
+                SizedBox(height: 50.h),
+                Text(
+                  'Période',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20.h),
+
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  // Padding horizontal pour 'Du'
+                  child: Text(
+                    'Du:',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+
+                // Ajouter les champs de date ici
+                Row(
+                  children: [
+                    buildDateField('Jour', '23', 'day'),
+                    // Ensure 'Day' is a key in _dateControllers
+                    SizedBox(width: 10.w),
+                    buildDateField('Mois', '11', 'Month'),
+                    // Ensure 'Day' is a key in _dateControllers
+                    SizedBox(width: 10.w),
+                    buildDateField('Année', '2000', 'Year'),
+                    // Ensure 'Day' is a key in _dateControllers
+                  ],
+                ),
+                SizedBox(height: 20.h),
+
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  // Padding horizontal pour 'Du'
+                  child: Text(
+                    'Jusqu' 'à:',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+
+                Row(
+                  children: [
+                    buildDateField('Jour', '23', 'day'),
+                    // Ensure 'Day' is a key in _dateControllers
+                    SizedBox(width: 10.w),
+                    buildDateField('Mois', '11', 'Month'),
+                    // Ensure 'Month' is a key in _dateControllers
+                    SizedBox(width: 10.w),
+                    buildDateField('Année', '2000', 'Year'),
+                    // Ensure 'Year' is a key in _dateControllers
+                  ],
+                ),
+
+                SizedBox(height: 30.h),
+                CustomInput(
+                  controller: _nomSociete,
+                  hint: 'Déscription',
+                  onChanged: (value) {
+                    print('Description: $value');
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
       case 9:
-        return CompleteProfileProExpert();
+        //  return CompleteProfileProExpert();
+        return SingleChildScrollView(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(40),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(34, 123, 34, 55.1),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.6),
+                    child: Center(
+                      child: Text(
+                        'Complétez votre profile',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 22.3,
+                          height: 1.4,
+                          color: const Color.fromARGB(255, 2, 2, 2),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 17.4),
+                    child: Text(
+                      'Nous souhaitons mieux vous connaître afin de finaliser votre profile.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.dmSans(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: const Color(0xFFA7A6A5),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  CustomInput(
+                    controller: _specialiteDiplome,
+                    hint: 'Spécialisé en',
+                    onChanged: (value) {
+                      print('Spécialisé: $value');
+                    },
+                  ),
+                  SizedBox(height: 20.h),
+
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 24),
+                    child: SizedBox(
+                      width: 264,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          buildSpecializationCard('Design'),
+                          const SizedBox(width: 12),
+                          buildSpecializationCard('Web Dev'),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 20.1),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Diplome',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 40.w),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              buildCard(0.27.sw, AppTheme.primaryColor,
+                                  'assets/icons/image.png'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 50.h),
+                  // Updated Container for Formations
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 20.1),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Formations',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 20.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  buildCard(0.27.sw, AppTheme.primaryColor,
+                                      'assets/icons/image.png'),
+                                  SizedBox(width: 10.h),
+                                  buildCard(0.27.sw, AppTheme.primaryColor,
+                                      'assets/icons/image.png'),
+                                  SizedBox(width: 10.h),
+                                  buildCard(0.27.sw, AppTheme.primaryColor,
+                                      'assets/icons/image.png'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
       case 10:
-        return formDiplome();
+        // return formDiplome();
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20.h),
+                Center(
+                  child: Image.asset(
+                    "assets/images/logo_rent_me-removebg-preview 2.png",
+                    width: 50.w,
+                    height: 50.h,
+                  ),
+                ),
+                SizedBox(height: 50.h),
+                // Ajustez cette valeur pour réduire l'espace
+
+                Center(
+                  child: Container(
+                    width: 0.8.sw,
+                    child: Text(
+                      'Avez vous un diplôme ?',
+                      style: TextStyle(
+                        fontSize: 0.06.sw,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.secondaryColor,
+                        fontFamily: 'Roboto',
+                        height: 1.4,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Center(
+                  child: Container(
+                    width: 0.8.sw,
+                    child: Text(
+                      'Nous souhaitons mieux vous connaître afin de finaliser votre profile.',
+                      style: TextStyle(
+                        fontSize: 0.04.sw,
+                        color: AppTheme.accentColor,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 50.h),
+                Text(
+                  'Diplome',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildCard(0.27.sw, AppTheme.primaryColor,
+                        'assets/icons/img_6.png'),
+                  ],
+                ),
+                SizedBox(height: 50.h),
+                Text(
+                  'Formations',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20.h),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildCard(0.27.sw, AppTheme.primaryColor,
+                        'assets/icons/img_6.png'),
+                    SizedBox(width: 10.h),
+                    buildCard(0.27.sw, AppTheme.primaryColor,
+                        'assets/icons/img_6.png'),
+                    SizedBox(width: 10.h),
+                    buildCard(0.27.sw, AppTheme.primaryColor,
+                        'assets/icons/img_6.png'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
       case 11:
         // return FormExperience();
         return SingleChildScrollView(
@@ -1167,19 +1716,19 @@ class _CustomStepperState extends State<CustomStepper> {
                 ),
                 SizedBox(height: 30.h),
                 CustomInput(
-                  controller: _NomSociete,
+                  controller: _titreExperience,
                   hint: 'Titre',
                   onChanged: (value) {
-                    print('Mot de passe: $value');
+                    print('Titre: $value');
                   },
                 ),
                 SizedBox(height: 10.h),
 
                 CustomInput(
-                  controller: _NomSociete,
+                  controller: _nomSocietePrecedente,
                   hint: 'Nom de société précédente:',
                   onChanged: (value) {
-                    print('Mot de passe: $value');
+                    print('Ancienne Societe: $value');
                   },
                 ),
                 SizedBox(height: 50.h),
@@ -1208,14 +1757,14 @@ class _CustomStepperState extends State<CustomStepper> {
                 SizedBox(height: 10.h),
                 Row(
                   children: [
-                    buildDateField('Day', '23'),
-                    // Ensure 'Day' is a key in _dateControllers
-                    SizedBox(width: 10.w),
-                    buildDateField('Month', '11'),
-                    // Ensure 'Month' is a key in _dateControllers
-                    SizedBox(width: 10.w),
-                    buildDateField('Year', '2000'),
-                    // Ensure 'Year' is a key in _dateControllers
+                    buildDateField('Jour', '23', 'day'),
+                    // Pass 'day' as the prefKey
+                    SizedBox(width: 10.h),
+                    buildDateField('Mois', '11', 'month'),
+                    // Pass 'month' as the prefKey
+                    SizedBox(width: 10.h),
+                    buildDateField('Année', '2000', 'year'),
+                    // Pass 'year' as the prefKey
                   ],
                 ),
                 SizedBox(height: 20.h),
@@ -1236,23 +1785,23 @@ class _CustomStepperState extends State<CustomStepper> {
 
                 Row(
                   children: [
-                    buildDateField('Day', '23'),
-                    // Ensure 'Day' is a key in _dateControllers
-                    SizedBox(width: 10.w),
-                    buildDateField('Month', '11'),
-                    // Ensure 'Month' is a key in _dateControllers
-                    SizedBox(width: 10.w),
-                    buildDateField('Year', '2000'),
-                    // Ensure 'Year' is a key in _dateControllers
+                    buildDateField('Jour', '23', 'day'),
+                    // Pass 'day' as the prefKey
+                    SizedBox(width: 10.h),
+                    buildDateField('Mois', '11', 'month'),
+                    // Pass 'month' as the prefKey
+                    SizedBox(width: 10.h),
+                    buildDateField('Année', '2000', 'year'),
+                    // Pass 'year' as the prefKey
                   ],
                 ),
 
                 SizedBox(height: 30.h),
                 CustomInput(
-                  controller: _NomSociete,
+                  controller: _descriptionExperience,
                   hint: 'Déscription',
                   onChanged: (value) {
-                    print('Mot de passe: $value');
+                    print('Description: $value');
                   },
                 ),
               ],
@@ -1311,7 +1860,7 @@ class _CustomStepperState extends State<CustomStepper> {
                 ),
                 SizedBox(height: 30.h),
                 CustomInput(
-                  controller: _NomSociete,
+                  controller: _nomSociete,
                   hint: 'Nom de la Société',
                   onChanged: (value) {
                     print('Mot de passe: $value');
@@ -1319,7 +1868,7 @@ class _CustomStepperState extends State<CustomStepper> {
                 ),
                 SizedBox(height: 10.h),
                 CustomInput(
-                  controller: _NomSociete,
+                  controller: _domaineActivite,
                   hint: 'Domaine d’activité:',
                   onChanged: (value) {
                     print('Mot de passe: $value');
@@ -1331,12 +1880,12 @@ class _CustomStepperState extends State<CustomStepper> {
                   children: <Widget>[
                     CustomButton(
                       text: 'Communication',
-                      color: Color(0xFFFFFFFF),
+                      color: const Color(0xFFFFFFFF),
                       onPressed: () {},
-                      borderColor: Color(0xFF064BA6),
-                      textColor: Color(0xFF064BA6),
+                      borderColor: const Color(0xFF064BA6),
+                      textColor: const Color(0xFF064BA6),
                       textStyle: TextStyle(
-                        color: Color(0xFF064BA6),
+                        color: const Color(0xFF064BA6),
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                       ),
@@ -1388,13 +1937,146 @@ class _CustomStepperState extends State<CustomStepper> {
           ),
         );
       case 13:
-        return FormSociete2();
+        //return FormSociete2();
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10.h),
+                Center(
+                  child: Image.asset(
+                    "assets/images/logo_rent_me-removebg-preview 2.png",
+                    width: 50.w,
+                    height: 50.h,
+                  ),
+                ),
+                SizedBox(height: 50.h),
+                // Ajustez cette valeur pour réduire l'espace
+                Center(
+                  child: Container(
+                    width: 0.8.sw,
+                    child: Text(
+                      'Vos justificatifs professionnels',
+                      style: TextStyle(
+                        fontSize: 0.05.sw,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.secondaryColor,
+                        fontFamily: 'Roboto',
+                        height: 1.4,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Center(
+                  child: Container(
+                    width: 0.8.sw,
+                    child: Text(
+                      'Veuillez citer vos justificatifs pour valider votre statut.',
+                      style: TextStyle(
+                        fontSize: 0.04.sw,
+                        color: AppTheme.accentColor,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 30.h),
+                CustomInput(
+                  controller: _ancienClient, // ou n'importe quel contrôleur
+                  hint: 'Ancient clients:', // ou le texte d'indication souhaité
+                  onChanged: (value) {
+                    // Action à faire lorsque le texte change
+                  },
+                ),
+                SizedBox(height: 10.h),
+                CustomInput(
+                  controller: _nbSalarie,
+                  // ou n'importe quel contrôleur
+                  hint: 'Nombre de salariés:',
+                  // ou le texte d'indication souhaité
+                  onChanged: (value) {
+                    // Action à faire lorsque le texte change
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
       case 14:
-        return Steppercomplet();
-        break;
+        // return Steppercomplet();
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20.h),
+                Center(
+                  child: Image.asset(
+                    "assets/images/logo_rent_me-removebg-preview 2.png",
+                    width: 50.w,
+                    height: 50.h,
+                  ),
+                ),
+                SizedBox(height: 80.h),
+                Center(
+                  child: Image.asset(
+                    "assets/icons/img_3.png",
+                    width: 100.w,
+                    height: 100.h,
+                  ),
+                ),
+                SizedBox(height: 70.h),
+                Center(
+                  child: Container(
+                    width: 0.7.sw,
+                    child: Text(
+                      'Votre comte RentMe est créé avec succés !',
+                      style: TextStyle(
+                        fontSize: 0.06.sw,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.secondaryColor,
+                        fontFamily: 'Roboto',
+                        height: 1.4,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Center(
+                  child: Container(
+                    width: 0.8.sw,
+                    child: Text(
+                      'Vous pouvez procéder à l’application.'
+                      'Nous vous souhaitons une bonne experience.',
+                      style: TextStyle(
+                        fontSize: 0.04.sw,
+                        color: AppTheme.accentColor,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+        //break;
 
       default:
-        return Center(child: Text('Étape inconnue'));
+        return const Center(child: Text('Étape inconnue'));
     }
   }
 
@@ -1413,6 +2095,7 @@ class _CustomStepperState extends State<CustomStepper> {
                 setState(() {
                   currentStep++;
                 });
+                _saveDataToPreferences();
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -1437,6 +2120,7 @@ class _CustomStepperState extends State<CustomStepper> {
                 setState(() {
                   currentStep++;
                 });
+                _saveDataToPreferences();
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -1468,7 +2152,7 @@ class _CustomStepperState extends State<CustomStepper> {
                 // Naviguer vers HomeScreen
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -1500,6 +2184,7 @@ class _CustomStepperState extends State<CustomStepper> {
                 setState(() {
                   currentStep++;
                 });
+                _saveDataToPreferences();
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 12.h),
