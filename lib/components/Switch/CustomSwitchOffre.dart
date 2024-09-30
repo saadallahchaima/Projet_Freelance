@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'CardOffre.dart';
-import 'CardOffreEnCours.dart';
+import '../Card/CardOffre.dart';
+import '../Card/CardOffreEnCours.dart';
 
 class CustomSwitchOffre extends StatefulWidget {
   final List<String> buttonLabels;

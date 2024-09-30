@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../theme/AppTheme.dart';
+import '../../theme/AppTheme.dart';
 
 class ServiceCard extends StatelessWidget {
   final String title;

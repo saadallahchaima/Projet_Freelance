@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:khedma/components/CustomSwitch1.dart';
-import 'package:khedma/components/ServiceCard.dart';
 import 'package:khedma/components/appBardemande.dart';
 import 'package:khedma/components/navbara.dart';
 import 'package:khedma/screens/SideMenu.dart';
 import 'package:khedma/theme/AppTheme.dart';
+
+import '../../components/Card/ServiceCard.dart';
+import '../../components/Switch/CustomSwitch1.dart';
 
 class MyRequestsPage extends StatefulWidget {
   @override
@@ -382,7 +383,7 @@ class _GroupState extends State<Group> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor:AppTheme.primaryColor,
                       foregroundColor: Colors.white,
                       minimumSize: Size(105, 36),
                     ),

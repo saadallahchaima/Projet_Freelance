@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../components/CustomSwitchOffreLocation.dart';
-import '../../../components/appBar.dart';
+import '../../../components/Switch/CustomSwitchOffreLocation.dart';
+import '../../../components/appBar/appBar.dart';
 import '../../../components/navbara.dart';
 import '../../SideMenu.dart';
 

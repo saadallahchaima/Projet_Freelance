@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'CardOffre.dart';
-import 'CardOffreLocation.dart';
+import '../Card/CardOffre.dart';
+import '../Card/CardOffreLocation.dart';
 
 class CustomSwitchLocationOffre extends StatefulWidget {
   final List<String> buttonLabels;

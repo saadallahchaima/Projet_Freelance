@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../theme/AppTheme.dart';
-import 'MyButtons.dart';
+import '../../theme/AppTheme.dart';
+import '../Buttons/MyButtons.dart';
 
 class CustomSwitchRecherche extends StatefulWidget {
   final List<String> buttonLabels;

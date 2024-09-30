@@ -1,18 +1,24 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:khedma/Service/collectdonnee.dart';
-import 'package:khedma/components/MyButtons.dart';
 import 'package:khedma/screens/SignUp/Complete_Pro_Expert.dart';
 import 'package:khedma/screens/SignUp/Diplome.dart';
 import 'package:khedma/screens/SignUp/societe_exper.dart';
-import 'package:khedma/screens/SignUp/stepperComplet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../screens/MainPages/HomePage.dart';
 import '../../screens/SignUp/formDiplome.dart';
 import '../../screens/SignUp/form_Societe2.dart';
+import '../Buttons/MyButtons.dart';
+import '../Buttons/_buildGenderButton.dart';
+import '../Card/_buildCard.dart';
+import '../Card/_buildCardSociete.dart';
+import '../Card/_buildSpecializationCard.dart';
+import '../CustomInput.dart';
+import '../Dots/_buildDotsIndicator.dart';
+import '../_buildDateField.dart';
+import '../_buildTextField.dart';
+import 'stepperComplet.dart';
 import '../../screens/SignUp/verifMail.dart';
 import '../../screens/SignUp/verificationTel.dart';
 import '../../theme/AppTheme.dart';
@@ -21,7 +27,6 @@ class CustomStepper extends StatefulWidget {
   @override
   _CustomStepperState createState() => _CustomStepperState();
 }
-
 Future<Map<String, String>> getUserData() async {
   final prefs = await SharedPreferences.getInstance();
   return {
@@ -40,21 +45,9 @@ Future<Map<String, String>> getUserData() async {
     'domainActivite': prefs.getString('domainActivite') ?? '',
     'rib': prefs.getString('domainActivite') ?? '',
   };
-
 }
 
 String _selectedGender = 'Male';
-final List<Map<String, dynamic>> textFieldsData = [
-  {'label': 'Prénom', 'hint': 'Nom'},
-  {'label': 'Nom', 'hint': 'Prénom'},
-  {'label': 'Email', 'hint': 'E-mail'},
-  {'label': 'Password', 'hint': 'Password'},
-];
-final Map<String, TextEditingController> _dateControllers = {
-  'Day': TextEditingController(text: '23'),
-  'Month': TextEditingController(text: '11'),
-  'Year': TextEditingController(text: '2000'),
-};
 final TextEditingController _prenomController = TextEditingController();
 final TextEditingController _nomController = TextEditingController();
 final TextEditingController _emailController = TextEditingController();
@@ -62,15 +55,22 @@ final TextEditingController _passwordController = TextEditingController();
 String selectedProfile = '';
 String selectedCountryFlag = '🇺🇸'; // Default country flag (USA)
 String selectedCountryCode = '+1'; // Default country code
-final TextEditingController _PaysController = TextEditingController();
-final TextEditingController _VilleController = TextEditingController();
 final TextEditingController _AdresseController = TextEditingController();
+final TextEditingController _VilleController = TextEditingController();
 final TextEditingController _postalCodeController = TextEditingController();
-
+final TextEditingController _PaysController = TextEditingController();
+final TextEditingController _NumTel = TextEditingController();
+final TextEditingController _NomSociete = TextEditingController();
+final TextEditingController _TitreExperience = TextEditingController();
+final TextEditingController _NomSocietePrecedente = TextEditingController();
+final TextEditingController _DescriptionExperience = TextEditingController();
+final TextEditingController _Prix = TextEditingController();
+final TextEditingController _DomaineActivite = TextEditingController();
+final TextEditingController _Ancienlient = TextEditingController();
+final TextEditingController _NbSalarie = TextEditingController();
 
 class _CustomStepperState extends State<CustomStepper> {
   int currentStep = 0;
-
 
   @override
   void dispose() {
@@ -78,17 +78,22 @@ class _CustomStepperState extends State<CustomStepper> {
     _nomController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _AdresseController.dispose();
+    _VilleController.dispose();
+    _postalCodeController.dispose();
     _PaysController.dispose();
-  _VilleController.dispose();
-  _AdresseController.dispose();
-  _postalCodeController.dispose();
-    _dateControllers.values.forEach((controller) => controller.dispose());
+    // _dateControllers.values.forEach((controller) => controller.dispose());
     super.dispose();
   }
-
+  void _onGenderSelected(String gender) {
+    setState(() {
+      _selectedGender = gender; // Update the selected gender
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -149,7 +154,7 @@ class _CustomStepperState extends State<CustomStepper> {
                 children: [
                   _getPageForStep(currentStep),
                   if (_hasDotsForStep(currentStep))
-                    _buildDotsIndicator(currentStep),
+                    buildDotsIndicator(currentStep),
                 ],
               ),
             ),
@@ -169,117 +174,131 @@ class _CustomStepperState extends State<CustomStepper> {
   Widget _getPageForStep(int step) {
     switch (step) {
       case 0:
-return SingleChildScrollView(
-  child: Padding(
-    padding: EdgeInsets.symmetric(horizontal: 24.w),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 20.h),
-        Center(
-          child: Image.asset(
-            "assets/images/logo_rent_me-removebg-preview 2.png",
-            width: 50.w,
-            height: 50.h,
-          ),
-        ),
-        SizedBox(height: 50.h),
-        Center(
-          child: Container(
-            width: 0.8.sw,
-            child: Text(
-              'Vos données principales',
-              style: TextStyle(
-                fontSize: 0.06.sw,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.secondaryColor,
-                fontFamily: 'Roboto',
-                height: 1.4,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-        SizedBox(height: 8.h),
-        Center(
-          child: Container(
-            width: 0.8.sw,
-            child: Text(
-              'Nous souhaitons mieux vous connaître afin de finaliser votre profil.',
-              style: TextStyle(
-                fontSize: 0.04.sw,
-                color: AppTheme.accentColor,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w500,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-        SizedBox(height: 70.h),
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                showCountryPicker(
-                  context: context,
-                  showPhoneCode: true,
-                  onSelect: (Country country) {
-                    setState(() {
-                      selectedCountryFlag = country.flagEmoji;
-                    });
-                    print('Select country: ${country.displayName}');
-                  },
-                );
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8.r),
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20.h),
+                Center(
+                  child: Image.asset(
+                    "assets/images/logo_rent_me-removebg-preview 2.png",
+                    width: 50.w,
+                    height: 50.h,
+                  ),
                 ),
-                child: Row(
+                SizedBox(height: 50.h),
+                Center(
+                  child: Container(
+                    width: 0.8.sw,
+                    child: Text(
+                      'Vos données principales',
+                      style: TextStyle(
+                        fontSize: 0.06.sw,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.secondaryColor,
+                        fontFamily: 'Roboto',
+                        height: 1.4,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Center(
+                  child: Container(
+                    width: 0.8.sw,
+                    child: Text(
+                      'Nous souhaitons mieux vous connaître afin de finaliser votre profil.',
+                      style: TextStyle(
+                        fontSize: 0.04.sw,
+                        color: AppTheme.accentColor,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w500,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 70.h),
+                Row(
                   children: [
-                    Text(selectedCountryFlag, style: TextStyle(fontSize: 24.sp)),
-                    Icon(Icons.arrow_drop_down),
+                    GestureDetector(
+                      onTap: () {
+                        showCountryPicker(
+                          context: context,
+                          showPhoneCode: true,
+                          onSelect: (Country country) {
+                            setState(() {
+                              selectedCountryFlag = country.flagEmoji;
+                            });
+                            print('Select country: ${country.displayName}');
+                          },
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 12.h, horizontal: 12.w),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(selectedCountryFlag,
+                                style: TextStyle(fontSize: 24.sp)),
+                            Icon(Icons.arrow_drop_down),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: CustomInput(
+                        controller: _PaysController,
+                        // ou n'importe quel contrôleur
+                        hint: 'Pays',
+                        // ou le texte d'indication souhaité
+                        onChanged: (value) {
+                          // Action à faire lorsque le texte change
+                        },
+                      ),
+                    ),
                   ],
                 ),
-              ),
+                SizedBox(height: 30.h),
+                CustomInput(
+                  controller: _VilleController, // ou n'importe quel contrôleur
+                  hint: 'Ville', // ou le texte d'indication souhaité
+                  onChanged: (value) {
+                    // Action à faire lorsque le texte change
+                  },
+                ),
+                SizedBox(height: 30.h),
+                CustomInput(
+                  controller: _AdresseController,
+                  // ou n'importe quel contrôleur
+                  hint: 'Adresse',
+                  // ou le texte d'indication souhaité
+                  onChanged: (value) {
+                    // Action à faire lorsque le texte change
+                  },
+                ),
+                SizedBox(height: 30.h),
+                CustomInput(
+                  controller: _postalCodeController,
+                  // ou n'importe quel contrôleur
+                  hint: 'Code Postal',
+                  // ou le texte d'indication souhaité
+                  onChanged: (value) {
+                    // Action à faire lorsque le texte change
+                  },
+                ),
+              ],
             ),
-            SizedBox(width: 10.w), // Add some space between the country picker and text field
-            Expanded(
-              child: _buildTextField({
-                'label': 'Pays',
-                'hint': 'Entrez votre pays',
-                'controller': _PaysController,
-              }),
-            ),
-          ],
-        ),
-        SizedBox(height: 30.h),
-        _buildTextField({
-          'label': 'Ville',
-          'hint': 'Entrez votre ville',
-          'controller': _VilleController,
-        }),
-        SizedBox(height: 30.h),
-        _buildTextField({
-          'label': 'Adresse',
-          'hint': 'Entrez votre adresse',
-          'controller': _AdresseController,
-        }),
-        SizedBox(height: 30.h),
-        _buildTextField({
-          'label': 'Code Postal',
-          'hint': 'Entrez votre code postal',
-          'controller': _postalCodeController,
-        }),
-      ],
-    ),
-  ),
-);
-
+          ),
+        );
       case 1:
         return VerificationPage();
       case 2:
@@ -362,10 +381,13 @@ return SingleChildScrollView(
                       ),
                     ),
                     Expanded(
-                      child: _buildTextField({
-                        'label': '',
-                        'hint': '',
-                      }),
+                      child: CustomInput(
+                        controller: _NumTel, // ou n'importe quel contrôleur
+                        hint: 'Tel', // ou le texte d'indication souhaité
+                        onChanged: (value) {
+                          // Action à faire lorsque le texte change
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -423,12 +445,32 @@ return SingleChildScrollView(
                   ),
                 ),
                 SizedBox(height: 30.h),
-                ...textFieldsData.map((data) => Column(
+                Column(
                       children: [
-                        _buildTextField(data),
+                        buildTextField(
+                          textFieldData: {'label': 'Prénom', 'hint': 'Entrez votre prénom'},
+                          controller: _prenomController,
+                        ),
                         SizedBox(height: 30.h),
+
+                        buildTextField(
+                          textFieldData: {'label': 'Nom', 'hint': 'Entrez votre nom'},
+                          controller: _nomController,
+                        ),
+                        SizedBox(height: 30.h),
+
+                        buildTextField(
+                          textFieldData: {'label': 'Email', 'hint': 'Entrez votre email'},
+                          controller: _emailController,
+                        ),
+                        SizedBox(height: 30.h),
+
+                        buildTextField(
+                          textFieldData: {'label': 'Password', 'hint': 'Entrez votre mot de passe'},
+                          controller: _passwordController,
+                        ),
                       ],
-                    )),
+                    ),
                 SizedBox(height: 20.h),
                 Text(
                   'Your gender',
@@ -441,19 +483,19 @@ return SingleChildScrollView(
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildGenderButton('Male', "assets/icons/img.png",
-                        _selectedGender == 'Male', () {
-                      setState(() {
-                        _selectedGender = 'Male';
-                      });
-                    }),
+                    buildGenderButton(
+                      'Homme',
+                      Icons.man,
+                      _selectedGender == 'Homme',
+                          () => _onGenderSelected('Homme'), // Update selection on tap
+                    ),
                     SizedBox(width: 10.w),
-                    _buildGenderButton('Female', "assets/icons/img_2.png",
-                        _selectedGender == 'Female', () {
-                      setState(() {
-                        _selectedGender = 'Female';
-                      });
-                    }),
+                    buildGenderButton(
+                      'Female',
+                      Icons.woman,
+                      _selectedGender == 'Femme',
+                          () => _onGenderSelected('Femme'), // Update selection on tap
+                    ),
                   ],
                 ),
                 SizedBox(height: 20.h),
@@ -468,11 +510,11 @@ return SingleChildScrollView(
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildDateField('Day', '23'),
+                    buildDateField('Day', '23'),
                     SizedBox(width: 10.h),
-                    _buildDateField('Month', '11'),
+                    buildDateField('Month', '11'),
                     SizedBox(width: 10.h),
-                    _buildDateField('Year', '2000'),
+                    buildDateField('Year', '2000'),
                   ],
                 ),
               ],
@@ -891,9 +933,9 @@ return SingleChildScrollView(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildSpecializationCard('Design'),
+                          buildSpecializationCard('Design'),
                           SizedBox(width: 12), // Adjust spacing between cards
-                          _buildSpecializationCard('Web Dev'),
+                          buildSpecializationCard('Web Dev'),
                         ],
                       ),
                     ),
@@ -1044,13 +1086,13 @@ return SingleChildScrollView(
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildCard(0.27.sw, AppTheme.primaryColor,
+                      buildCard(0.27.sw, AppTheme.primaryColor,
                           'assets/icons/image.png'),
                       SizedBox(width: 10.h),
-                      _buildCard(0.27.sw, AppTheme.primaryColor,
+                      buildCard(0.27.sw, AppTheme.primaryColor,
                           'assets/icons/image.png'),
                       SizedBox(width: 10.h),
-                      _buildCard(0.27.sw, AppTheme.primaryColor,
+                      buildCard(0.27.sw, AppTheme.primaryColor,
                           'assets/icons/image.png'),
                     ],
                   ),
@@ -1124,15 +1166,22 @@ return SingleChildScrollView(
                   ),
                 ),
                 SizedBox(height: 30.h),
-                _buildTextField({
-                  'label': 'Titre:',
-                  'hint': 'Titre:',
-                }),
+                CustomInput(
+                  controller: _NomSociete,
+                  hint: 'Titre',
+                  onChanged: (value) {
+                    print('Mot de passe: $value');
+                  },
+                ),
                 SizedBox(height: 10.h),
-                _buildTextField({
-                  'label': 'Nom de société précédente:',
-                  'hint': 'Nom de société précédente:',
-                }),
+
+                CustomInput(
+                  controller: _NomSociete,
+                  hint: 'Nom de société précédente:',
+                  onChanged: (value) {
+                    print('Mot de passe: $value');
+                  },
+                ),
                 SizedBox(height: 50.h),
                 Text(
                   'Période',
@@ -1159,13 +1208,13 @@ return SingleChildScrollView(
                 SizedBox(height: 10.h),
                 Row(
                   children: [
-                    _buildDateField('Day', '23'),
+                    buildDateField('Day', '23'),
                     // Ensure 'Day' is a key in _dateControllers
                     SizedBox(width: 10.w),
-                    _buildDateField('Month', '11'),
+                    buildDateField('Month', '11'),
                     // Ensure 'Month' is a key in _dateControllers
                     SizedBox(width: 10.w),
-                    _buildDateField('Year', '2000'),
+                    buildDateField('Year', '2000'),
                     // Ensure 'Year' is a key in _dateControllers
                   ],
                 ),
@@ -1187,22 +1236,25 @@ return SingleChildScrollView(
 
                 Row(
                   children: [
-                    _buildDateField('Day', '23'),
+                    buildDateField('Day', '23'),
                     // Ensure 'Day' is a key in _dateControllers
                     SizedBox(width: 10.w),
-                    _buildDateField('Month', '11'),
+                    buildDateField('Month', '11'),
                     // Ensure 'Month' is a key in _dateControllers
                     SizedBox(width: 10.w),
-                    _buildDateField('Year', '2000'),
+                    buildDateField('Year', '2000'),
                     // Ensure 'Year' is a key in _dateControllers
                   ],
                 ),
 
                 SizedBox(height: 30.h),
-                _buildTextField({
-                  'label': 'Description',
-                  'hint': 'Description',
-                }),
+                CustomInput(
+                  controller: _NomSociete,
+                  hint: 'Déscription',
+                  onChanged: (value) {
+                    print('Mot de passe: $value');
+                  },
+                ),
               ],
             ),
           ),
@@ -1258,15 +1310,21 @@ return SingleChildScrollView(
                   ),
                 ),
                 SizedBox(height: 30.h),
-                _buildTextField({
-                  'label': 'Nom de la Société:',
-                  'hint': 'Nom de la Société:',
-                }),
+                CustomInput(
+                  controller: _NomSociete,
+                  hint: 'Nom de la Société',
+                  onChanged: (value) {
+                    print('Mot de passe: $value');
+                  },
+                ),
                 SizedBox(height: 10.h),
-                _buildTextField({
-                  'label': 'Domaine d’activité:',
-                  'hint': 'Domaine d’activité:',
-                }),
+                CustomInput(
+                  controller: _NomSociete,
+                  hint: 'Domaine d’activité:',
+                  onChanged: (value) {
+                    print('Mot de passe: $value');
+                  },
+                ),
                 SizedBox(height: 16.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -1298,13 +1356,13 @@ return SingleChildScrollView(
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _buildCardSociete('K.BIS', 0.27.sw, AppTheme.primaryColor,
+                    buildCardSociete('K.BIS', 0.27.sw, AppTheme.primaryColor,
                         'assets/icons/img_6.png'),
                     SizedBox(width: 16.h),
-                    _buildCardSociete('Label de qualité', 0.27.sw,
+                    buildCardSociete('Label de qualité', 0.27.sw,
                         AppTheme.primaryColor, 'assets/icons/img_6.png'),
                     SizedBox(width: 16.h),
-                    _buildCardSociete('Assurance ', 0.27.sw,
+                    buildCardSociete('Assurance ', 0.27.sw,
                         AppTheme.primaryColor, 'assets/icons/img_6.png'),
                   ],
                 ),
@@ -1344,25 +1402,6 @@ return SingleChildScrollView(
     return step == 7 || step == 8;
   }
 
-  Widget _buildDotsIndicator(int step) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 16.h),
-      child: DotsIndicator(
-        dotsCount: 2,
-        position: step == 7 ? 0 : 1,
-        decorator: DotsDecorator(
-          activeColor: Colors.blue,
-          color: Colors.grey,
-          size: Size.square(9.0),
-          activeSize: Size.square(12.0),
-          activeShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildButtonsForStep(int step) {
     if (step == 7 || step == 8 || step == 9) {
       return Row(
@@ -1371,7 +1410,6 @@ return SingleChildScrollView(
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-
                 setState(() {
                   currentStep++;
                 });
@@ -1451,36 +1489,14 @@ return SingleChildScrollView(
           ),
         ),
       );
-    } else  if (step == 4 ) {
+    } else {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: Center(
           child: Container(
             width: 0.4.sw,
             child: ElevatedButton(
-              onPressed: () async {
-          
-                await saveUserData('firstName', _prenomController.text);
-                await saveUserData('lastName', _nomController.text);
-                await saveUserData('email', _emailController.text);
-                await saveUserData('password', _passwordController.text);
-                await saveUserData('gender', _selectedGender);
-                // Sauvegarder la date de naissance
-                await saveUserData('day', _dateControllers['Day']!.text);
-                await saveUserData('month', _dateControllers['Month']!.text);
-                await saveUserData('year', _dateControllers['Year']!.text);
-
-
-
-                print("c bon");
-                print("Données sauvegardées Adresse avec succès !");
-          
-                print("Données sauvegardées avec succès !");
-                print('First Name: ${_prenomController.text}');
-                print('Last Name: ${_nomController.text}');
-                print('Email: ${_emailController.text}');
-                print('Password: ${_passwordController.text}');
-
+              onPressed: () {
                 setState(() {
                   currentStep++;
                 });
@@ -1504,453 +1520,5 @@ return SingleChildScrollView(
         ),
       );
     }
-  else if (step == 0) {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 32.w),
-        child: Center(
-          child: Container(
-            width: 0.4.sw,
-            child: ElevatedButton(
-             onPressed: () async {
-                //////////adresse//////////
-                await saveUserData('ville', _VilleController.text);
-                await saveUserData('adresse', _AdresseController.text);
-                await saveUserData('codePostal', _postalCodeController.text);
-                
-
-                print("c bon");
-                print("Données sauvegardées Adresse avec succès !");
-                print('adresse: ${_AdresseController.text}');
-                print('codePostal: ${_postalCodeController.text}');
-                print('Ville: ${_VilleController.text}');
-               
-                setState(() {
-                  currentStep++;
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                backgroundColor: AppTheme.primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14.33.r),
-                ),
-              ),
-              child: Text(
-                'Continuer',
-                style: TextStyle(
-                  fontSize: 0.034.sw,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }else {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 32.w),
-        child: Center(
-          child: Container(
-            width: 0.4.sw,
-            child: ElevatedButton(
-              onPressed: () async {
-                setState(() {
-                  currentStep++;
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                backgroundColor: AppTheme.primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14.33.r),
-                ),
-              ),
-              child: Text(
-                'Continuer',
-                style: TextStyle(
-                  fontSize: 0.034.sw,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-  }
-  
-
-  Widget _buildTextFieldAdresse(Map<String, dynamic> textFieldData) {
-    TextEditingController controller;
-
-    switch (textFieldData['label']) {
-      case 'Pays':
-        controller = _PaysController;
-        break;
-      case 'Ville':
-        controller = _VilleController;
-        break;
-      case 'Adresse':
-        controller = _AdresseController;
-        break;
-      case 'CodePostal':
-        controller = _postalCodeController;
-        break;
-        
-      default:
-        controller =
-            TextEditingController(); // Un contrôleur par défaut si jamais
-    }
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-      decoration: BoxDecoration(
-        color: AppTheme.grisTextField,
-        borderRadius: BorderRadius.circular(10.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 5.0,
-            spreadRadius: 1.0,
-            offset: Offset(0, 2.0),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          hintText: textFieldData['hint'],
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-          hintStyle: TextStyle(color: AppTheme.secondaryColor),
-          border: UnderlineInputBorder(
-            borderSide: BorderSide(color: AppTheme.grisTextField),
-          ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: AppTheme.grisTextField),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: AppTheme.grisTextField),
-          ),
-        ),
-      ),
-    );
-  }
-  Widget _buildTextField(Map<String, dynamic> textFieldData) {
-    TextEditingController controller;
-
-    switch (textFieldData['label']) {
-      case 'Prénom':
-        controller = _prenomController;
-        break;
-      case 'Nom':
-        controller = _nomController;
-        break;
-      case 'Email':
-        controller = _emailController;
-        break;
-      case 'Password':
-        controller = _passwordController;
-        break;
-
-      default:
-        controller =
-            TextEditingController(); // Un contrôleur par défaut si jamais
-    }
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-      decoration: BoxDecoration(
-        color: AppTheme.grisTextField,
-        borderRadius: BorderRadius.circular(10.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 5.0,
-            spreadRadius: 1.0,
-            offset: Offset(0, 2.0),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          hintText: textFieldData['hint'],
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-          hintStyle: TextStyle(color: AppTheme.secondaryColor),
-          border: UnderlineInputBorder(
-            borderSide: BorderSide(color: AppTheme.grisTextField),
-          ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: AppTheme.grisTextField),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: AppTheme.grisTextField),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGenderButton(
-      String label, String iconPath, bool isSelected, VoidCallback onTap) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          height: 70.h, // Réduit la hauteur
-          width: 70.w, // Réduit la largeur
-          decoration: BoxDecoration(
-            color:
-                isSelected ? Colors.green.withOpacity(0.1) : Colors.transparent,
-            borderRadius: BorderRadius.circular(8.r), // Réduit le rayon du bord
-            border: Border.all(color: isSelected ? Colors.green : Colors.grey),
-          ),
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(4.w), // Réduit le padding
-                  decoration: BoxDecoration(
-                    color: isSelected ? Colors.green : Colors.transparent,
-                    borderRadius:
-                        BorderRadius.circular(6.r), // Réduit le rayon du bord
-                  ),
-                  child: Image.asset(
-                    iconPath,
-                    width: 24.w, // Ajuste la largeur de l'image
-                    height: 24.h, // Ajuste la hauteur de l'image
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                // Réduit l'espace entre l'image et le texte
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14.sp, // Ajuste la taille du texte
-                    color: isSelected ? Colors.green : Colors.grey,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDateField(String label, String initialValue) {
-    final TextEditingController controller = _dateControllers[label]!;
-
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppTheme.grisTextField, // Couleur de fond
-          borderRadius: BorderRadius.circular(10.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              blurRadius: 5.0,
-              spreadRadius: 1.0,
-              offset: Offset(0, 2.0),
-            ),
-          ],
-        ),
-        child: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            labelText: label,
-            hintStyle: TextStyle(color: AppTheme.secondaryColor),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide:
-                  BorderSide(color: Colors.blue, width: 1.0), // Bordure bleue
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide:
-                  BorderSide(color: Colors.blue, width: 1.0), // Bordure bleue
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.r),
-              borderSide: BorderSide(
-                  color: Colors.blue,
-                  width: 2.0), // Bordure bleue plus épaisse quand actif
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCard(double size, Color color, String imagePath) {
-    return Column(
-      children: [
-        Stack(
-          children: [
-            Container(
-              width: size * 0.9,
-              height: size * 0.9,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.white, width: 2.0),
-                borderRadius: BorderRadius.circular(15.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    blurRadius: 10.0,
-                    spreadRadius: 1.0,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: size * 0.1),
-                  child: Image.asset(
-                    imagePath,
-                    width: size * 0.4,
-                    height: size * 0.4,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: size * 0.0,
-              right: size * 0.0,
-              child: Container(
-                width: size * 0.20,
-                height: size * 0.20,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: size * 0.18,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSpecializationCard(String text) {
-    return Container(
-      margin: EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Color(0xFF064BA6)),
-        borderRadius: BorderRadius.circular(22),
-        color: Color(0xFFFFFFFF),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x0C8E8E8E),
-            offset: Offset(0, 2),
-            blurRadius: 3,
-          ),
-        ],
-      ),
-      child: SizedBox(
-        height: 45,
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(20, 13, 14, 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                text,
-                style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16,
-                  color: Color(0xFF064BA6),
-                ),
-              ),
-              SizedBox(
-                width: 16,
-                height: 16,
-                child: Image.asset(
-                  'assets/icons/closeicon.png',
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCardSociete(
-      String title, double size, Color color, String imagePath) {
-    return Column(
-      children: [
-        Stack(
-          children: [
-            Container(
-              width: size * 0.9,
-              height: size * 0.9,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.white, width: 2.0),
-                borderRadius: BorderRadius.circular(15.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    blurRadius: 10.0,
-                    spreadRadius: 1.0,
-                    offset: const Offset(0, 10.0),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: size * 0.1),
-                  child: Image.asset(
-                    imagePath, // Utilisez le paramètre imagePath ici
-                    width: size * 0.4,
-                    height: size * 0.4,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: size * 0.0,
-              right: size * 0.0,
-              child: Container(
-                width: size * 0.20,
-                height: size * 0.20,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: size * 0.18,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 8.h),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: size * 0.14,
-            color: color,
-          ),
-        ),
-      ],
-    );
   }
 }

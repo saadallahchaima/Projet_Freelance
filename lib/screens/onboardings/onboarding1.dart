@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../components/CustomDots.dart';
-import '../../components/background.dart';
+import '../../components/Dots/CustomDots.dart';
+import '../../components/Background/background.dart';
 
 class Onboarding1 extends StatefulWidget {
   final PageController controller;

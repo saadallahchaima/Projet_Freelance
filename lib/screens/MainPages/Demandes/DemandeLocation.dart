@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:khedma/components/appBar.dart';
-import '../../../components/CustomSwitchLocation.dart';
+import 'package:khedma/components/appBar/appBar.dart';
+import '../../../components/Switch/CustomSwitchLocation.dart';
 
 import '../../../components/navbara.dart';
 import '../../SideMenu.dart';

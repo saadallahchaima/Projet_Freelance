@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../screens/MainPages/notification.dart';
-import '../theme/AppTheme.dart';
-import 'CustomSwitchRechereche.dart'; // Assuming this is your custom widget
+import '../../screens/MainPages/notification.dart';
+import '../../theme/AppTheme.dart';
+import '../Switch/CustomSwitchRechereche.dart'; // Assuming this is your custom widget
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget notificationIcon;

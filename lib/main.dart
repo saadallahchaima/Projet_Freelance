@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:khedma/components/CustomStepper.dart';
 
-import 'package:khedma/screens/SignUp/DoneePrincipale.dart';
-import 'package:khedma/screens/SignUp/DonneeAdresse.dart';
+import 'package:khedma/screens/onboardings/spalshScreen.dart';
 import 'package:khedma/theme/AppTheme.dart';
 
 
@@ -16,18 +14,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
+
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme, 
+          //theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.system, 
+         themeMode: ThemeMode.system,
           title: "Freelence",
-          home: CustomStepper(),
-         initialRoute: '/',
-     
+          home: SplashPage()
+
         );
       },
     );

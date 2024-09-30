@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:khedma/theme/AppTheme.dart';
-import '../screens/MainPages/RequestsPage.dart';
-import 'ServiceCard.dart';
+import '../../screens/MainPages/RequestsPage.dart';
+import '../Card/ServiceCard.dart';
 
 class CustomSwitchDemandes extends StatefulWidget {
   final List<String> buttonLabels;

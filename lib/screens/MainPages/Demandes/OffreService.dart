@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khedma/theme/AppTheme.dart';
-import '../../../components/CustomSwitchOffreServices.dart';
-import '../../../components/appBar.dart';
+import '../../../components/Switch/CustomSwitchOffreServices.dart';
+import '../../../components/appBar/appBar.dart';
 import '../../SideMenu.dart';
 
 class OffreservicetScreen extends StatefulWidget {

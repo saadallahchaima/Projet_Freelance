@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../screens/MainPages/notification.dart';
 import '../theme/AppTheme.dart';
-import 'CustomSwitchRechereche.dart'; // Assuming this is your custom widget
+import 'Switch/CustomSwitchRechereche.dart';
 
 class CustomAppBard extends StatelessWidget implements PreferredSizeWidget {
   final Widget notificationIcon;

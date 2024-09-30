@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../components/MyButtons.dart';
+import '../../components/Buttons/MyButtons.dart';
 import '../../theme/AppTheme.dart';
 
 class FormSociete extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:khedma/components/background2.dart';
+import 'package:khedma/components/Background/background2.dart';
 
-import '../../components/CustomDots.dart';
+import '../../components/Dots/CustomDots.dart';
 
 class Onboarding2 extends StatefulWidget {
   final PageController controller;

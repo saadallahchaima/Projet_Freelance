@@ -28,6 +28,7 @@ class _AllBoardingsState extends State<AllBoardings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: Stack(
         children: <Widget>[
           PageView(

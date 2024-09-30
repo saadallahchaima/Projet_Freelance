@@ -16,10 +16,10 @@ import '../screens/SignUp/formDiplome.dart';
 import '../screens/SignUp/form_Societe2.dart';
 import '../screens/SignUp/form_experience.dart';
 import '../screens/SignUp/form_societe.dart';
-import '../screens/SignUp/stepperComplet.dart';
 import '../screens/SignUp/verifMail.dart';
 import '../screens/SignUp/verificationTel.dart';
 import '../theme/AppTheme.dart';
+import 'Stepper/stepperComplet.dart';
 
 class CustomStepperProfile extends StatefulWidget {
   @override

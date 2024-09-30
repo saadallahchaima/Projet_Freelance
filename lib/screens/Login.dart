@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:khedma/components/CustomStepper.dart';
+import 'package:khedma/components/Stepper/CustomStepper.dart';
 
-import '../components/LoginBtn.dart';
+import '../components/Buttons/LoginBtn.dart';
 import '../theme/AppTheme.dart';
 
 class LoginPage extends StatelessWidget {

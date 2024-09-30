@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../theme/AppTheme.dart';
+import '../../theme/AppTheme.dart';
 
 
 class TerminerBtn extends StatelessWidget {

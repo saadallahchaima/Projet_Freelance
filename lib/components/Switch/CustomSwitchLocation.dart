@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:khedma/theme/AppTheme.dart';
 
-import 'CardItemHistorique.dart';
-import 'RentalItemCard.dart';
+import '../Card/CardItemHistorique.dart';
+import '../Card/RentalItemCard.dart';
 
 class CustomSwitchLocation extends StatefulWidget {
   final List<String> buttonLabels;

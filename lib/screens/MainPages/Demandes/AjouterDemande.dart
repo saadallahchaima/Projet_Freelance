@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../components/CustomSwitch2.dart';
+import '../../../components/Switch/CustomSwitch2.dart';
 
 class CustomBottomSheet {
   static void show(BuildContext context) {

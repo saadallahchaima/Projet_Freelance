@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../theme/AppTheme.dart';
-import 'IndependentButtonGroup.dart';
-import 'MyButtons.dart';
+import '../../theme/AppTheme.dart';
+import '../Buttons/IndependentButtonGroup.dart';
+import '../Buttons/MyButtons.dart';
 
 class CustomSwitch2 extends StatefulWidget {
   final List<String> buttonLabels;

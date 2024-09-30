@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:khedma/components/navbara.dart';
-import '../../components/appBar.dart';
+import '../../components/appBar/appBar.dart';
 import '../../theme/AppTheme.dart';
 import '../SideMenu.dart';
 
