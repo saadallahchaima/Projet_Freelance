@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:khedma/components/appBardemande.dart';
 import 'package:khedma/components/navbara.dart';
 import 'package:khedma/screens/SideMenu.dart';
+import 'package:khedma/theme/AppTheme.dart';
 
 class ChatMessagePage extends StatefulWidget {
   @override
@@ -9,123 +11,281 @@ class ChatMessagePage extends StatefulWidget {
 }
 
 class _ChatMessagePageState extends State<ChatMessagePage> {
-   String buttonImagePath = 'assets/icons/deal.png';
+  String buttonImagePath = 'assets/icons/deal.png';
   String selectedProviderMessage = '';
-void _showAssignDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+  List<Widget> chatMessages = []; // ListView starts empty
+
+  void _showAssignDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Est-ce que vous voulez assigner votre demande “Nom de la demande” à “Nom du prestataire ?”',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
                   ),
-                  
-                ],
+                ),
+                SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
+                      child: Text(
+                        'Annuler',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          selectedProviderMessage =
+                              'Vous avez choisi Dr. Floyd Miles comme votre prestataire.';
+                          buttonImagePath = 'assets/icons/confirmed.png';
+                        });
+                        Navigator.of(context).pop();
+                        _showCompletionDialog();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                      ),
+                      child: Text(
+                        'Confirmer',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showCompletionDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Terminé ?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Souhaitez-vous classifier la demande “Nom de la demande” comme étant terminée ?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+                SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
+                      child: Text(
+                        'Annuler',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          chatMessages.add(_buildCompletionMessage());
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                      ),
+                      child: Text(
+                        'Confirmer',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCompletionMessage() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Text(
+            'Dr. Floyd Miles a classifier votre demande comme étant terminée, est-ce que vous confirmez cette affirmation ?',
+            style: TextStyle(
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+            ),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  chatMessages.add(Text(""));
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryColor,
               ),
-              SizedBox(height: 16),
-              Text(
-                'Est-ce que vous voulez assigner votre demande “Nom de la demande” à “Nom du prestataire ?"',
-                textAlign: TextAlign.center,
+              child: Text(
+                'Valider',
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
+                  color: Colors.white,
                 ),
               ),
-              SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    child: Text(
-                      'Annuler',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        selectedProviderMessage =
-                            'Vous avez choisi Dr. Floyd Miles comme votre prestataire.';
-                        buttonImagePath = 'assets/icons/confirmed.png';
-                      });
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                    ),
-                    child: Text(
-                      'Confirmer',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.grey,
               ),
-            ],
-          ),
+              child: Text(
+                'Annuler',
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
-      );
-    },
-  );
-}
+      ],
+    );
+  }
+ bool _isSettingsDrawer = false;
+
+  void _toggleDrawer(BuildContext context) {
+    setState(() {
+      _isSettingsDrawer = !_isSettingsDrawer;
+    });
+    Navigator.of(context).pop(); // Close the current drawer
+    Scaffold.of(context).openEndDrawer(); // Open the new drawer
+  }
+
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0XFFEFF6F9),
-      appBar: AppBar(
-        backgroundColor: Color(0xFF0099D6),
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-
-            Text(
-              'Mes Messages',
-              style: GoogleFonts.getFont(
-                'Roboto',
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Colors.white,
-              ),
+      endDrawer: _isSettingsDrawer
+          ? Builder(
+        builder: (context) =>
+            SettingsDrawer(toggleDrawer: () => _toggleDrawer(context)),
+      )
+          : Builder(
+              builder: (context) =>
+                  MyDrawer(toggleDrawer: () => _toggleDrawer(context)),
             ),
-            SizedBox(width: 24),
-          ],
-        ),
-        elevation: 0,
+      appBar: CustomAppBard(
+        notificationIcon: Icon(Icons.location_on_outlined, color: Colors.white),
+        title: 'Messages',
+        showSearchBar: false,
+        backgroundColor: AppTheme.primaryColor, // AppBar with primary color
       ),
       body: Column(
         children: [
@@ -692,10 +852,22 @@ SizedBox(height:50 ),
               padding: const EdgeInsets.all(8.0),
               child: Text(selectedProviderMessage),
             ),
-SizedBox(height:100 ),
-SizedBox(height:100 ),
+SizedBox(height:50 ),
 
-
+ if (chatMessages.isEmpty) // Show a placeholder if empty
+        Center(
+          child: Text(
+            '',
+            style: TextStyle(
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              color: Colors.grey,
+            ),
+          ),
+        )
+      else
+        ...chatMessages, // Spread operator to include messages
     ],
   ),
   
@@ -707,13 +879,15 @@ SizedBox(height:100 ),
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Left button with an image
-                GestureDetector(
-                  onTap: _showAssignDialog,
+                 GestureDetector(
+                  onTap: buttonImagePath == 'assets/icons/confirmed.png'
+                      ? _showCompletionDialog
+                      : _showAssignDialog,
                   child: Container(
                     width: 41.97,
                     height: 41.97,
                     decoration: BoxDecoration(
-                      color: Color(0xFF0099D5), // Button color
+                      color: Color(0xFF0099D5),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
@@ -771,14 +945,8 @@ SizedBox(height:100 ),
                 ),
               ],
             ),
-          ),
+          ), 
           SizedBox(height: 20),
-
-          // Display the selected provider message if available
-        
-
-          // Your ListView or other content
-         
         ],
       ),
       bottomNavigationBar: BottomNavBar(),

@@ -77,7 +77,7 @@ SizedBox(height: 20.h),
                     profileImages: [
                       'https://via.placeholder.com/150',
                       'https://via.placeholder.com/150'
-                    ],
+                    ], imageUrl: '',
                   ),
                 ),
               ),
@@ -133,7 +133,7 @@ SizedBox(height: 20.h),
                     profileImages: [
                       'https://via.placeholder.com/150',
                       'https://via.placeholder.com/150'
-                    ],
+                    ], imageUrl: '',
                   ),
                 ),
               ),

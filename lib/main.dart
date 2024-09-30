@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:khedma/screens/MainPages/RequestsPage.dart';
-import 'package:khedma/screens/MainPages/editProfile.dart';
+import 'package:khedma/components/CustomStepper.dart';
 
-import 'package:khedma/screens/onboardings/spalshScreen.dart';
+import 'package:khedma/screens/SignUp/DoneePrincipale.dart';
+import 'package:khedma/screens/SignUp/DonneeAdresse.dart';
 import 'package:khedma/theme/AppTheme.dart';
 
 
@@ -25,7 +25,9 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme,
           themeMode: ThemeMode.system, 
           title: "Freelence",
-          home: EditProdile()
+          home: CustomStepper(),
+         initialRoute: '/',
+     
         );
       },
     );

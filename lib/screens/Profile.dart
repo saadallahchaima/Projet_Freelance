@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:khedma/components/CustomProfile.dart';
+import 'package:khedma/components/navbara.dart';
 import 'package:khedma/screens/SideMenu.dart';
 
-import '../components/navbara.dart';
 
 class ProfilePage  extends StatefulWidget {
   @override
@@ -65,15 +66,24 @@ class _ProfilePageState extends State<ProfilePage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: 24,
-              height: 24,
-              child: Image.asset(
-                'assets/icons/edit.png',
-                width: 24,
-                height: 24,
-              ),
-            ),
+            GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CustomStepperProfile()),
+    );
+  },
+  child: Container(
+    width: 24,
+    height: 24,
+    child: Image.asset(
+      'assets/icons/edit.png',
+      width: 24,
+      height: 24,
+    ),
+  ),
+),
+
             Text(
               'Mon Profile',
               style: GoogleFonts.getFont(
@@ -87,6 +97,8 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
         elevation: 0,
+                automaticallyImplyLeading: false,
+
       ),
       body: SingleChildScrollView(
         child: Column(

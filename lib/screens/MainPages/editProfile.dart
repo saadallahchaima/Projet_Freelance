@@ -1,26 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../theme/AppTheme.dart';
 
-class EditProdile extends StatefulWidget {
+class EditProfile extends StatefulWidget {
   @override
-  State<EditProdile> createState() => _EditProdileState();
+  State<EditProfile> createState() => _EditProfileState();
 }
 
-class _EditProdileState extends State<EditProdile> {
-  final Map<String, TextEditingController> _dateControllers = {
-    'Day': TextEditingController(text: '23'),
-    'Month': TextEditingController(text: '11'),
-    'Year': TextEditingController(text: '2000'),
-  };
-
-  @override
-  void dispose() {
-    // Dispose les contrôleurs pour éviter les fuites de mémoire
-    _dateControllers.values.forEach((controller) => controller.dispose());
-    super.dispose();
-  }
+class _EditProfileState extends State<EditProfile> {
+  int? selectedContainerIndex; // Index du conteneur sélectionné
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +22,6 @@ class _EditProdileState extends State<EditProdile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 20.h),
-
                   Center(
                     child: Image.asset(
                       "assets/images/logo_rent_me-removebg-preview 2.png",
@@ -42,13 +29,12 @@ class _EditProdileState extends State<EditProdile> {
                       height: 50.h,
                     ),
                   ),
-                  SizedBox(height: 50.h), // Ajustez cette valeur pour réduire l'espace
-
+                  SizedBox(height: 50.h),
                   Center(
                     child: Container(
                       width: 0.8.sw,
                       child: Text(
-                        'Séléctionner votre profile',
+                        'Sélectionner votre profil',
                         style: TextStyle(
                           fontSize: 0.05.sw,
                           fontWeight: FontWeight.w600,
@@ -65,7 +51,7 @@ class _EditProdileState extends State<EditProdile> {
                     child: Container(
                       width: 0.8.sw,
                       child: Text(
-                        'Nous souhaitons découvrir votre expérience.',
+                        'Quel type de profile vous représente le mieux?',
                         style: TextStyle(
                           fontSize: 0.03.sw,
                           color: AppTheme.accentColor,
@@ -77,14 +63,98 @@ class _EditProdileState extends State<EditProdile> {
                       ),
                     ),
                   ),
-                
-                 
+                  SizedBox(height: 80.h),
 
-                         
-                 
+                  // Liste des conteneurs
+                  ...List.generate(3, (index) {
+                    String imagePath;
+                    if (index == 0) {
+                                            imagePath = 'assets/icons/healthicons_factory-worker-outline.png'; 
 
-                 
+                    } else if (index == 1) {
+                                            imagePath = 'assets/icons/healthicons_city-worker-outline.png'; 
 
+                    } else {
+                      imagePath = 'assets/icons/healthicons_construction-worker-outline.png';
+                    }
+
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedContainerIndex = index; // Mettre à jour l'index sélectionné
+                        });
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(26.w, 0, 0, 0),
+                        child: Container(
+                          width: 0.8.sw, // Changez ici pour s'adapter à l'écran
+                          height: 144.73.h,
+                          padding: EdgeInsets.all(16.w),
+                          decoration: BoxDecoration(
+                            color: selectedContainerIndex == index
+                                ? Color(0xFFE0E0E0) // Couleur de fond si sélectionné
+                                : Color(0xFFF4F6F5),
+                            borderRadius: BorderRadius.circular(16.r),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                imagePath,
+                                width: 40.w,
+                                height: 40.h,
+                                fit: BoxFit.cover,
+                              ),
+                              SizedBox(width: 20.w), // Réduit l'espace pour éviter le dépassement
+                              Expanded( // Utilisez Expanded pour permettre à la colonne de s'adapter
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      index == 0
+                                          ? 'Je veux devenir un professionnel'
+                                          : index == 1
+                                              ? 'Je veux devenir un expert'
+                                              : 'Je veux devenir un amateur certifié',
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                      maxLines: 2, // Maximum de lignes à afficher
+                                      overflow: TextOverflow.visible, // Permet de revenir à la ligne
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      index == 0
+                                          ? 'Je souhaite offrir mes services.'
+                                          : index == 1
+                                              ? 'Je souhaite offrir des services avancés.'
+                                              : 'Je souhaite débuter ma carrière.',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Color(0xFFA7A6A5),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }).map((container) {
+                    return Column(
+                      children: [
+                        container,
+                        SizedBox(height: 16.h), // Espace entre les conteneurs
+                      ],
+                    );
+                  }).toList(),
+
+                  SizedBox(height: 90.w),
                 ],
               ),
             ),
@@ -93,5 +163,4 @@ class _EditProdileState extends State<EditProdile> {
       ),
     );
   }
-
 }

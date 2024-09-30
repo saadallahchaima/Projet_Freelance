@@ -1,5 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:khedma/screens/SignUp/DonneeAdresse.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Importation de SharedPreferences
+import 'package:khedma/Service/collectdonnee.dart';
+import 'package:khedma/entities/User.dart';
 
 import '../../theme/AppTheme.dart';
 
@@ -9,24 +14,56 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  String _selectedGender = 'Male'; // Par défaut, "Male" est sélectionné.
+  String _selectedGender = 'Male';
   final List<Map<String, dynamic>> textFieldsData = [
     {'label': 'Prénom', 'hint': 'Nom'},
     {'label': 'Nom', 'hint': 'Prénom'},
     {'label': 'Email', 'hint': 'E-mail'},
+    {'label': 'Password', 'hint': 'Password'},
+ 
   ];
+    int currentStep = 0;
+
   final Map<String, TextEditingController> _dateControllers = {
     'Day': TextEditingController(text: '23'),
     'Month': TextEditingController(text: '11'),
     'Year': TextEditingController(text: '2000'),
   };
+  
+  final TextEditingController _prenomController = TextEditingController();
+  final TextEditingController _nomController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    // Dispose les contrôleurs pour éviter les fuites de mémoire
+    _prenomController.dispose();
+    _nomController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     _dateControllers.values.forEach((controller) => controller.dispose());
     super.dispose();
   }
+
+  // Fonction pour vérifier si les données sont bien enregistrées
+  Future<bool> _areUserDataSaved() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? firstName = prefs.getString('firstName');
+    String? lastName = prefs.getString('lastName');
+    String? email = prefs.getString('email');
+    String? password = prefs.getString('password');
+    String? gender = prefs.getString('gender');
+    String? day = prefs.getString('day');
+    String? month = prefs.getString('month');
+    String? year = prefs.getString('year');
+
+    // Vérifier si toutes les valeurs sont présentes
+    if (firstName != null && lastName != null && email != null && password != null && gender != null && day != null && month != null && year != null) {
+      return true;  // Les données sont toutes présentes
+    }
+    return false;  // Certaines données manquent
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,105 +75,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20.h),
-                  Center(
-                    child: Image.asset(
-                      "assets/images/logo_rent_me-removebg-preview 2.png",
-                      width: 50.w,
-                      height: 50.h,
-                    ),
-                  ),
-                  SizedBox(height: 50.h),
 
-                  Center(
-                    child: Container(
-                      width: 0.8.sw,
-                      child: Text(
-                        'Vos données principales',
-                        style: TextStyle(
-                          fontSize: 0.06.sw,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.secondaryColor,
-                          fontFamily: 'Roboto',
-                          height: 1.4,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 18.h),
-                  Center(
-                    child: Container(
-                      width: 0.8.sw,
-                      child: Text(
-                        'Nous souhaitons mieux vous connaître afin de finaliser votre profil.',
-                        style: TextStyle(
-                          fontSize: 0.04.sw,
-                          color: AppTheme.accentColor,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.w500,
-                          height: 1.5,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 30.h),
-
-                  // Ajout des champs de texte
-                  ...textFieldsData.map((data) => Column(
-                    children: [
-                      _buildTextField(data),
-                      SizedBox(height: 30.h),
-                    ],
-                  )),
-
-                  SizedBox(height: 20.h),
-                  Text(
-                    'Your gender',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildGenderButton('Male', "assets/icons/img.png", _selectedGender == 'Male', () {
-                        setState(() {
-                          _selectedGender = 'Male';
-                        });
-                      }),
-                      SizedBox(width: 10.w),
-                      _buildGenderButton('Female', "assets/icons/img_2.png", _selectedGender == 'Female', () {
-                        setState(() {
-                          _selectedGender = 'Female';
-                        });
-                      }),
-                    ],
-                  ),
-                  SizedBox(height: 20.h),
-                  Text(
-                    'Your birthday',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildDateField('Day', '23'),
-                      SizedBox(width: 10.h),
-
-                      _buildDateField('Month', '11'),
-                      SizedBox(width: 10.h),
-
-                      _buildDateField('Year', '2000'),
-                    ],
-                  ),
+                 ElevatedButton( 
+                   onPressed: () async { 
+                    
+                   await saveUserData('firstName', _prenomController.text); 
+                      await saveUserData('lastName', _nomController.text);   
+                       await saveUserData('email', _emailController.text);   
+                        await saveUserData('password', _passwordController.text);  
+                          await saveUserData('gender', _selectedGender);   
+                           // Sauvegarder la date de naissance    
+                           await saveUserData('day', _dateControllers['Day']!.text);  
+                             await saveUserData('month', _dateControllers['Month']!.text);  
+                               await saveUserData('year', _dateControllers['Year']!.text);   
+                                print("c bon");  
+                                  print("Données sauvegardées avec succès !");   
+                                   print('First Name: ${_prenomController.text}');   
+                                    print('Last Name: ${_nomController.text}');  
+                                      print('Email: ${_emailController.text}');  
+                                        print('Password: ${_passwordController.text}');  
+                                          Navigator.pushReplacement(     
+                                             context,    
+                                            MaterialPageRoute(
+                                              builder: (context) => Donneeadresse()),   
+                                               );  
+                                               }, 
+                                             child: Text('Suivant'), 
+                   ),
                 ],
               ),
             ),
@@ -145,6 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
+
 
   Widget _buildTextField(Map<String, dynamic> textFieldData) {
     return Container(
