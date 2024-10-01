@@ -233,6 +233,7 @@ class _CustomStepperState extends State<CustomStepper> {
                           onSelect: (Country country) {
                             setState(() {
                               selectedCountryFlag = country.flagEmoji;
+                              _PaysController.text=country.name;
                             });
                             print('Select country: ${country.displayName}');
                           },
@@ -1103,7 +1104,7 @@ class _CustomStepperState extends State<CustomStepper> {
         );
       //return FormExperience();
       case 7:
-        return diplome();
+        return Diplomescreen();
       // return FormSociete();
       case 8:
         return SocieteExper();

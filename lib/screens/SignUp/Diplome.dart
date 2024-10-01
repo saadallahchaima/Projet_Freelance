@@ -1,10 +1,20 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../theme/AppTheme.dart';
 
-class diplome extends StatelessWidget {
+class Diplomescreen extends StatefulWidget {
+  @override
+  _DiplomescreenState createState() => _DiplomescreenState();
+}
 
+class _DiplomescreenState extends State<Diplomescreen> {
+
+  List<String?> _selectedImagePaths = [null, null, null,null];
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +35,12 @@ class diplome extends StatelessWidget {
                       height: 50.h,
                     ),
                   ),
-                  SizedBox(height: 50.h), // Ajustez cette valeur pour réduire l'espace
-
+                  SizedBox(height: 50.h),
                   Center(
                     child: Container(
                       width: 0.8.sw,
                       child: Text(
-                        'Avez vous un diplôme ?',
+                        'Avez-vous un diplôme ?',
                         style: TextStyle(
                           fontSize: 0.06.sw,
                           fontWeight: FontWeight.w600,
@@ -48,7 +57,7 @@ class diplome extends StatelessWidget {
                     child: Container(
                       width: 0.8.sw,
                       child: Text(
-                        'Nous souhaitons mieux vous connaître afin de finaliser votre profile.',
+                        'Nous souhaitons mieux vous connaître afin de finaliser votre profil.',
                         style: TextStyle(
                           fontSize: 0.04.sw,
                           color: AppTheme.accentColor,
@@ -62,7 +71,7 @@ class diplome extends StatelessWidget {
                   ),
                   SizedBox(height: 50.h),
                   Text(
-                    'Diplome',
+                    'Diplôme',
                     style: TextStyle(
                       fontSize: 16.sp,
                       color: Colors.black,
@@ -72,7 +81,7 @@ class diplome extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/img_6.png'),
+                      _buildCard(0.27.sw, AppTheme.primaryColor, 0),
                     ],
                   ),
                   SizedBox(height: 50.h),
@@ -85,19 +94,16 @@ class diplome extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20.h),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/img_6.png'),
+                      _buildCard(0.27.sw, AppTheme.primaryColor, 1),
                       SizedBox(width: 10.h),
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/img_6.png'),
+                      _buildCard(0.27.sw, AppTheme.primaryColor, 2),
                       SizedBox(width: 10.h),
-
-                      _buildCard( 0.27.sw, AppTheme.primaryColor, 'assets/icons/img_6.png'),
+                      _buildCard(0.27.sw, AppTheme.primaryColor, 3),
                     ],
                   ),
-
                 ],
               ),
             ),
@@ -106,62 +112,93 @@ class diplome extends StatelessWidget {
       ),
     );
   }
-}
-Widget _buildCard( double size, Color color, String imagePath) {
-  return Column(
-    children: [
-      Stack(
+
+  Widget _buildCard(double size, Color color, int index) {
+    return GestureDetector(
+      onTap: () async {
+        var status = await Permission.storage.status;
+        if (!status.isGranted) {
+          status = await Permission.storage.request();
+          if (!status.isGranted) {
+            print("Permission d'accès au stockage refusée");
+            return;
+          }
+        }
+
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.image,
+        );
+
+        if (result != null) {
+          String filePath = result.files.single.path!;
+          setState(() {
+            _selectedImagePaths[index] = filePath; // Mise à jour correcte de l'image à l'index donné
+          });
+        } else {
+          print("Aucun fichier sélectionné");
+        }
+      },
+      child: Column(
         children: [
-          Container(
-            width: size * 0.9,
-            height: size * 0.9,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.white, width: 2.0),
-              borderRadius: BorderRadius.circular(15.r),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  blurRadius: 10.0,
-                  spreadRadius: 1.0,
-                  offset: Offset(0, 10.0),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(bottom: size * 0.1),
-                child: Image.asset(
-                  imagePath, // Utilisez le paramètre imagePath ici
-                  width: size * 0.4,
-                  height: size * 0.4,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: size * 0.0,
-            right: size * 0.0,
-            child: Container(
-              width: size * 0.20,
-              height: size * 0.20,
-              decoration: BoxDecoration(
-                color: color, // Utilisez le paramètre color ici
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.add,
+          Stack(
+            children: [
+              Container(
+                width: size * 0.9,
+                height: size * 0.9,
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  size: size * 0.18,
+                  border: Border.all(color: Colors.white, width: 2.0),
+                  borderRadius: BorderRadius.circular(15.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 10.0,
+                      spreadRadius: 1.0,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: size * 0.1),
+                    child: _selectedImagePaths[index] != null
+                        ? Image.file(
+                            File(_selectedImagePaths[index]!),
+                            width: size * 0.4,
+                            height: size * 0.4,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset(
+                            'assets/icons/img_6.png',
+                            width: size * 0.4,
+                            height: size * 0.4,
+                          ),
+                  ),
                 ),
               ),
-            ),
+              Positioned(
+                top: size * 0.0,
+                right: size * 0.0,
+                child: Container(
+                  width: size * 0.20,
+                  height: size * 0.20,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: size * 0.18,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
-
-    ],
-  );
+    );
+  }
 }
-

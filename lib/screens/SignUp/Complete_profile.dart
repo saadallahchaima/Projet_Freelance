@@ -1,9 +1,20 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:khedma/theme/AppTheme.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class CompleteProfile extends StatelessWidget {
+class CompleteProfile extends StatefulWidget {
+  @override
+  _CompleteProfileState createState() => _CompleteProfileState();
+}
+
+class _CompleteProfileState extends State<CompleteProfile> {
+  List<String?> _selectedImagePaths = [null, null, null];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -233,11 +244,11 @@ class CompleteProfile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildCard(0.27.sw, AppTheme.primaryColor, 'assets/icons/image.png'),
+                 _buildCard(0.27.sw, AppTheme.primaryColor, 0),
                     SizedBox(width: 10.h),
-                    _buildCard(0.27.sw, AppTheme.primaryColor, 'assets/icons/image.png'),
+                    _buildCard(0.27.sw, AppTheme.primaryColor, 1),
                     SizedBox(width: 10.h),
-                    _buildCard(0.27.sw, AppTheme.primaryColor, 'assets/icons/image.png'),
+                    _buildCard(0.27.sw, AppTheme.primaryColor, 2),
                   ],
                 ),
 
@@ -249,60 +260,92 @@ class CompleteProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(double size, Color color, String imagePath) {
-    return Column(
-      children: [
-        Stack(
-          children: [
-            Container(
-              width: size * 0.9,
-              height: size * 0.9,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.white, width: 2.0),
-                borderRadius: BorderRadius.circular(15.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    blurRadius: 10.0,
-                    spreadRadius: 1.0,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: size * 0.1),
-                  child: Image.asset(
-                    imagePath,
-                    width: size * 0.4,
-                    height: size * 0.4,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: size * 0.0,
-              right: size * 0.0,
-              child: Container(
-                width: size * 0.20,
-                height: size * 0.20,
+Widget _buildCard(double size, Color color, int index) {
+    return GestureDetector(
+      onTap: () async {
+        var status = await Permission.storage.status;
+        if (!status.isGranted) {
+          status = await Permission.storage.request();
+          if (!status.isGranted) {
+            print("Permission d'accès au stockage refusée");
+            return;
+          }
+        }
+
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.image,
+        );
+
+        if (result != null) {
+          String filePath = result.files.single.path!;
+          setState(() {
+            _selectedImagePaths[index] = filePath; // Met à jour l'image spécifique à l'index
+          });
+        } else {
+          print("Aucun fichier sélectionné");
+        }
+      },
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              Container(
+                width: size * 0.9,
+                height: size * 0.9,
                 decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  border: Border.all(color: Colors.white, width: 2.0),
+                  borderRadius: BorderRadius.circular(15.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 10.0,
+                      spreadRadius: 1.0,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
                 ),
                 child: Center(
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: size * 0.18,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: size * 0.1),
+                    child: _selectedImagePaths[index] != null
+                        ? Image.file(
+                            File(_selectedImagePaths[index]!),
+                            width: size * 0.4,
+                            height: size * 0.4,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset(
+                            'assets/icons/image.png',
+                            width: size * 0.4,
+                            height: size * 0.4,
+                          ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ],
+              Positioned(
+                top: size * 0.0,
+                right: size * 0.0,
+                child: Container(
+                  width: size * 0.20,
+                  height: size * 0.20,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: size * 0.18,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -350,4 +393,6 @@ class CompleteProfile extends StatelessWidget {
       ),
     );
   }
+  
+ 
 }

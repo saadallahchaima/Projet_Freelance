@@ -125,7 +125,7 @@ class _CustomStepperProfileState extends State<CustomStepperProfile> {
        return CompleteProfile();
         //return FormExperience();
       case 7:
-      return diplome();
+      return Diplomescreen();
        // return FormSociete();
       case 8:
       return SocieteExper();
