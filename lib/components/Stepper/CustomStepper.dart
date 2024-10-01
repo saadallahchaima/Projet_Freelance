@@ -346,7 +346,6 @@ class _CustomStepperState extends State<CustomStepper> {
                           onSelect: (Country country) {
                             setState(() {
                               selectedCountryFlag = country.flagEmoji;
-                              _PaysController.text=country.name;
                               _paysController.text = country.name;
                             });
                             print('Select country: ${country.displayName}');

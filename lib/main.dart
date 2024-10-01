@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:khedma/screens/SignUp/Complete_profile.dart';
 import 'package:khedma/screens/SignUp/Diplome.dart';
-import 'package:khedma/screens/SignUp/hhh.dart';
 
 import 'package:khedma/screens/onboardings/spalshScreen.dart';
 import 'package:khedma/theme/AppTheme.dart';
+
+import 'screens/SignUp/Complete_profile.dart';
 
 
 void main() {
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme,
          themeMode: ThemeMode.system,
           title: "Freelence",
-          home: SpecialityAutocomplete()
+          home: CompleteProfile()
 
         );
       },
