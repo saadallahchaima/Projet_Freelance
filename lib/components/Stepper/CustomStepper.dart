@@ -893,6 +893,7 @@ class _CustomStepperState extends State<CustomStepper> {
                         onTap: () {
                           setState(() {
                             selectedProfile = 'amateur certifié';
+                            currentStep = 6;
                           });
                         },
                         child: Column(
@@ -985,138 +986,105 @@ class _CustomStepperState extends State<CustomStepper> {
 
       //DonneeProfile();
       //return formDiplome();
+        //////////Profile aadi
       case 6:
-        return SingleChildScrollView(
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFFFFF),
-              borderRadius: BorderRadius.circular(40),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(34, 123, 34, 55.1),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 10.6),
-                    child: Text(
-                      'Complétez votre profile',
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 22.3,
-                        height: 1.4,
-                        color: const Color(0xFF1C1F1E),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 17.4),
-                    child: Text(
-                      'Nous souhaitons mieux vous connaître afin de finaliser votre profile.',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: const Color(0xFFA7A6A5),
-                      ),
-                    ),
-                  ),
 
-                  SizedBox(height: 10.h),
-                  CustomInput(
-                    controller: _specialite,
-                    hint: 'Spécialisé en',
-                    onChanged: (value) {
-                      print('Spécialisé: $value');
-                    },
-                  ),
-                  SizedBox(height: 10.h),
+          return SingleChildScrollView(
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFFFFF),
+                borderRadius: BorderRadius.circular(40),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(34, 123, 34, 55.1),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 10.6),
+                      child: Text(
+                        'Complétez votre profile',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 22.3,
+                          height: 1.4,
+                          color: const Color(0xFF1C1F1E),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 17.4),
+                      child: Text(
+                        'Nous souhaitons mieux vous connaître afin de finaliser votre profile.',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.dmSans(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: const Color(0xFFA7A6A5),
+                        ),
+                      ),
+                    ),
 
-                  /////dataset//////
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 24),
-                    child: SizedBox(
-                      width: 264,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          buildSpecializationCard('Design'),
-                          const SizedBox(width: 12), // Adjust spacing between cards
-                          buildSpecializationCard('Web Dev'),
-                        ],
-                      ),
+                    SizedBox(height: 10.h),
+                    CustomInput(
+                      controller: _specialite,
+                      hint: 'Spécialisé en',
+                      onChanged: (value) {
+                        print('Spécialisé: $value');
+                      },
                     ),
-                  ),
-                  ////////
-                  SizedBox(height: 10.h),
-                  CustomInput(
-                    controller: _descriptionProfile,
-                    hint: 'Déscription',
-                    onChanged: (value) {
-                      print('Descriptiin: $value');
-                    },
-                  ),
-                  SizedBox(height: 10.h),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(5.2, 0, 0, 17),
-                    child: Text(
-                      'Proposez votre tarif par l’unité qui vous convient.',
-                      style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: const Color(0xFFA7A6A5),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 30.8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Prix Section
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                    SizedBox(height: 10.h),
+
+                    /////dataset//////
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 24),
+                      child: SizedBox(
+                        width: 264,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Prix :',
-                              style: GoogleFonts.inter(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                                color: const Color(0xFF000000),
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            SizedBox(
-                              width: 60, // Minimum width for the text field
-                              child: TextFormField(
-                                controller: _prix,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: const BorderSide(
-                                      color: Color(0xFF0099D5),
-                                    ),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 10,
-                                    horizontal: 12,
-                                  ),
-                                ),
-                                keyboardType: TextInputType.number,
-                              ),
-                            ),
+                            buildSpecializationCard('Design'),
+                            const SizedBox(width: 12),
+                            // Adjust spacing between cards
+                            buildSpecializationCard('Web Dev'),
                           ],
                         ),
-                        const SizedBox(width: 30),
-                        // Par Section
-                        Expanded(
-                          child: Column(
+                      ),
+                    ),
+                    ////////
+                    SizedBox(height: 10.h),
+                    CustomInput(
+                      controller: _descriptionProfile,
+                      hint: 'Déscription',
+                      onChanged: (value) {
+                        print('Descriptiin: $value');
+                      },
+                    ),
+                    SizedBox(height: 10.h),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(5.2, 0, 0, 17),
+                      child: Text(
+                        'Proposez votre tarif par l’unité qui vous convient.',
+                        style: GoogleFonts.dmSans(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: const Color(0xFFA7A6A5),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 30.8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Prix Section
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                'Par :',
+                                'Prix :',
                                 style: GoogleFonts.inter(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
@@ -1124,7 +1092,10 @@ class _CustomStepperState extends State<CustomStepper> {
                                 ),
                               ),
                               const SizedBox(height: 5),
-                              DropdownButtonFormField<String>(
+                              SizedBox(
+                                width: 60, // Minimum width for the text field
+                                child: TextFormField(
+                                  controller: _prix,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
@@ -1137,59 +1108,95 @@ class _CustomStepperState extends State<CustomStepper> {
                                       horizontal: 12,
                                     ),
                                   ),
-                                  value: _selectedDropdownValue,
-                                  items: <String>[
-                                    'Heure',
-                                    'Jour',
-                                    'Semaine',
-                                    'Mois',
-                                    'Année'
-                                  ].map((String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
-                                    _selectedDropdownValue = newValue!;
-                                    _saveDataToPreferences();
-                                    // Save the new value to SharedPreferences                                },
-                                  }),
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 30.1),
-                    child: Text(
-                      'Ajoutez vos projets',
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.9,
-                        color: const Color(0xFF1C1F1E),
+                          const SizedBox(width: 30),
+                          // Par Section
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Par :',
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: const Color(0xFF000000),
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                DropdownButtonFormField<String>(
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        borderSide: const BorderSide(
+                                          color: Color(0xFF0099D5),
+                                        ),
+                                      ),
+                                      contentPadding: const EdgeInsets
+                                          .symmetric(
+                                        vertical: 10,
+                                        horizontal: 12,
+                                      ),
+                                    ),
+                                    value: _selectedDropdownValue,
+                                    items: <String>[
+                                      'Heure',
+                                      'Jour',
+                                      'Semaine',
+                                      'Mois',
+                                      'Année'
+                                    ].map((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      _selectedDropdownValue = newValue!;
+                                      _saveDataToPreferences();
+                                      // Save the new value to SharedPreferences                                },
+                                    }),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      buildCard(0.27.sw, AppTheme.primaryColor,
-                          'assets/icons/image.png'),
-                      SizedBox(width: 10.h),
-                      buildCard(0.27.sw, AppTheme.primaryColor,
-                          'assets/icons/image.png'),
-                      SizedBox(width: 10.h),
-                      buildCard(0.27.sw, AppTheme.primaryColor,
-                          'assets/icons/image.png'),
-                    ],
-                  ),
-                ],
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 30.1),
+                      child: Text(
+                        'Ajoutez vos projets',
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.9,
+                          color: const Color(0xFF1C1F1E),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        buildCard(0.27.sw, AppTheme.primaryColor,
+                            'assets/icons/image.png'),
+                        SizedBox(width: 10.h),
+                        buildCard(0.27.sw, AppTheme.primaryColor,
+                            'assets/icons/image.png'),
+                        SizedBox(width: 10.h),
+                        buildCard(0.27.sw, AppTheme.primaryColor,
+                            'assets/icons/image.png'),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
+          );
+
+
       //return FormExperience();
       case 7:
         //  return Diplomescreen();
