@@ -117,7 +117,8 @@ class _CustomStepperProfileState extends State<CustomStepperProfile> {
       case 3:
         return PhoneInput();
       case 4:
-        return SignUpScreen();
+        //return SignUpScreen();
+        return PhoneInput();
       case 5:
       return EditProfile();
         //return formDiplome();
@@ -142,7 +143,6 @@ class _CustomStepperProfileState extends State<CustomStepperProfile> {
       return FormSociete2();
       case 14:
       return  Steppercomplet();
-      break;
 
       default:
         return Center(child: Text('Étape inconnue'));

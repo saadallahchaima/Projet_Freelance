@@ -8,7 +8,7 @@ import '../../components/Background/background.dart';
 class Onboarding3 extends StatefulWidget {
   final PageController controller;
 
-  Onboarding3({required this.controller});
+  const Onboarding3({required this.controller});
 
   @override
   _Onboarding3State createState() => _Onboarding3State();
@@ -36,7 +36,7 @@ class _Onboarding3State extends State<Onboarding3> {
                       ),
                     ),
                     SizedBox(height: 10.h), // Adjusted height value
-                    Container(
+                    SizedBox(
                       width: 295.w,
                       child: const Text(
                         "Des Profils de Confiance.",
@@ -52,7 +52,7 @@ class _Onboarding3State extends State<Onboarding3> {
                       ),
                     ),
                     SizedBox(height: 10.h), // Adjusted height value
-                    Container(
+                    SizedBox(
                       width: 295.w,
                       child: const Text(
                         "Notre processus de sélection garantit des correspondances de qualité supérieure à chaque fois.",
@@ -85,7 +85,7 @@ class _Onboarding3State extends State<Onboarding3> {
                         onPressed: () {
                           // Handle skip action
                         },
-                        child: Text(
+                        child: const Text(
                           "Ignorer",
                           style: TextStyle(color: Colors.grey),
                         ),
@@ -119,7 +119,7 @@ class _Onboarding3State extends State<Onboarding3> {
                             ),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           "Suivant",
                           style: TextStyle(color: Colors.black),
                         ),

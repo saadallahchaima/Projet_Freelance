@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../components/Dots/CustomDots.dart';
 import '../../components/Background/background.dart';
+import '../Login.dart';
 
 class Onboarding1 extends StatefulWidget {
   final PageController controller;
@@ -83,6 +84,13 @@ class _Onboarding1State extends State<Onboarding1> {
                       child: TextButton(
                         onPressed: () {
                           // Handle skip action
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
+                          );
+
                         },
                         child: Text(
                           "Ignorer",

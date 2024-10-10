@@ -1,11 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:khedma/components/Stepper/CustomStepper.dart';
+import 'package:khedma/screens/MainPages/HomePage.dart';
 
+import '../Services/UserService.dart';
 import '../components/Buttons/LoginBtn.dart';
 import '../theme/AppTheme.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  late UserService us ;
+
+  @override
+  void initState() {
+    super.initState();
+    us = UserService();
+  }
+
+  void _login() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    // Call the user service to authenticate the user
+    bool isAuthenticated = await us.authenticate(email, password);
+
+    if (isAuthenticated) {
+      // Navigate to the next screenif authentication is s uccessful
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } else {
+      // Show an error message if authentication fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Authentication failed')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +79,7 @@ class LoginPage extends StatelessWidget {
                     SizedBox(height: 32.h),
                     Padding(
                       padding: EdgeInsets.only(top: 100.h),
-                      child: Container(
+                      child: SizedBox(
                         width: 361.w,
                         height: 189.h,
                         child: Image.asset('assets/images/logo.png'),
@@ -53,6 +91,7 @@ class LoginPage extends StatelessWidget {
                       height: 46.h,
                       margin: EdgeInsets.only(left: 10.w, top: 20.h),
                       child: TextField(
+                        controller: _emailController,
                         decoration: InputDecoration(
                           labelText: 'Adresse E-Mail',
                           border: OutlineInputBorder(
@@ -67,6 +106,7 @@ class LoginPage extends StatelessWidget {
                       height: 46.h,
                       margin: EdgeInsets.only(left: 10.w),
                       child: TextField(
+                        controller: _passwordController,
                         decoration: InputDecoration(
                           labelText: 'Mot de Passe',
                           border: OutlineInputBorder(
@@ -97,12 +137,14 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 32.h),
-                    const LoginBtn(),
+                    GestureDetector(
+                      onTap: _login,
+                      child: LoginBtn(),
+                    ),
                     SizedBox(height: 16.h),
                     GestureDetector(
-
                       onTap: () {
-                       Navigator.push(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => CustomStepper(),
@@ -140,7 +182,7 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 10.h),
-                    Container(
+                    SizedBox(
                       width: 145.w,
                       height: 52.h,
                       child: Row(
@@ -157,7 +199,6 @@ class LoginPage extends StatelessWidget {
                             width: 36.w,
                             height: 36.h,
                           ),
-
                           SizedBox(width: 10.w),
                           Image.asset(
                             'assets/images/facebook.png',

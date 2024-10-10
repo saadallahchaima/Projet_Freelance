@@ -307,17 +307,18 @@ class _CompleteProfileState extends State<CompleteProfile> {
 Widget _buildCard(double size, Color color, int index) {
     return GestureDetector(
       onTap: () async {
-        var status = await Permission.storage.status;
+       /* var status = await Permission.storage.status;
         if (!status.isGranted) {
           status = await Permission.storage.request();
           if (!status.isGranted) {
             print("Permission d'accès au stockage refusée");
             return;
           }
-        }
+        }*/
 
         FilePickerResult? result = await FilePicker.platform.pickFiles(
-          type: FileType.image,
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
         );
 
         if (result != null) {

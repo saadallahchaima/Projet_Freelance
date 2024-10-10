@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:khedma/screens/MainPages/HomePage.dart';
+import 'package:khedma/screens/MainPages/Profil.dart';
 import 'package:khedma/screens/SignUp/Diplome.dart';
 
 import 'package:khedma/screens/onboardings/spalshScreen.dart';
@@ -25,8 +27,8 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           //theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-         themeMode: ThemeMode.system,
-          title: "Freelence",
+          themeMode: ThemeMode.system,
+          title: "RentMe",
           home: SplashPage()
 
         );

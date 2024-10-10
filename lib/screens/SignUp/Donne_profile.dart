@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:khedma/Services/MinIOService.dart';
 import 'package:khedma/theme/AppTheme.dart';
+
+import '../../Services/SharedPrefService.dart';
 
 class DonneeProfile extends StatefulWidget {
   @override
@@ -9,11 +15,59 @@ class DonneeProfile extends StatefulWidget {
 }
 
 class _DonneeProfileState extends State<DonneeProfile> {
-  String selectedProfile = ''; 
+  String selectedProfile = '';
+  String selectedImagePath = '';
+  File? _image;
+  late MinIOService ms;
+  late SharedPrefService sharedPrefService;
+
+  @override
+  void initState()  {
+    super.initState();
+    selectedProfile = '';
+
+    ms = MinIOService();
+    sharedPrefService = SharedPrefService();
+   //loadImage();
+  }
+
+  /*void loadImage() async {
+    print("Loading image");
+    await ms.LoadFileFromServer("images", "username1-1728400565489").then((value) {
+      setState(() {
+        _image = value;
+      });
+    });
+  }*/
+
+  @override
+  void dispose() {
+    _saveData();
+    super.dispose();
+
+  }
+  Future<void> _saveData() async {
+    if (_image != null) {
+      selectedImagePath = await ms.saveFileToServer("images", _image!);
+      sharedPrefService.saveUserData('profileImagePath', selectedImagePath);
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+      //checkAllValues();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
- return MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Color(0xFFFFFFFF), // Set background color to white
@@ -64,7 +118,7 @@ class _DonneeProfileState extends State<DonneeProfile> {
                                   child: Container(
                                     width: 0.8.sw,
                                     child: Text(
-                                      'Vos données principales',
+                                      'Votre profile',
                                       style: TextStyle(
                                         fontSize: 0.06.sw,
                                         fontWeight: FontWeight.w600,
@@ -93,75 +147,93 @@ class _DonneeProfileState extends State<DonneeProfile> {
                           ),
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(1.2, 0, 0, 26.2),
+                      GestureDetector(
+                        onTap: _pickImage,
                         child: Container(
-                          padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(1.8, 0, 0, 14.3),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: Color(0xFFFFFFFF),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Color(0x11124565),
-                                          offset: Offset(0, 12),
-                                          blurRadius: 7.5,
-                                        ),
-                                      ],
-                                    ),
-                                    child: SizedBox(
-                                      width: 92,
-                                      child: Padding(
-                                        padding: EdgeInsets.fromLTRB(0, 26.3, 0, 26.2),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(0, 0, 0, 4.3),
-                                              child: SizedBox(
-                                                width: 50,
-                                                height: 50,
-                                                child: Image.asset(
-                                                  'assets/icons/Icon.png',
+                          margin: EdgeInsets.fromLTRB(1.2, 0, 0, 26.2),
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      margin:
+                                          EdgeInsets.fromLTRB(1.8, 0, 0, 14.3),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: Color(0xFFFFFFFF),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Color(0x11124565),
+                                            offset: Offset(0, 12),
+                                            blurRadius: 7.5,
+                                          ),
+                                        ],
+                                      ),
+                                      child: SizedBox(
+                                        width: 250,
+                                        child: Padding(
+                                          padding: EdgeInsets.fromLTRB(
+                                              0, 26.3, 0, 26.2),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.fromLTRB(
+                                                    0, 0, 0, 4.3),
+                                                child: SizedBox(
+                                                  width: 250,
+                                                  height: 250,
+                                                  child: _image == null
+                                                      ? Image.asset(
+                                                          'assets/icons/Icon.png')
+                                                      : ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          child: Image.file(
+                                                            _image!,
+                                                            width: 250,
+                                                            height: 250,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Text(
-                                    'Ajouter votre photo',
-                                    style: GoogleFonts.roboto(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
-                                      color: Color(0xFF0099D5),
+                                    Text(
+                                      'Ajouter votre photo',
+                                      style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16,
+                                        color: Color(0xFF0099D5),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Positioned(
-                                right: 13.6,
-                                top: 0,
-                                child: SizedBox(
-                                  width: 25.6,
-                                  height: 25.5,
-                                  child: Image.asset(
-                                    'assets/icons/Shape.png',
+                                  ],
+                                ),
+                                Positioned(
+                                  right: 13.6,
+                                  top: 0,
+                                  child: SizedBox(
+                                    width: 25.6,
+                                    height: 25.5,
+                                    child:
+                                        Image.asset('assets/icons/Shape.png'),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -209,6 +281,7 @@ class _DonneeProfileState extends State<DonneeProfile> {
                         onTap: () {
                           setState(() {
                             selectedProfile = 'expert';
+                            sharedPrefService.saveUserData('role', selectedProfile);
                           });
                         },
                         child: Column(
@@ -228,7 +301,8 @@ class _DonneeProfileState extends State<DonneeProfile> {
                               ),
                               child: Center(
                                 child: Image.asset(
-                                  'assets/icons/healthicons_city-worker-outline.png', // Replace with your image path
+                                  'assets/icons/healthicons_city-worker-outline.png',
+                                  // Replace with your image path
                                   width: 50,
                                   height: 50,
                                 ),
@@ -254,6 +328,7 @@ class _DonneeProfileState extends State<DonneeProfile> {
                         onTap: () {
                           setState(() {
                             selectedProfile = 'amateur certifié';
+                            sharedPrefService.saveUserData('role', selectedProfile);
                           });
                         },
                         child: Column(
@@ -299,6 +374,7 @@ class _DonneeProfileState extends State<DonneeProfile> {
                         onTap: () {
                           setState(() {
                             selectedProfile = 'professionel';
+                            sharedPrefService.saveUserData('role', selectedProfile);
                           });
                         },
                         child: Column(
@@ -340,7 +416,6 @@ class _DonneeProfileState extends State<DonneeProfile> {
                   ],
                 ),
               ),
-              
             ],
           ),
         ),

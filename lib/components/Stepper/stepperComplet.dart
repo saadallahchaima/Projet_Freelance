@@ -1,40 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+
 
 import '../../theme/AppTheme.dart';
 
 class Steppercomplet extends StatelessWidget {
-
-  Future<Map<String, String>> getUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-    return {
-      'userName': prefs.getString('userName') ?? '',
-      'email': prefs.getString('email') ?? '',
-      'firstName': prefs.getString('firstName') ?? '',
-      'lastName': prefs.getString('lastName') ?? '',
-      'password': prefs.getString('password') ?? '',
-    };
-  }
-
-  Future<void> registerUser(Map<String, String> userData) async {
-    final response = await http.post(
-      Uri.parse('http://localhost:8080/api/auth/register'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(userData),
-    );
-
-    if (response.statusCode == 201) {
-      // Successful registration
-    } else {
-      // Handle errors
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +39,7 @@ class Steppercomplet extends StatelessWidget {
                     child: Container(
                       width: 0.7.sw,
                       child: Text(
-                        'Votre comte RentMe est créé avec succés !',
+                        'Votre compte RentMe est créé avec succés !',
                         style: TextStyle(
                           fontSize: 0.06.sw,
                           fontWeight: FontWeight.w600,

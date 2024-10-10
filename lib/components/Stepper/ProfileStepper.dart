@@ -1,35 +1,45 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:khedma/Services/SharedPrefService.dart';
 import 'package:khedma/Services/UserService.dart';
-import 'package:khedma/components/Stepper/ProfileStepper.dart';
 import 'package:khedma/components/Stepper/stepperComplet.dart';
-import 'package:khedma/screens/Login.dart';
-import 'package:khedma/screens/MainPages/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../Services/SharedPrefService.dart';
 import '../../entities/User.dart';
-import '../../screens/SignUp/AjouterTel.dart';
-import '../../screens/SignUp/verifMail.dart';
-import '../../screens/SignUp/verificationTel.dart';
-import '../../screens/SignUp/DoneePrincipale.dart';
-import '../../theme/AppTheme.dart';
-import 'FormsValidator.dart';
-import 'package:provider/provider.dart';
+import '../../screens/MainPages/HomePage.dart';
 
-class CustomStepper extends StatefulWidget {
-  const CustomStepper({super.key});
+
+import '../../screens/SignUp/form_experience.dart';
+import '../../screens/SignUp/form_societe.dart';
+import '../../screens/SignUp/form_Societe2.dart';
+import '../../screens/SignUp/formDiplome.dart';
+import '../../screens/SignUp/societe_exper.dart';
+
+import '../../screens/SignUp/Donne_profile.dart';
+import '../../screens/SignUp/DonneeAdresse.dart';
+import '../../screens/SignUp/Complete_Pro_Expert.dart';
+import '../../screens/SignUp/Complete_profile.dart';
+import '../../screens/SignUp/Diplome.dart';
+
+
+import '../../theme/AppTheme.dart';
+import 'package:http/http.dart' as http;
+
+class ProfileStepper extends StatefulWidget {
+  const ProfileStepper({super.key});
 
   @override
-  CustomStepperState createState() => CustomStepperState();
+  ProfileStepperState createState() => ProfileStepperState();
 }
 
-class CustomStepperState extends State<CustomStepper> {
+
+class ProfileStepperState extends State<ProfileStepper> {
   int currentStep = 0;
   int totalSteps = 4;
-  late UserService us;
+  late UserService us ;
   late SharedPrefService sharedPrefService;
-  final SignUpFormController signUpFormController = SignUpFormController();
-  Map<String, dynamic> validationErrors = {};
+  String role = "USER";
+
 
   @override
   void initState() {
@@ -41,49 +51,6 @@ class CustomStepperState extends State<CustomStepper> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Map<String, dynamic> _validateStep(int step) {
-    switch (step) {
-      case 0:
-        return signUpFormController.validate();
-      case 1:
-        return signUpFormController.validate();
-      case 2:
-        // Add validation logic for step 2
-        return signUpFormController.validate();
-      case 3:
-        // Add validation logic for step 3
-        return signUpFormController.validate();
-      default:
-        return signUpFormController.validate();
-    }
-  }
-
-  Widget _getPageForStep(int step) {
-    switch (step) {
-      case 0:
-        print('case 0');
-        return SignUpScreen(controller: signUpFormController);
-      case 1:
-        print('case  1');
-        return VerificationMailPage();
-      case 2:
-        print('case  2');
-        return PhoneInput();
-      case 3:
-        print('case  3');
-        return VerificationPage();
-      case 4:
-        print('case  4');
-        // consume register api and save user data
-        //SaveUserData().then((value) => print('User data saved'));
-        sharedPrefService.clearAllUserData();
-        sharedPrefService.checkAllValues();
-        return Steppercomplet();
-      default:
-        return const Center(child: Text('Étape inconnue'));
-    }
   }
 
   @override
@@ -120,20 +87,18 @@ class CustomStepperState extends State<CustomStepper> {
                         value: currentStep / totalSteps,
                         backgroundColor: Colors.grey[200],
                         valueColor:
-                            const AlwaysStoppedAnimation<Color>(Colors.blue),
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                         minHeight: 4.h,
                       ),
                     ),
                     CircleAvatar(
                       radius: 15.r,
-                      backgroundColor: currentStep >= totalSteps
-                          ? Colors.green
-                          : Colors.grey[200],
+                      backgroundColor:
+                      currentStep >= totalSteps ? Colors.green : Colors.grey[200],
                       child: Icon(
                         Icons.check_circle_outline_outlined,
-                        color: currentStep >= totalSteps
-                            ? Colors.white
-                            : Colors.grey[600],
+                        color:
+                        currentStep >= totalSteps ? Colors.white : Colors.grey[600],
                         size: 20.sp,
                       ),
                     ),
@@ -151,7 +116,9 @@ class CustomStepperState extends State<CustomStepper> {
               child: Stack(
                 ///////////houuni
                 alignment: Alignment.topCenter,
-                children: [_getPageForStep(currentStep)],
+                children: [
+                  _getPageForStep(currentStep)
+                ],
               ),
             ),
             SizedBox(height: 20.h),
@@ -167,9 +134,50 @@ class CustomStepperState extends State<CustomStepper> {
       ),
     );
   }
+  Widget _getPageForStep(int step) {
+    if(step == 0) {
+      return DonneeProfile();
+    }
+    if(role == "amateur certifié") {
+      switch (step) {
+        case 1:
+          return CompleteProfile();
+        case 2:
+          //return CompleteProfile();
+          return formDiplome();
+        case 3:
+          return FormExperience();
+        case 4:
+          return Steppercomplet();
+        default:
+          return const Center(child: Text('Étape inconnue'));
+      }
+    } else {
+      switch (step) {
+        case 1:
+          return CompleteProfileProExpert();
+        case 2:
+          return formDiplome();
+        case 3:
+          return FormExperience();
+        case 4:
+          //return CompleteProfileProExpert();
+          return FormSociete();
+        case 5:
+         // return CompleteProfileProExpert();
+          return FormSociete2();
+        case 6:
+          return Steppercomplet();
+
+        default:
+          return const Center(child: Text('Étape inconnue'));
+      }
+    }
+  }
+
 
   Widget _buildButtonsForStep(int step) {
-    if (step == totalSteps) {
+    if(step==0) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -177,10 +185,15 @@ class CustomStepperState extends State<CustomStepper> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfileStepper()),
-                  );
+                  sharedPrefService.readUserData('role').then((value) {
+                    role = value;
+                    if(role == "amateur certifié") {
+                      totalSteps = 4;
+                    } else {
+                      totalSteps = 6;
+                    }
+                    currentStep++;
+                  });
                 });
               },
               style: ElevatedButton.styleFrom(
@@ -191,7 +204,7 @@ class CustomStepperState extends State<CustomStepper> {
                 ),
               ),
               child: Text(
-                'Set Profile',
+                'Continuer',
                 style: TextStyle(
                   fontSize: 0.034.sw,
                   color: Colors.white,
@@ -204,11 +217,66 @@ class CustomStepperState extends State<CustomStepper> {
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
-                  // redirect to home
-                  Navigator.pushReplacement(
+                  sharedPrefService.saveUserData('role', role);
+                  // go home
+                  Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
                   );
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                backgroundColor: AppTheme.primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14.33.r),
+                ),
+              ),
+              child: Text(
+                'Je suis un client',
+                style: TextStyle(
+                  fontSize: 0.034.sw,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+   /* if (step == 7 || step == 8 || step == 9) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  currentStep++;
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                backgroundColor: AppTheme.primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14.33.r),
+                ),
+              ),
+              child: Text(
+                'Continuer',
+                style: TextStyle(
+                  fontSize: 0.034.sw,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  currentStep++;
                 });
               },
               style: ElevatedButton.styleFrom(
@@ -219,7 +287,7 @@ class CustomStepperState extends State<CustomStepper> {
                 ),
               ),
               child: Text(
-                'Go Home',
+                'Ignorer',
                 style: TextStyle(
                   fontSize: 0.034.sw,
                   color: Colors.white,
@@ -229,7 +297,9 @@ class CustomStepperState extends State<CustomStepper> {
           ),
         ],
       );
-      /* return Padding(
+    }*/
+   if (step == totalSteps) {
+      return Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: Center(
           child: Container(
@@ -239,7 +309,7 @@ class CustomStepperState extends State<CustomStepper> {
                 // Naviguer vers HomeScreen
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -250,55 +320,29 @@ class CustomStepperState extends State<CustomStepper> {
                 ),
               ),
               child: Text(
-                'Se Connecter',
+                'Continue Home',
                 style: TextStyle(
                   fontSize: 0.034.sw,
                   color: Colors.white,
                 ),
               ),
             ),
-
           ),
         ),
-      );*/
+      );
     } else {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 32.w),
         child: Center(
-          child: SizedBox(
+          child: Container(
             width: 0.4.sw,
             child: ElevatedButton(
               onPressed: () {
-                print('currentStep: $currentStep');
-                print('totalSteps: $totalSteps');
-                print('validateStep: ${_validateStep(currentStep)}');
                 setState(() {
-                  this.validationErrors = _validateStep(currentStep);
-                  print('validationErrors: $validationErrors');
-                  // show a snackbar with validation errors
-                  if (this.validationErrors.isNotEmpty) {
-                    // get the error message from the map validationErrors: {error: true, message: You must be 18 years old}
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(validationErrors['message']),
-                        backgroundColor: Colors.redAccent,
-                        behavior: SnackBarBehavior.floating,
-                        // add a button to dismiss the snackbar
-                        // add time duration to dismiss the snackbar
-                        duration: const Duration(seconds: 1),
-                        action: SnackBarAction(
-                          label: 'OK',
-                          textColor: Colors.white,
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                          },
-                        ),
-                      ),
-                    );
-                  } else {
-                    currentStep++;
-                  }
+                  sharedPrefService.checkAllValues();
+                  currentStep++;
                 });
+
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -321,7 +365,7 @@ class CustomStepperState extends State<CustomStepper> {
     }
   }
 
-  Future<void> SaveUserData() async {
+  void SaveUserData() async {
     final prefs = await SharedPreferences.getInstance();
     String day = prefs.getString('day') ?? '';
     String month = prefs.getString('month') ?? '';
@@ -334,7 +378,10 @@ class CustomStepperState extends State<CustomStepper> {
         password: prefs.getString('password') ?? '',
         numTel: prefs.getString('numTel') ?? '',
         userName: prefs.getString('userName') ?? '',
-        dateNaissance: dob);
+        dateNaissance: dob
+    );
     us.saveUser(user);
   }
+
+
 }

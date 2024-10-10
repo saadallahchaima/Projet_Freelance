@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:country_picker/country_picker.dart'; // Make sure you've added this import
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Services/SharedPrefService.dart';
 import '../../theme/AppTheme.dart';
 
 class PhoneInput extends StatefulWidget {
@@ -12,6 +14,43 @@ class PhoneInput extends StatefulWidget {
 class _PhoneInputState extends State<PhoneInput> {
   String selectedCountryCode = '+1'; // Default country code
   String selectedCountryFlag = '🇺🇸'; // Default country flag (USA)
+  final TextEditingController _phoneController = TextEditingController();
+  late SharedPrefService sharedPrefService;
+
+
+  @override
+  void initState() {
+    super.initState();
+    this.sharedPrefService = SharedPrefService();
+    // Load the selected country code from shared preferences
+    loadUserData();
+  }
+
+  void loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedCountryCode = prefs.getString('code') ?? '+1';
+      selectedCountryFlag = prefs.getString('flag') ?? '🇺🇸';
+      _phoneController.text = prefs.getString('phone') ?? '';
+    });
+    }
+
+
+  @override
+  void dispose() {
+    save();
+    super.dispose();
+  }
+
+  void save() async {
+    // Save the selected country code to shared preferences
+    print("phone number : $selectedCountryCode${_phoneController.text}") ;
+    await sharedPrefService.saveUserData('numTel', selectedCountryCode + _phoneController.text);
+    await sharedPrefService.saveUserData('flag', selectedCountryFlag);
+    await sharedPrefService.saveUserData('code', selectedCountryCode);
+    await sharedPrefService.saveUserData('phone', _phoneController.text);
+    print("phone c bon ");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,39 +147,41 @@ class _PhoneInputState extends State<PhoneInput> {
       ),
     );
   }
-}
-
-Widget _buildTextField(Map<String, dynamic> textFieldData) {
-  return Container(
-    margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-    decoration: BoxDecoration(
-      color: AppTheme.grisTextField, // Change this to your desired background color
-      borderRadius: BorderRadius.circular(10.0),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          blurRadius: 5.0,
-          spreadRadius: 1.0,
-          offset: Offset(0, 2.0),
-        ),
-      ],
-    ),
-    child: TextField(
-      decoration: InputDecoration(
-        hintText: textFieldData['hint'],
-        contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
-        hintStyle: TextStyle(color: AppTheme.secondaryColor), // Change hint text color here
-        border: UnderlineInputBorder(
-          borderSide: BorderSide(color: AppTheme.grisTextField), // Border color
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: AppTheme.grisTextField), // Border color when inactive
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: AppTheme.grisTextField), // Border color when active
+  Widget _buildTextField(Map<String, dynamic> textFieldData) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        color: AppTheme.grisTextField, // Change this to your desired background color
+        borderRadius: BorderRadius.circular(10.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 5.0,
+            spreadRadius: 1.0,
+            offset: Offset(0, 2.0),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: _phoneController,
+        decoration: InputDecoration(
+          hintText: textFieldData['hint'],
+          contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+          hintStyle: TextStyle(color: AppTheme.secondaryColor), // Change hint text color here
+          border: UnderlineInputBorder(
+            borderSide: BorderSide(color: AppTheme.grisTextField), // Border color
+          ),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: AppTheme.grisTextField), // Border color when inactive
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: AppTheme.grisTextField), // Border color when active
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
+
+
 

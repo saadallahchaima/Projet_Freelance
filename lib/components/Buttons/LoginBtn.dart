@@ -15,13 +15,6 @@ class LoginBtn extends StatelessWidget {
           width: 133,
           height: 46,
           child: InkWell(
-            onTap: () {
-              // Navigate to a new page when the button is tapped
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
-            },
             child: Stack(
               children: [
                 Positioned(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../../entities/SavaData.dart';
@@ -10,41 +11,127 @@ import '../../theme/AppTheme.dart';
 import 'DonneeAdresse.dart';
 
 class SignUpScreen extends StatefulWidget {
+  final SignUpFormController controller;
+
+  SignUpScreen({Key? key, required this.controller}) : super(key: key);
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  String _selectedGender = 'Male';
-  final List<Map<String, dynamic>> textFieldsData = [
-    {'label': 'Prénom', 'hint': 'Nom'},
-    {'label': 'Nom', 'hint': 'Prénom'},
-    {'label': 'Email', 'hint': 'E-mail'},
-    {'label': 'Password', 'hint': 'Password'},
-
-  ];
+class SignUpFormController {
+  final TextEditingController _prenomController = TextEditingController();
+  final TextEditingController _nomController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final Map<String, TextEditingController> _dateControllers = {
     'Day': TextEditingController(text: '23'),
     'Month': TextEditingController(text: '11'),
     'Year': TextEditingController(text: '2000'),
   };
-  final TextEditingController _prenomController = TextEditingController();
-  final TextEditingController _nomController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
+  Map<String,dynamic> validate() {
+    String errorMessage = '';
+    Map<String,dynamic> result = {};
+    int year = DateTime.now().year;
+    int daysInFebruary = year % 4 == 0 ? 29 : 28;
+    String emailRegex = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
 
+    if (_prenomController.text.isEmpty ||
+        _nomController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _passwordController.text.isEmpty) {
+      errorMessage = 'All fields are required';
+      result = {'error': true, 'message': errorMessage};
+    }
+    else if (!RegExp(emailRegex).hasMatch(_emailController.text)) {
+      errorMessage = 'Invalid email';
+      result = {'error': true, 'message': errorMessage};
+    }
+    else if (_passwordController.text.length < 6) {
+      errorMessage = 'Password must be at least 6 characters';
+      result = {'error': true, 'message': errorMessage};
+    }
+    // test if the date is valid
+    else if (int.parse(_dateControllers['Day']!.text) > 31 ||
+        int.parse(_dateControllers['Month']!.text) > 12) {
+      errorMessage = 'Invalid day';
+      result = {'error': true, 'message': errorMessage};
+    }
+    // test month
+    else if (int.parse(_dateControllers['Month']!.text) < 1 && int.parse(_dateControllers['Month']!.text) > 12 ) {
+      errorMessage = 'Invalid month';
+      result = {'error': true, 'message': errorMessage};
+    }
+      else if (int.parse(_dateControllers['Month']!.text) == 2 && int.parse(_dateControllers['Day']!.text) > daysInFebruary) {
+        errorMessage = 'Invalid day';
+        result = {'error': true, 'message': errorMessage};
+      }
+   // test if the age > 18
+    else if (int.parse(_dateControllers['Year']!.text) > 2003) {
+      errorMessage = 'You must be 18 years old';
+      result = {'error': true, 'message': errorMessage};
+    }
 
-  @override
+    return result;
+  }
+
   void dispose() {
     _prenomController.dispose();
     _nomController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _dateControllers.values.forEach((controller) => controller.dispose());
+    _dateControllers.forEach((key, controller) => controller.dispose());
+  }
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  String _selectedGender = 'Male';
+
+  final List<Map<String, dynamic>> textFieldsData = [
+    {'label': 'Prénom', 'hint': 'Nom'},
+    {'label': 'Nom', 'hint': 'Prénom'},
+    {'label': 'Email', 'hint': 'E-mail'},
+    {'label': 'Password', 'hint': 'Password'},
+  ];
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+  @override
+  void dispose() {
+    Save();
     super.dispose();
   }
+  void Save() async {
+  // Sauvegarder les données
 
+  await saveUserData('firstName', widget.controller._prenomController.text);
+  await saveUserData('lastName', widget.controller._nomController.text);
+  await saveUserData('email', widget.controller._emailController.text);
+  await saveUserData('password', widget.controller._passwordController.text);
+  await saveUserData('gender', _selectedGender);
+  // Sauvegarder la date de naissance
+  await saveUserData('day', widget.controller._dateControllers['Day']!.text);
+  await saveUserData('month', widget.controller._dateControllers['Month']!.text);
+  await saveUserData('year', widget.controller._dateControllers['Year']!.text);
+
+  print("c bon");
+}
+  void _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      widget.controller._prenomController.text = prefs.getString('firstName') ?? '';
+      widget.controller._nomController.text = prefs.getString('lastName') ?? '';
+      widget.controller._emailController.text = prefs.getString('email') ?? '';
+      widget.controller._passwordController.text = prefs.getString('password') ?? '';
+      _selectedGender = prefs.getString('gender') ?? 'Male';
+      widget.controller._dateControllers['Day']!.text = prefs.getString('day') ?? '23';
+      widget.controller._dateControllers['Month']!.text = prefs.getString('month') ?? '11';
+      widget.controller._dateControllers['Year']!.text = prefs.getString('year') ?? '2000';
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -154,30 +241,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                   SizedBox(height: 20.h),
-                  ElevatedButton(
-                    onPressed: () async {
-                      // Sauvegarder les données
-                      await saveUserData('firstName', _prenomController.text);
-                      await saveUserData('lastName', _nomController.text);
-                      await saveUserData('email', _emailController.text);
-                      await saveUserData('password', _passwordController.text);
-                      await saveUserData('gender', _selectedGender);
 
-                      // Sauvegarder la date de naissance
-                      await saveUserData('day', _dateControllers['Day']!.text);
-                      await saveUserData('month', _dateControllers['Month']!.text);
-                      await saveUserData('year', _dateControllers['Year']!.text);
-
-                      print("c bon");
-                      print("Données sauvegardées avec succès !");
-                      print('First Name: ${_prenomController.text}');
-                      print('Last Name: ${_nomController.text}');
-                      print('Email: ${_emailController.text}');
-                      print('Password: ${_passwordController.text}');
-                    },
-                    child: Text('Suivant'),
-
-                  ),
 
                 ],
               ),
@@ -190,19 +254,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildTextField(Map<String, dynamic> textFieldData) {
     TextEditingController controller;
-
+    bool isPassword = false;
     switch (textFieldData['label']) {
       case 'Prénom':
-        controller = _prenomController;
+        controller = widget.controller._prenomController;
         break;
       case 'Nom':
-        controller = _nomController;
+        controller = widget.controller._nomController;
         break;
       case 'Email':
-        controller = _emailController;
+        controller = widget.controller._emailController;
         break;
       case 'Password':
-        controller = _passwordController;
+        controller = widget.controller._passwordController;
+        isPassword = true;
         break;
       default:
         controller = TextEditingController(); // Un contrôleur par défaut si jamais
@@ -222,10 +287,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
+        obscureText: isPassword,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
-          hintText: textFieldData['hint'],
+          labelText: textFieldData['hint'],
           contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
           hintStyle: TextStyle(color: AppTheme.secondaryColor),
           border: UnderlineInputBorder(
@@ -238,6 +305,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
             borderSide: BorderSide(color: AppTheme.grisTextField),
           ),
         ),
+        validator: (value) {
+
+          if (value == null || value.isEmpty) {
+            if(controller == widget.controller._prenomController)
+              return 'Please enter your first name';
+            if(controller == widget.controller._nomController)
+              return 'Please enter your last name';
+            if(controller == widget.controller._emailController)
+              return 'Please enter your email';
+            if(controller == widget.controller._passwordController)
+              return 'Please enter your password';
+          }
+          return null;
+        },
+
       ),
     );
   }
@@ -290,7 +372,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 
   Widget _buildDateField(String label, String initialValue) {
-    final TextEditingController controller = _dateControllers[label]!;
+    final TextEditingController controller = widget.controller._dateControllers[label]!;
 
     return Expanded(
       child: Container(
