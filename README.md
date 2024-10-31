@@ -1,16 +1,8 @@
-# khedma
+# Freelence Project
+• Développer une application mobile de mise en relation clients et prestataires de services avec Flutter et Spring Boot en adaptant une architecture
+microservices
 
+• intégrer un système de messagerie instantanée, appel vidéo, un système de notification pour une communication fluide entre les utilisateurs , tout
+en garantissant un design responsive et une interface conviviale .
 A new Flutter project.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
